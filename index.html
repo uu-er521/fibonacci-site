@@ -249,6 +249,120 @@
     }
     .spiral-card svg { width: 100%; max-width: 420px; }
 
+    /* ---------- Golden spiral puzzle ---------- */
+    .puzzle-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+    .puzzle-board {
+      position: relative;
+      border-radius: 8px;
+      background:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+        var(--bg-2);
+      background-size: 30px 30px;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      touch-action: none;
+      user-select: none;
+    }
+    .target-slot {
+      position: absolute;
+      border: 1px dashed rgba(251,191,36,0.35);
+      border-radius: 4px;
+      background: rgba(251,191,36,0.06);
+      z-index: 1;
+    }
+    .target-slot.filled {
+      border-color: transparent;
+      background: transparent;
+    }
+    .piece-shape {
+      position: absolute;
+      border-radius: 4px;
+      background: linear-gradient(145deg, rgba(24,33,54,0.95), rgba(30,42,68,0.95));
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+      z-index: 3;
+      cursor: grab;
+      transition: box-shadow 0.2s, transform 0.2s;
+      touch-action: none;
+    }
+    .piece-shape.dragging {
+      cursor: grabbing;
+      box-shadow: 0 14px 34px rgba(0,0,0,0.65);
+    }
+    .piece-shape.placed {
+      cursor: default;
+      box-shadow: 0 4px 10px rgba(251,191,36,0.15);
+    }
+    .piece-shape.targets {
+      border-color: var(--gold-1);
+      box-shadow: 0 0 0 3px rgba(251,191,36,0.4);
+    }
+    .piece-shape.locked {
+      border: 1px solid rgba(251,191,36,0.8);
+    }
+        .arc-svg {
+      position: absolute;
+      left: 0;
+      top: 0;
+      max-width: none;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+      overflow: visible;
+    }
+    .piece-shape .size-label {
+      position: absolute;
+      right: 5px;
+      bottom: 3px;
+      font-size: 0.7rem;
+      color: var(--muted);
+      opacity: 0.85;
+      pointer-events: none;
+    }
+    .puzzle-tray {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      min-height: 44px;
+      padding: 8px 12px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      min-width: 320px;
+    }
+    .puzzle-tray .tray-piece {
+      width: 40px; height: 40px;
+      border-radius: 6px;
+      background: linear-gradient(145deg, rgba(24,33,54,0.95), rgba(30,42,68,0.95));
+      border: 1px solid rgba(255,255,255,0.2);
+      display: grid; place-items: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--text);
+      cursor: grab;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+    .puzzle-tray .tray-piece.dragging { opacity: 0.4; }
+    .puzzle-tray .tray-piece.used { opacity: 0.15; pointer-events: none; cursor: default; }
+    .puzzle-msg {
+      font-size: 0.95rem;
+      color: var(--muted);
+      min-height: 24px;
+    }
+    .puzzle-msg .done { color: var(--teal); font-weight: 700; }
+    .puzzle-reset {
+      margin-top: 4px;
+    }
+
     /* ---------- Nature cards ---------- */
     .nature-grid {
       display: grid;
@@ -447,19 +561,19 @@
       <p>当相邻两项的比值稳定下来，就得到约 1.618 的黄金比例 φ。用它画出矩形与圆弧，便构成了自然界随处可见的黄金螺旋。</p>
     </div>
 
-    <div class="two-col">
+        <div class="two-col">
       <div class="spiral-card reveal">
-        <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-          <path id="spiral" fill="none" stroke="#fbbf24" stroke-width="3"
-                d="M250,250
-                   C 250,190 300,150 360,150
-                   C 420,150 470,200 470,260
-                   C 470,350 400,420 310,420
-                   C 190,420 110,340 110,220
-                   C 110,70 270,-5 430,-5"
-                transform="translate(-20,40)"/>
-          <text x="250" y="250" text-anchor="middle" fill="#94a3b8" font-size="14">黄金螺旋 φ</text>
-        </svg>
+        <h3 style="font-size:1.15rem; margin-bottom:16px;">🧩 拖拽拼图 · 拼出黄金螺旋</h3>
+        <p style="color:var(--muted); font-size:0.88rem; margin-bottom:16px;">
+          将下方托盘中的 7 个正方形（边长 1,1,2,3,5,8,13）逐一拖入虚线框中对应的位置，
+          每条 90° 弧线便会拼接成一条完整的黄金螺旋线。
+        </p>
+        <div class="puzzle-wrap">
+          <div class="puzzle-board" id="puzzleBoard"></div>
+          <div class="puzzle-msg" id="puzzleMsg">将下方托盘中的方块拖入上方对应位置，拼满 7 块即完成 ✨</div>
+          <div class="puzzle-tray" id="puzzleTray"></div>
+          <button class="btn btn-ghost puzzle-reset" id="puzzleReset">↺ 重置拼图</button>
+        </div>
       </div>
 
       <div class="reveal">
@@ -469,11 +583,15 @@
           这个比值 <strong style="color:var(--gold-1)">φ = (1 + √5) / 2 ≈ 1.6180339887…</strong>
           就是黄金比例。它也和斐波那契数列的极限比值完全一致。
         </p>
-        <p style="color:var(--muted); margin-top:14px;">
+                <p style="color:var(--muted); margin-top:14px;">
           从帕特农神庙到《蒙娜丽莎》，达·芬奇的作品，再到苹果公司的标志，
           设计师们数百年来都痴迷于这个比例带来的和谐美感。
         </p>
-        <button class="btn btn-ghost" id="drawSpiral" style="margin-top:20px;">✨ 绘制黄金螺旋</button>
+        <p style="color:var(--muted); margin-top:14px; font-size:0.88rem;">
+          💡 左侧拼图的每个正方形边长依次为 1、1、2、3、5、8、13，
+          恰好是斐波那契数列。当它们拼合完毕，各正方形内的 90° 圆弧
+          便会连成自然界中那条完美的黄金螺旋。
+        </p>
       </div>
     </div>
   </section>
@@ -607,19 +725,287 @@
     countRange.addEventListener('input', renderSeq);
     renderSeq();
 
-    // ---------- Draw golden spiral ----------
-    const spiral = document.querySelector('#spiral');
-    const drawBtn = document.getElementById('drawSpiral');
-    drawBtn.addEventListener('click', () => {
-      spiral.style.transition = 'none';
-      spiral.getBBox();
-      spiral.style.transition = 'stroke-dashoffset 2.5s ease-in-out';
-      spiral.setAttribute('stroke-dasharray','2600');
-      spiral.setAttribute('stroke-dashoffset','2600');
-      requestAnimationFrame(()=>{
-        spiral.setAttribute('stroke-dashoffset','0');
+        // ============================================================
+    //  Golden Spiral Jigsaw Puzzle
+    //  7 squares (sides 1,1,2,3,5,8,13) each carrying a 90° arc;
+    //  dragging them into place assembles a golden spiral.
+    // ============================================================
+        const GRID_W = 21;          // board width in cells  (sum of 8+13)
+    const GRID_H = 13;          // board height in cells (sum of 8+5)
+    // Responsive cell size: fit the board within the card column.
+    const cardEl = document.querySelector('.spiral-card');
+    const availW = (cardEl ? cardEl.clientWidth : 520) - 24;
+    const CELL = Math.max(16, Math.min(30, Math.floor(availW / GRID_W)));
+
+    // Square placements (grid coords x,y) & size, plus arc geometry.
+    // Arc centre is given relative to the square's top-left corner (ox,oy)
+    // in cell units; arc sweeps 90° at radius = size.
+        const PIE = [
+            // size, x, y,  arc-centre offset (ox,oy FROM the square's top-left,
+      // 0 or s so the quarter-circle pivots on a corner), start/end angle
+      // Positions are SVG-grid top-left corners (board 21 x 13), derived from
+      // the given plane coords (each square's BOTTOM-LEFT corner, y measured up).
+      { s: 1, x:15, y: 3, ox:  0, oy:  1, a1:270, a2:360 }, // 边长1 左下角
+      { s: 1, x:15, y: 4, ox:  0, oy:  0, a1:  0, a2: 90 }, // 边长1 左上角
+      { s: 2, x:13, y: 3, ox:  2, oy:  0, a1: 90, a2:180 }, // 边长2 右上角
+      { s: 3, x:13, y: 0, ox:  3, oy:  3, a1:180, a2:270 }, // 边长3 右下角
+      { s: 5, x:16, y: 0, ox:  0, oy:  5, a1:270, a2:360 }, // 边长5 左下角
+      { s: 8, x:13, y: 5, ox:  0, oy:  0, a1:  0, a2: 90 }, // 边长8 左上角
+      { s:13, x: 0, y: 0, ox: 13, oy:  0, a1: 90, a2:180 }  // 边长13 右上角
+    ];
+
+    const board = document.getElementById('puzzleBoard');
+    const tray  = document.getElementById('puzzleTray');
+    const msg   = document.getElementById('puzzleMsg');
+    const reset = document.getElementById('puzzleReset');
+
+        board.style.width  = (GRID_W * CELL) + 'px';
+    board.style.height = (GRID_H * CELL) + 'px';
+    // match the decorative grid lines to cell size
+    board.style.backgroundSize = CELL + 'px ' + CELL + 'px';
+
+    let placed = 0;           // count of correctly placed pieces
+    let dragEl = null;        // active draggable element
+    let dragOffset = {x:0, y:0};
+    let pieceGeom = {};       // current {x,y} in cells for each shape
+    let source = {};          // where each piece was picked from
+
+    // ---- build target slots ----
+    function buildSlots(){
+      board.querySelectorAll('.target-slot').forEach(s=>s.remove());
+      PIE.forEach(p=>{
+        const s=document.createElement('div');
+        s.className='target-slot';
+        s.style.left=(p.x*CELL)+'px';
+        s.style.top=(p.y*CELL)+'px';
+        s.style.width=(p.s*CELL)+'px';
+        s.style.height=(p.s*CELL)+'px';
+        s.dataset.size=p.s;
+        s.dataset.x=p.x;
+        s.dataset.y=p.y;
+        board.appendChild(s);
       });
+    }
+    buildSlots();
+
+    // ---- arc path inside a square ---
+    function arcPath(p){
+      const cx=(p.ox)*CELL, cy=(p.oy)*CELL, r=p.s*CELL;
+      const rad=(deg)=>{ const t=deg*Math.PI/180; return {x:cx + r*Math.cos(t), y:cy + r*Math.sin(t)}; };
+            const st=rad(p.a1);
+      const en=rad(p.a2);
+      // sweep=1 renders the clockwise (major) arc portion between the angles
+      return `M ${st.x} ${st.y} A ${r} ${r} 0 0 1 ${en.x} ${en.y}`;
+    }
+
+        // ---- gear: consistent key helpers ----
+    function keyOf(el){ return String(el.dataset.pi); } // PIE index string
+
+    // ---- re-create a draggable square (used in board & tray) ---
+    function makeShape(pi, mode){
+      const k=String(PIE.indexOf(pi));
+      const el=document.createElement('div');
+      el.className = mode==='tray' ? 'tray-piece' : 'piece-shape';
+      el.dataset.size=pi.s;
+      el.dataset.pi=k;
+      if(mode==='shape'){
+        el.style.width=(pi.s*CELL)+'px';
+        el.style.height=(pi.s*CELL)+'px';
+        const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+        svg.setAttribute('class','arc-svg');
+        svg.setAttribute('width',(pi.s*CELL)+'px');
+        svg.setAttribute('height',(pi.s*CELL)+'px');
+        svg.setAttribute('viewBox',`0 0 ${pi.s*CELL} ${pi.s*CELL}`);
+        const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+        path.setAttribute('d',arcPath(pi));
+        path.setAttribute('fill','none');
+        path.setAttribute('stroke','#fbbf24');
+        path.setAttribute('stroke-width','3');
+        path.setAttribute('stroke-linecap','round');
+        svg.appendChild(path);
+        el.appendChild(svg);
+        const lbl=document.createElement('div');
+        lbl.className='size-label';
+        lbl.textContent=pi.s;
+        el.appendChild(lbl);
+        el.style.left='0px';
+        el.style.top='0px';
+      } else {
+        el.textContent=pi.s;
+      }
+      attachDrag(el, mode, pi);
+      return el;
+    }
+
+    // ---- tray pieces ----
+    function rebuildTray(){
+      tray.innerHTML='';
+      placed=0;
+      PIE.forEach(pi=>{ tray.appendChild(makeShape(pi,'tray')); });
+      pieceGeom={};
+      source={};
+      msg.innerHTML='将下方托盘中的方块拖入上方对应位置，拼满 7 块即完成 ✨';
+    }
+
+    // ---- mark slot filled state based on geom ----
+    function refreshSlots(){
+      board.querySelectorAll('.target-slot').forEach(slot=>{
+        const sx=+slot.dataset.x, sy=+slot.dataset.y, ss=+slot.dataset.size;
+        let has=false;
+        for(const k in pieceGeom){
+          const pi=PIE[+k];
+          const gx=pieceGeom[k].x, gy=pieceGeom[k].y;
+          if(gx<=sx+0.01 && gx+pi.s>=sx+ss-0.01 && gy<=sy+0.01 && gy+pi.s>=sy+ss-0.01){
+            has=true;
+          }
+        }
+        slot.classList.toggle('filled', has);
+      });
+    }
+
+    // ---- drag & drop (pointer events) ----
+    function attachDrag(el, mode, pi){
+      const k=String(PIE.indexOf(pi));
+
+      el.addEventListener('pointerdown', (e)=>{
+        if(e.button!==undefined && e.button!==0) return;
+        if(mode==='shape' && el.classList.contains('placed')) return;
+        e.preventDefault();
+
+        if(mode==='tray'){
+          // spawn a new draggable shape from the tray
+          el.classList.add('used');
+          const sh=makeShape(pi,'shape');
+          sh.classList.add('dragging');
+          const bRect=board.getBoundingClientRect();
+          const mRect=el.getBoundingClientRect();
+          const px=mRect.left - bRect.left - (pi.s*CELL)/2;
+          const py=mRect.top  - bRect.top  - (pi.s*CELL)/2;
+          sh.style.left=px+'px';
+          sh.style.top=py+'px';
+          sh.dataset.cx=px/CELL;
+          sh.dataset.cy=py/CELL;
+          board.appendChild(sh);
+          pieceGeom[k]={x:px/CELL, y:py/CELL};
+          source[k]={fromTray:true, trayEl:el};
+          dragEl=sh;
+        } else {
+          // pick up an existing in-board piece back into dragging
+          dragEl=el;
+          el.classList.add('dragging');
+          pieceGeom[k]=el; // placeholder replaced below
+        }
+
+        const b2=board.getBoundingClientRect();
+        // compute offset relative to board + element top-left
+        const rect=dragEl.getBoundingClientRect();
+        dragOffset.x = e.clientX - rect.left;
+        dragOffset.y = e.clientY - rect.top;
+        dragEl.style.zIndex='5';
+        dragEl.setPointerCapture(e.pointerId);
+        // update geom from element position
+        const nx=rect.left - b2.left;
+        const ny=rect.top - b2.top;
+        pieceGeom[k]={x:nx/CELL, y:ny/CELL};
+        showTargets(true);
+      });
+
+      const onMove=(e)=>{
+        if(!dragEl || dragEl!==el) return;
+        const b=board.getBoundingClientRect();
+        const nx=e.clientX - b.left - dragOffset.x;
+        const ny=e.clientY - b.top  - dragOffset.y;
+        el.style.left=nx+'px';
+        el.style.top=ny+'px';
+        el.dataset.cx=nx/CELL;
+        el.dataset.cy=ny/CELL;
+        pieceGeom[k]={x:nx/CELL,y:ny/CELL};
+      };
+      el.addEventListener('pointermove', onMove);
+
+            const endDrag=(e)=>{
+        if(!dragEl || dragEl!==el) return;
+        const nxE=+dragEl.dataset.cx, nyE=+dragEl.dataset.cy;
+        const ok = Math.abs(nxE-pi.x)<0.55 && Math.abs(nyE-pi.y)<0.55;
+        showTargets(false);
+        if(ok){
+          // snap to correct position
+          dragEl.style.left=(pi.x*CELL)+'px';
+          dragEl.style.top=(pi.y*CELL)+'px';
+          dragEl.dataset.cx=pi.x;
+          dragEl.dataset.cy=pi.y;
+          pieceGeom[k]={x:pi.x,y:pi.y};
+          if(!dragEl.classList.contains('placed')){
+            dragEl.classList.add('placed');
+            placed++;
+            pingPlace();
+          }
+        } else {
+          // wrong spot -> return to tray
+          dragEl.remove();
+          if(source[k] && source[k].trayEl){
+            source[k].trayEl.classList.remove('used');
+          }
+          delete pieceGeom[k];
+        }
+        refreshSlots();
+        updateMsg();
+        dragEl.classList.remove('dragging');
+        dragEl.style.zIndex='';
+        dragEl=null;
+      };
+            el.addEventListener('pointerup', endDrag);
+      el.addEventListener('pointercancel', endDrag);
+    }
+
+        function showTargets(show){
+      board.querySelectorAll('.piece-shape').forEach(p=>{
+        const pi=PIE[+p.dataset.pi];
+        const g=pieceGeom[p.dataset.pi];   // keyed by index string
+        const near = g && Math.abs(g.x-pi.x)<0.55 && Math.abs(g.y-pi.y)<0.55;
+        p.classList.toggle('targets', !!show&&!!near);
+      });
+    }
+
+    function pingPlace(){
+      // small confetti pulse on board
+      const pul=document.createElement('div');
+      pul.style.cssText='position:absolute;left:0;top:0;width:100%;height:100%;'+
+        'pointer-events:none;border:2px solid rgba(45,212,191,0.6);border-radius:8px;'+
+        'animation:placePing 0.6s ease-out;z-index:4';
+      board.appendChild(pul);
+      setTimeout(()=>pul.remove(),650);
+    }
+
+    function updateMsg(){
+      if(placed===PIE.length){
+        msg.innerHTML='🎉 <span class="done">恭喜完成！</span> 7 段 90° 圆弧已连接成完整的黄金螺旋线';
+        // canvas-style completion burst
+        msg.style.transform='scale(1.05)';
+        setTimeout(()=>msg.style.transform='',200);
+      } else {
+        msg.innerHTML=`已拼好 <strong style="color:var(--gold-1)">${placed}</strong> / ${PIE.length} 块，继续加油！`;
+      }
+    }
+
+    // reset
+    reset.addEventListener('click', ()=>{
+      board.querySelectorAll('.piece-shape').forEach(p=>p.remove());
+      rebuildTray();
+      refreshSlots();
     });
+
+    // initial setup
+    rebuildTray();
+    refreshSlots();
+
+    // place ping keyframes
+    if(!document.querySelector('#placePingKey')){
+      const st=document.createElement('style');
+      st.id='placePingKey';
+      st.textContent='@keyframes placePing{from{opacity:1;transform:scale(0.85)}to{opacity:0;transform:scale(1.15)}}';
+      document.head.appendChild(st);
+    }
 
     // ---------- Reveal on scroll ----------
     const revealEls = document.querySelectorAll('.reveal');
