@@ -1,0 +1,471 @@
+/* ============================================================
+   style.css — 斐波那契教学页面样式表
+   （从原 index.html 内联 <style> 中拆出，便于维护）
+   ============================================================ */
+
+/* ---------- Reset / Base ---------- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0f1524;
+  --bg-2: #141b2e;
+  --card: rgba(255,255,255,0.05);
+  --card-border: rgba(255,255,255,0.1);
+  --text: #e8ecf4;
+  --muted: #94a3b8;
+  --gold-1: #fbbf24;
+  --gold-2: #f59e0b;
+  --gold-3: #d97706;
+  --teal: #2dd4bf;
+  --purple: #a78bfa;
+  --pink: #f472b6;
+  --shadow: 0 20px 60px rgba(0,0,0,0.4);
+  --radius: 18px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ---------- SVG Background ---------- */
+.bg-fib {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  opacity: 0.5;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(251,191,36,0.08), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(167,139,250,0.08), transparent 40%);
+}
+
+.golden-arc { position: fixed; inset: 0; z-index: -1; opacity: 0.12; pointer-events: none; }
+
+/* ---------- Navbar ---------- */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  background: rgba(15,21,36,0.7);
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 5%;
+}
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 800; font-size: 1.15rem; letter-spacing: 1px;
+}
+.logo .mark {
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-3));
+  border-radius: 50%;
+  color: #0f1524; font-weight: 900;
+  box-shadow: 0 0 20px rgba(251,191,36,0.5);
+}
+nav .links { display: flex; gap: 26px; }
+nav .links a {
+  color: var(--muted); text-decoration: none;
+  font-size: 0.92rem; font-weight: 500;
+  transition: color 0.3s;
+}
+nav .links a:hover { color: var(--gold-1); }
+
+/* ---------- Hero ---------- */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 5% 60px;
+  position: relative;
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: 1px;
+  margin-bottom: 18px;
+}
+.grad {
+  background: linear-gradient(90deg, var(--gold-1), var(--pink), var(--purple), var(--teal));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero p.desc {
+  max-width: 640px;
+  color: var(--muted);
+  font-size: 1.12rem;
+  margin-bottom: 40px;
+}
+.cta {
+  display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+}
+.btn {
+  padding: 13px 30px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.98rem;
+  text-decoration: none;
+  transition: transform 0.25s, box-shadow 0.25s;
+  cursor: pointer;
+  border: none;
+}
+.btn:hover { transform: translateY(-3px); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  color: #0f1524;
+  box-shadow: 0 8px 25px rgba(251,191,36,0.35);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--card-border);
+}
+.btn-ghost:hover { border-color: var(--gold-1); color: var(--gold-1); }
+
+/* Sequence ticker in hero */
+.seq-strip {
+  margin-top: 60px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 22px 30px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(6px);
+  max-width: 800px;
+  box-shadow: var(--shadow);
+}
+.seq-chip {
+  width: 52px; height: 52px;
+  display: grid; place-items: center;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  animation: popIn 0.6s ease both;
+}
+@keyframes popIn {
+  from { transform: scale(0) rotate(-30deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+.scroll-hint {
+  position: absolute; bottom: 30px;
+  color: var(--muted); font-size: 0.8rem;
+  letter-spacing: 2px;
+  animation: float 2s ease-in-out infinite;
+}
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
+
+/* ---------- Sections ---------- */
+section { padding: 90px 5%; max-width: 1200px; margin: 0 auto; }
+.sec-head { text-align: center; margin-bottom: 55px; }
+.sec-head .kicker {
+  letter-spacing: 4px; font-size: 0.8rem; color: var(--gold-1);
+  text-transform: uppercase; margin-bottom: 12px; font-weight: 700;
+}
+.sec-head h2 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 800;
+}
+.sec-head p { color: var(--muted); margin-top: 12px; max-width: 600px; margin-inline: auto; }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+@media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+
+/* ---------- Generator ---------- */
+.generator-wrap {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 30px;
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow);
+}
+.gen-controls { display: flex; gap: 12px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
+.gen-controls input[type=range] {
+  flex: 1; min-width: 180px;
+  accent-color: var(--gold-1);
+}
+.gen-controls .badge {
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  color: #0f1524; font-weight: 800;
+  padding: 6px 16px; border-radius: 50px; font-size: 0.95rem;
+}
+.seq-display {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  min-height: 60px;
+}
+.term-box {
+  min-width: 46px; height: 46px;
+  display: grid; place-items: center;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  font-weight: 700;
+  transition: all 0.3s;
+  animation: fadeSlide 0.4s ease both;
+}
+@keyframes fadeSlide { from{opacity:0; transform:translateY(8px)} to{opacity:1} }
+.term-box.gold { background: linear-gradient(135deg, var(--gold-1), var(--gold-2)); color:#0f1524; border:none; box-shadow: 0 4px 15px rgba(251,191,36,0.4); }
+.ratio-line {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--card-border);
+  font-size: 0.95rem; color: var(--muted);
+}
+.ratio-line strong { color: var(--gold-1); font-size: 1.2rem; }
+
+/* ---------- Golden spiral card ---------- */
+.spiral-card {
+  text-align: center;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+.spiral-card svg { width: 100%; max-width: 420px; }
+
+/* ---------- Golden spiral puzzle ---------- */
+.puzzle-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.puzzle-board {
+  position: relative;
+  border-radius: 8px;
+  background:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+    var(--bg-2);
+  background-size: 30px 30px;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow);
+  touch-action: none;
+  user-select: none;
+}
+.target-slot {
+  position: absolute;
+  border: 1px dashed rgba(251,191,36,0.35);
+  border-radius: 4px;
+  background: rgba(251,191,36,0.06);
+  z-index: 1;
+}
+.target-slot.filled {
+  border-color: transparent;
+  background: transparent;
+}
+.piece-shape {
+  position: absolute;
+  border-radius: 4px;
+  background: linear-gradient(145deg, rgba(24,33,54,0.95), rgba(30,42,68,0.95));
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  z-index: 3;
+  cursor: grab;
+  transition: box-shadow 0.2s, transform 0.2s;
+  touch-action: none;
+}
+.piece-shape.dragging {
+  cursor: grabbing;
+  box-shadow: 0 14px 34px rgba(0,0,0,0.65);
+}
+.piece-shape.placed {
+  cursor: default;
+  box-shadow: 0 4px 10px rgba(251,191,36,0.15);
+}
+.piece-shape.targets {
+  border-color: var(--gold-1);
+  box-shadow: 0 0 0 3px rgba(251,191,36,0.4);
+}
+.piece-shape.locked {
+  border: 1px solid rgba(251,191,36,0.8);
+}
+.arc-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  max-width: none;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  overflow: visible;
+}
+.piece-shape .size-label {
+  position: absolute;
+  right: 5px;
+  bottom: 3px;
+  font-size: 0.7rem;
+  color: var(--muted);
+  opacity: 0.85;
+  pointer-events: none;
+}
+.puzzle-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 12px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  min-width: 320px;
+}
+.puzzle-tray .tray-piece {
+  width: 40px; height: 40px;
+  border-radius: 6px;
+  background: linear-gradient(145deg, rgba(24,33,54,0.95), rgba(30,42,68,0.95));
+  border: 1px solid rgba(255,255,255,0.2);
+  display: grid; place-items: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text);
+  cursor: grab;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+.puzzle-tray .tray-piece.dragging { opacity: 0.4; }
+.puzzle-tray .tray-piece.used { opacity: 0.15; pointer-events: none; cursor: default; }
+.puzzle-msg {
+  font-size: 0.95rem;
+  color: var(--muted);
+  min-height: 24px;
+}
+.puzzle-msg .done { color: var(--teal); font-weight: 700; }
+.puzzle-reset {
+  margin-top: 4px;
+}
+
+/* ---------- Nature cards ---------- */
+.nature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+}
+.nature-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 26px;
+  transition: transform 0.3s, border-color 0.3s;
+  position: relative; overflow: hidden;
+}
+.nature-card:hover { transform: translateY(-6px); border-color: var(--gold-1); }
+.nature-card .emoji { font-size: 2.6rem; margin-bottom: 14px; }
+.nature-card h3 { font-size: 1.15rem; margin-bottom: 8px; }
+.nature-card p { color: var(--muted); font-size: 0.95rem; }
+.nature-card::after {
+  content: '';
+  position: absolute; top: -40px; right: -40px;
+  width: 90px; height: 90px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(251,191,36,0.15), transparent 70%);
+}
+
+/* ---------- Quiz ---------- */
+.quiz-box {
+  max-width: 680px;
+  margin: 0 auto;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 34px;
+  box-shadow: var(--shadow);
+}
+.quiz-q { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; min-height: 55px; }
+.quiz-options { display: grid; gap: 12px; }
+.quiz-opt {
+  text-align: left;
+  padding: 15px 20px;
+  border-radius: 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-family: inherit;
+}
+.quiz-opt:hover { border-color: var(--gold-1); transform: translateX(5px); }
+.quiz-opt.correct { background: rgba(45,212,191,0.15); border-color: var(--teal); }
+.quiz-opt.wrong { background: rgba(244,114,182,0.15); border-color: var(--pink); }
+.quiz-opt:disabled { cursor: not-allowed; }
+.quiz-foot {
+  margin-top: 22px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.quiz-score { font-weight: 800; color: var(--gold-1); }
+.quiz-next {
+  padding: 10px 26px; border-radius: 50px;
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  color: #0f1524; font-weight: 700; border: none; cursor: pointer;
+}
+.quiz-next:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ---------- Fun facts ---------- */
+.facts-list { display: grid; gap: 16px; max-width: 800px; margin: 0 auto; }
+.fact {
+  display: flex; gap: 18px; align-items: flex-start;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-left: 4px solid var(--gold-1);
+  padding: 18px 22px;
+  border-radius: 12px;
+}
+.fact .num { font-size: 1.4rem; font-weight: 900; color: var(--gold-1); min-width: 28px; }
+.fact p { color: var(--text); font-size: 0.99rem; }
+
+/* ---------- Formula ---------- */
+.formula {
+  background: var(--bg-2);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 30px;
+  text-align: center;
+  font-family: 'Times New Roman', Georgia, serif;
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  box-shadow: var(--shadow);
+}
+.formula sup { font-size: 0.7em; }
+.formula .vars { color: var(--gold-1); font-weight: bold; }
+.formula p.caption { font-family: inherit; color: var(--muted); margin-top: 14px; font-size: 0.85rem; }
+
+/* ---------- Footer ---------- */
+footer {
+  text-align: center;
+  padding: 50px 5%;
+  border-top: 1px solid var(--card-border);
+  color: var(--muted);
+  font-size: 0.9rem;
+  background: var(--bg-2);
+}
+footer .heart { color: var(--pink); }
+
+/* ---------- Reveal on scroll ---------- */
+.reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
