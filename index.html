@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>斐波那契 · 数字的完美之舞</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0f1524;
+      --bg-2: #141b2e;
+      --card: rgba(255,255,255,0.05);
+      --card-border: rgba(255,255,255,0.1);
+      --text: #e8ecf4;
+      --muted: #94a3b8;
+      --gold-1: #fbbf24;
+      --gold-2: #f59e0b;
+      --gold-3: #d97706;
+      --teal: #2dd4bf;
+      --purple: #a78bfa;
+      --pink: #f472b6;
+      --shadow: 0 20px 60px rgba(0,0,0,0.4);
+      --radius: 18px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ---------- SVG Background ---------- */
+    .bg-fib {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      opacity: 0.5;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(251,191,36,0.08), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(167,139,250,0.08), transparent 40%);
+    }
+
+    .golden-arc { position: fixed; inset: 0; z-index: -1; opacity: 0.12; pointer-events: none; }
+
+    /* ---------- Navbar ---------- */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      background: rgba(15,21,36,0.7);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 5%;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; font-size: 1.15rem; letter-spacing: 1px;
+    }
+    .logo .mark {
+      width: 34px; height: 34px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--gold-1), var(--gold-3));
+      border-radius: 50%;
+      color: #0f1524; font-weight: 900;
+      box-shadow: 0 0 20px rgba(251,191,36,0.5);
+    }
+    nav .links { display: flex; gap: 26px; }
+    nav .links a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.92rem; font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav .links a:hover { color: var(--gold-1); }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 5% 60px;
+      position: relative;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: 1px;
+      margin-bottom: 18px;
+    }
+    .grad {
+      background: linear-gradient(90deg, var(--gold-1), var(--pink), var(--purple), var(--teal));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero p.desc {
+      max-width: 640px;
+      color: var(--muted);
+      font-size: 1.12rem;
+      margin-bottom: 40px;
+    }
+    .cta {
+      display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+    }
+    .btn {
+      padding: 13px 30px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.98rem;
+      text-decoration: none;
+      transition: transform 0.25s, box-shadow 0.25s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+      color: #0f1524;
+      box-shadow: 0 8px 25px rgba(251,191,36,0.35);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+    .btn-ghost:hover { border-color: var(--gold-1); color: var(--gold-1); }
+
+    /* Sequence ticker in hero */
+    .seq-strip {
+      margin-top: 60px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 22px 30px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(6px);
+      max-width: 800px;
+      box-shadow: var(--shadow);
+    }
+    .seq-chip {
+      width: 52px; height: 52px;
+      display: grid; place-items: center;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      animation: popIn 0.6s ease both;
+    }
+    @keyframes popIn {
+      from { transform: scale(0) rotate(-30deg); opacity: 0; }
+      to   { transform: scale(1) rotate(0); opacity: 1; }
+    }
+
+    .scroll-hint {
+      position: absolute; bottom: 30px;
+      color: var(--muted); font-size: 0.8rem;
+      letter-spacing: 2px;
+      animation: float 2s ease-in-out infinite;
+    }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
+
+    /* ---------- Sections ---------- */
+    section { padding: 90px 5%; max-width: 1200px; margin: 0 auto; }
+    .sec-head { text-align: center; margin-bottom: 55px; }
+    .sec-head .kicker {
+      letter-spacing: 4px; font-size: 0.8rem; color: var(--gold-1);
+      text-transform: uppercase; margin-bottom: 12px; font-weight: 700;
+    }
+    .sec-head h2 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+    }
+    .sec-head p { color: var(--muted); margin-top: 12px; max-width: 600px; margin-inline: auto; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: center;
+    }
+    @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ---------- Generator ---------- */
+    .generator-wrap {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 30px;
+      backdrop-filter: blur(6px);
+      box-shadow: var(--shadow);
+    }
+    .gen-controls { display: flex; gap: 12px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
+    .gen-controls input[type=range] {
+      flex: 1; min-width: 180px;
+      accent-color: var(--gold-1);
+    }
+    .gen-controls .badge {
+      background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+      color: #0f1524; font-weight: 800;
+      padding: 6px 16px; border-radius: 50px; font-size: 0.95rem;
+    }
+    .seq-display {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      min-height: 60px;
+    }
+    .term-box {
+      min-width: 46px; height: 46px;
+      display: grid; place-items: center;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      font-weight: 700;
+      transition: all 0.3s;
+      animation: fadeSlide 0.4s ease both;
+    }
+    @keyframes fadeSlide { from{opacity:0; transform:translateY(8px)} to{opacity:1} }
+    .term-box.gold { background: linear-gradient(135deg, var(--gold-1), var(--gold-2)); color:#0f1524; border:none; box-shadow: 0 4px 15px rgba(251,191,36,0.4); }
+    .ratio-line {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--card-border);
+      font-size: 0.95rem; color: var(--muted);
+    }
+    .ratio-line strong { color: var(--gold-1); font-size: 1.2rem; }
+
+    /* ---------- Golden spiral (SVG animated) ---------- */
+    .spiral-card {
+      text-align: center;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .spiral-card svg { width: 100%; max-width: 420px; }
+
+    /* ---------- Nature cards ---------- */
+    .nature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+    }
+    .nature-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 26px;
+      transition: transform 0.3s, border-color 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .nature-card:hover { transform: translateY(-6px); border-color: var(--gold-1); }
+    .nature-card .emoji { font-size: 2.6rem; margin-bottom: 14px; }
+    .nature-card h3 { font-size: 1.15rem; margin-bottom: 8px; }
+    .nature-card p { color: var(--muted); font-size: 0.95rem; }
+    .nature-card::after {
+      content: '';
+      position: absolute; top: -40px; right: -40px;
+      width: 90px; height: 90px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(251,191,36,0.15), transparent 70%);
+    }
+
+    /* ---------- Quiz ---------- */
+    .quiz-box {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 34px;
+      box-shadow: var(--shadow);
+    }
+    .quiz-q { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; min-height: 55px; }
+    .quiz-options { display: grid; gap: 12px; }
+    .quiz-opt {
+      text-align: left;
+      padding: 15px 20px;
+      border-radius: 12px;
+      background: var(--bg-2);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.25s;
+      font-family: inherit;
+    }
+    .quiz-opt:hover { border-color: var(--gold-1); transform: translateX(5px); }
+    .quiz-opt.correct { background: rgba(45,212,191,0.15); border-color: var(--teal); }
+    .quiz-opt.wrong { background: rgba(244,114,182,0.15); border-color: var(--pink); }
+    .quiz-opt:disabled { cursor: not-allowed; }
+    .quiz-foot {
+      margin-top: 22px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .quiz-score { font-weight: 800; color: var(--gold-1); }
+    .quiz-next {
+      padding: 10px 26px; border-radius: 50px;
+      background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+      color: #0f1524; font-weight: 700; border: none; cursor: pointer;
+    }
+    .quiz-next:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ---------- Fun facts ---------- */
+    .facts-list { display: grid; gap: 16px; max-width: 800px; margin: 0 auto; }
+    .fact {
+      display: flex; gap: 18px; align-items: flex-start;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-left: 4px solid var(--gold-1);
+      padding: 18px 22px;
+      border-radius: 12px;
+    }
+    .fact .num { font-size: 1.4rem; font-weight: 900; color: var(--gold-1); min-width: 28px; }
+    .fact p { color: var(--text); font-size: 0.99rem; }
+
+    /* ---------- Formula ---------- */
+    .formula {
+      background: var(--bg-2);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 30px;
+      text-align: center;
+      font-family: 'Times New Roman', Georgia, serif;
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      box-shadow: var(--shadow);
+    }
+    .formula sup { font-size: 0.7em; }
+    .formula .vars { color: var(--gold-1); font-weight: bold; }
+    .formula p.caption { font-family: inherit; color: var(--muted); margin-top: 14px; font-size: 0.85rem; }
+
+    footer {
+      text-align: center;
+      padding: 50px 5%;
+      border-top: 1px solid var(--card-border);
+      color: var(--muted);
+      font-size: 0.9rem;
+      background: var(--bg-2);
+    }
+    footer .heart { color: var(--pink); }
+
+    /* Reveal on scroll */
+    .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+
+<body>
+  <!-- Decorative fixed background -->
+  <div class="bg-fib"></div>
+  <svg class="golden-arc" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="url(#fdeg)" stroke-width="2">
+      <defs><linearGradient id="fdeg"><stop offset="0%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient></defs>
+      <rect x="30" y="440" width="300" height="300"/>
+      <rect x="330" y="180" width="300" height="300"/>
+      <rect x="130" y="180" width="200" height="200"/>
+      <rect x="130" y="380" width="200" height="200"/>
+    </g>
+  </svg>
+
+  <!-- Navbar -->
+  <nav>
+    <div class="logo"><span class="mark">φ</span> FIBONACCI</div>
+    <div class="links">
+      <a href="#sequence">数列</a>
+      <a href="#golden">黄金比例</a>
+      <a href="#nature">自然</a>
+      <a href="#formula">公式</a>
+      <a href="#quiz">测验</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <h1>自然法则中<br><span class="grad">隐藏的数字之舞</span></h1>
+    <p class="desc">
+      从向日葵的种子到银河的旋臂，斐波那契数列以最优雅的方式
+      诠释了大自然的秩序与美学。向下滚动，探索这串神奇数字背后的秘密。
+    </p>
+    <div class="cta">
+      <a href="#sequence" class="btn btn-primary">开始探索 →</a>
+      <a href="#quiz" class="btn btn-ghost">挑战测验</a>
+    </div>
+
+    <div class="seq-strip" id="heroSeq"></div>
+    <div class="scroll-hint">▾ 向下滑动</div>
+  </header>
+
+  <!-- Sequence generator -->
+  <section id="sequence">
+    <div class="sec-head reveal">
+      <div class="kicker">Interactive Lab</div>
+      <h2>斐波那契数列生成器</h2>
+      <p>拖动滑杆，观察这套神奇的数列如何一步一步构建出来。每一项都是前两项之和。</p>
+    </div>
+
+    <div class="two-col">
+      <div class="generator-wrap reveal">
+        <div class="gen-controls">
+          <span>项数</span>
+          <input type="range" id="countRange" min="3" max="16" value="6">
+          <span class="badge" id="countLabel">6 项</span>
+        </div>
+        <div class="seq-display" id="seqDisplay"></div>
+        <div class="ratio-line">
+          相邻两项之比趋近于黄金比例 <strong>φ ≈ 1.618</strong>，
+          当前比值 <strong id="curRatio">—</strong>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h3 style="font-size:1.4rem; margin-bottom:12px;">规则何止简单？</h3>
+        <p style="color:var(--muted); margin-bottom:18px;">
+          数列从 <strong style="color:var(--gold-1)">0</strong> 和
+          <strong style="color:var(--gold-1)">1</strong> 开始，之后的每一项
+          都等于它前面 <strong>两项之和</strong>：
+        </p>
+        <div class="formula" style="font-size:1.3rem;">
+          F(n) = F(n−1) + F(n−2)
+        </div>
+        <p style="color:var(--muted); margin-top:18px;">
+          这看起来稀松平常，但正是这条简单的规则，衍生出了植物器官排列、
+          贝壳的螺旋、甚至人类的骨骼比例等自然界中最普遍的美学模式。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Golden ratio & spiral -->
+  <section id="golden">
+    <div class="sec-head reveal">
+      <div class="kicker">Golden Ratio</div>
+      <h2>黄金螺旋：永恒的优雅</h2>
+      <p>当相邻两项的比值稳定下来，就得到约 1.618 的黄金比例 φ。用它画出矩形与圆弧，便构成了自然界随处可见的黄金螺旋。</p>
+    </div>
+
+    <div class="two-col">
+      <div class="spiral-card reveal">
+        <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+          <path id="spiral" fill="none" stroke="#fbbf24" stroke-width="3"
+                d="M250,250
+                   C 250,190 300,150 360,150
+                   C 420,150 470,200 470,260
+                   C 470,350 400,420 310,420
+                   C 190,420 110,340 110,220
+                   C 110,70 270,-5 430,-5"
+                transform="translate(-20,40)"/>
+          <text x="250" y="250" text-anchor="middle" fill="#94a3b8" font-size="14">黄金螺旋 φ</text>
+        </svg>
+      </div>
+
+      <div class="reveal">
+        <h3 style="font-size:1.4rem; margin-bottom:12px;">为什么是 1.618？</h3>
+        <p style="color:var(--muted);">
+          将一条线段分成两部分，使整体与较长部分之比等于较长部分与短部分之比，
+          这个比值 <strong style="color:var(--gold-1)">φ = (1 + √5) / 2 ≈ 1.6180339887…</strong>
+          就是黄金比例。它也和斐波那契数列的极限比值完全一致。
+        </p>
+        <p style="color:var(--muted); margin-top:14px;">
+          从帕特农神庙到《蒙娜丽莎》，达·芬奇的作品，再到苹果公司的标志，
+          设计师们数百年来都痴迷于这个比例带来的和谐美感。
+        </p>
+        <button class="btn btn-ghost" id="drawSpiral" style="margin-top:20px;">✨ 绘制黄金螺旋</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Nature -->
+  <section id="nature">
+    <div class="sec-head reveal">
+      <div class="kicker">In Nature</div>
+      <h2>大自然中的斐波那契</h2>
+      <p>这不是巧合——是植物在数百万年进化中找到的最优排列策略，让每片叶子获得最多的阳光，让每颗种子有最大的生长空间。</p>
+    </div>
+
+    <div class="nature-grid">
+      <div class="nature-card reveal">
+        <div class="emoji">🌻</div>
+        <h3>向日葵</h3>
+        <p>向日葵种子以对数螺旋排列，往往呈现出 21、34、55… 的斐波那契数列，左右螺旋的数量通常是相邻的两个斐波那契数。</p>
+      </div>
+      <div class="nature-card reveal">
+        <div class="emoji">🐚</div>
+        <h3>鹦鹉螺</h3>
+        <p>鹦鹉螺的壳在其生长过程中不断按黄金比例扩张，形成了标志性的对数螺旋结构，既坚固美观又节省空间。</p>
+      </div>
+      <div class="nature-card reveal">
+        <div class="emoji">🌲</div>
+        <h3>松果 & 菠萝</h3>
+        <p>松果鳞片和菠萝的鳞皮常以 5 和 8、8 和 13 等相邻斐波那契数排列成螺旋，帮助种子最优地分布排列。</p>
+      </div>
+      <div class="nature-card reveal">
+        <div class="emoji">🌿</div>
+        <h3>叶片生长</h3>
+        <p>许多植物的叶片呈螺旋状排列，相邻叶片间的夹角接近 137.5°，恰是黄金角，让叶片几乎互不遮挡。</p>
+      </div>
+      <div class="nature-card reveal">
+        <div class="emoji">🐝</div>
+        <h3>蜜蜂的家族树</h3>
+        <p>雄蜂是单倍体（只有母系祖先），其家谱正好遵循斐波那契数：每一代的祖先数量依次为 1, 1, 2, 3, 5, 8…</p>
+      </div>
+      <div class="nature-card reveal">
+        <div class="emoji">🌌</div>
+        <h3>银河旋臂</h3>
+        <p>某些星系（如螺旋星系）的旋臂轨迹也可以用对数螺旋近似描述，与黄金螺旋有着惊人的视觉相似性。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Formula / math -->
+  <section id="formula">
+    <div class="sec-head reveal">
+      <div class="kicker">The Math</div>
+      <h2>从递推到封闭公式</h2>
+      <p>除了逐项相加，还有一个惊人的事实：你可以直接用黄金比例 φ 算出任意一项——无需计算它之前的所有项。</p>
+    </div>
+
+    <div class="formula reveal">
+      F(n) = <span class="vars">φ<sup>n</sup> − (1−φ)<sup>n</sup></span> / √5
+      <p class="caption">其中 φ = (1 + √5) / 2 ≈ 1.618，这就是著名的「比奈公式」，由法国数学家雅克·比奈于 1843 年发现。</p>
+    </div>
+
+    <div style="text-align:center; margin-top:40px;" class="reveal">
+      <h3 style="font-size:1.3rem; margin-bottom:8px;">斐波那契的惊人性质</h3>
+      <p style="color:var(--muted);">这些性质让斐波那契数列成为数论与编程中的「明星」。</p>
+    </div>
+
+    <div class="facts-list" style="margin-top:30px;">
+      <div class="fact reveal"><span class="num">1</span><p><strong>相邻项互质：</strong>相邻的两个斐波那契数最大公约数总是 1，即它们总是互质的。</p></div>
+      <div class="fact reveal"><span class="num">2</span><p><strong>平方和求和：</strong>前 n 项的平方和等于第 n 项与第 n+1 项的乘积：F₁²+…+Fₙ² = Fₙ·Fₙ₊₁。</p></div>
+      <div class="fact reveal"><span class="num">3</span><p><strong>可被整除：</strong>当且仅当 n 能整除 m 时，Fₙ 能整除 Fₘ。这使得斐波那契数列成为理解整除性的绝佳例证。</p></div>
+      <div class="fact reveal"><span class="num">4</span><p><strong>与编程：</strong>斐波那契是递归与动态规划的经典教学案例，也是测试性能与缓存技巧的常用基准。</p></div>
+    </div>
+  </section>
+
+  <!-- Quiz -->
+  <section id="quiz">
+    <div class="sec-head reveal">
+      <div class="kicker">Quiz Time</div>
+      <h2>检测你的理解</h2>
+      <p>回答下面的小测验，看看你对斐波那契了解了多少。</p>
+    </div>
+
+    <div class="quiz-box reveal">
+      <div class="quiz-q" id="quizQ"></div>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div class="quiz-foot">
+        <span class="quiz-score" id="quizScore">得分：0 / 0</span>
+        <button class="quiz-next" id="quizNext" disabled>下一题 →</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>用 <span class="heart">♥</span> 与 <span class="gold">φ</span> 编织的数字之美 · Fibonacci Learning Site</p>
+    <p style="margin-top:8px; font-size:0.8rem;">0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987…</p>
+  </footer>
+
+  <script>
+    // ---------- Hero sequence chips ----------
+    const heroSeq = document.getElementById('heroSeq');
+    const heroFib = [0,1,1,2,3,5,8,13,21,34,55,89,144];
+    heroFib.forEach((v, i) => {
+      const c = document.createElement('div');
+      c.className = 'seq-chip';
+      c.textContent = v;
+      c.style.animationDelay = (i * 0.15) + 's';
+      heroSeq.appendChild(c);
+    });
+
+    // ---------- Generator ----------
+    const countRange = document.getElementById('countRange');
+    const countLabel = document.getElementById('countLabel');
+    const seqDisplay = document.getElementById('seqDisplay');
+    const curRatio = document.getElementById('curRatio');
+
+    function fib(n){ const a=[0,1]; for(let i=2;i<n;i++) a[i]=a[i-1]+a[i-2]; return a; }
+
+    function renderSeq(){
+      const n = +countRange.value;
+      countLabel.textContent = n + ' 项';
+      const arr = fib(n);
+      seqDisplay.innerHTML = '';
+      arr.forEach((v,i) => {
+        const box = document.createElement('div');
+        box.className = 'term-box' + (i >= n-2 ? ' gold' : '');
+        box.textContent = v;
+        box.style.animationDelay = (i*0.07) + 's';
+        seqDisplay.appendChild(box);
+      });
+      const ratio = arr[n-1] / arr[n-2];
+      curRatio.textContent = 'φ ≈ ' + ratio.toFixed(6);
+    }
+    countRange.addEventListener('input', renderSeq);
+    renderSeq();
+
+    // ---------- Draw golden spiral ----------
+    const spiral = document.querySelector('#spiral');
+    const drawBtn = document.getElementById('drawSpiral');
+    drawBtn.addEventListener('click', () => {
+      spiral.style.transition = 'none';
+      spiral.getBBox();
+      spiral.style.transition = 'stroke-dashoffset 2.5s ease-in-out';
+      spiral.setAttribute('stroke-dasharray','2600');
+      spiral.setAttribute('stroke-dashoffset','2600');
+      requestAnimationFrame(()=>{
+        spiral.setAttribute('stroke-dashoffset','0');
+      });
+    });
+
+    // ---------- Reveal on scroll ----------
+    const revealEls = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.15 });
+    revealEls.forEach(el => obs.observe(el));
+
+    // ---------- Quiz ----------
+    const quizData = [
+      { q:'斐波那契数列从哪两个数字开始？', opts:['1 和 2','0 和 1','1 和 1','2 和 3'], a:1 },
+      { q:'数列 0, 1, 1, 2, 3, 5, 8, 13… 的下一个数是？', opts:['21','20','18','34'], a:0 },
+      { q:'黄金比例 φ 的数值约为？', opts:['1.414','2.718','1.618','3.14159'], a:2 },
+      { q:'向日葵种子螺旋的数量，通常不是下面哪一个？', opts:['34','55','21','7'], a:3 },
+      { q:'相邻两个斐波那契数之比，随着项数增加会趋近于？', opts:['黄金比例','圆周率','自然常数 e','√2'], a:0 }
+    ];
+    let qIndex = 0, score = 0, answered = false;
+    const quizQ = document.getElementById('quizQ');
+    const quizOptions = document.getElementById('quizOptions');
+    const quizScore = document.getElementById('quizScore');
+    const quizNext = document.getElementById('quizNext');
+
+    function loadQuestion(){
+      answered = false;
+      quizNext.disabled = true;
+      const item = quizData[qIndex];
+      quizQ.textContent = (qIndex+1) + '. ' + item.q;
+      quizOptions.innerHTML = '';
+      item.opts.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-opt';
+        btn.textContent = opt;
+        btn.addEventListener('click', () => {
+          if(answered) return;
+          answered = true;
+          const all = quizOptions.querySelectorAll('.quiz-opt');
+          if(i === item.a){ btn.classList.add('correct'); score++; }
+          else { btn.classList.add('wrong'); all[item.a].classList.add('correct'); }
+          all.forEach(b => b.disabled = true);
+          quizScore.textContent = '得分：' + score + ' / ' + (qIndex+1);
+          quizNext.disabled = false;
+        });
+        quizOptions.appendChild(btn);
+      });
+    }
+    quizNext.addEventListener('click', () => {
+      qIndex++;
+      if(qIndex >= quizData.length){
+        quizQ.textContent = '🎉 测验完成！' + score + ' / ' + quizData.length;
+        quizOptions.innerHTML = '<p style="color:var(--muted);">你已学完所有题目。往上翻刷新可以重来，或继续探索这个迷人的数列世界！</p>';
+        quizNext.disabled = true;
+        quizScore.textContent = '最终得分：' + score + ' / ' + quizData.length;
+        return;
+      }
+      loadQuestion();
+    });
+    loadQuestion();
+  </script>
+</body>
+</html>
