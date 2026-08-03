@@ -492,28 +492,31 @@ footer .heart { color: var(--pink); }
 .rabbit-stage { margin-top: 6px; }
 .rabbit-field {
   position: relative;
-  min-height: 150px;
+  min-height: 132px;
   background: rgba(255,255,255,0.02);
   border: 1px dashed var(--card-border);
   border-radius: 14px;
   padding: 12px;
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-start;
-  overflow: hidden;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
 }
 .rabbit-track {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  align-items: flex-end;
-  max-height: 130px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  max-width: 100%;
 }
 .rabbit-pair {
-  width: 30px; height: 24px;
+  width: 32px; height: 32px;
   border-radius: 50%;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
+  line-height: 1;
   display: grid; place-items: center;
+  flex-shrink: 0;
   background: radial-gradient(circle at 35% 30%, #fde68a, #f59e0b);
   animation: popIn 0.4s ease both;
 }

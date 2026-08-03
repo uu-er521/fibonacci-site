@@ -62,9 +62,9 @@
       <!-- 左：兔子繁衍交互 -->
       <div class="intro-card">
         <h3 style="font-size:1.3rem; margin-bottom:10px;">🐇 西方的"兔子"问题</h3>
-        <p style="color:var(--muted); margin-bottom:14px;">
+                <p style="color:var(--muted); margin-bottom:14px;">
           斐波那契在《计算之书》(1202) 中设问：一对兔子每月产一对，新兔次月即可生育。
-          拖动 <b style="color:var(--gold-1)">月份</b>，看兔子的对数如何繁殖、一年后变成多少对？
+          拖动 <b style="color:var(--gold-1)">月份</b>，看兔子的对数如何繁殖、逐月翻增。
         </p>
         <div class="rabbit-stage" id="rabbitStage">
           <div class="rabbit-field">
@@ -74,7 +74,7 @@
             <span class="rabbit-month" id="rabbitMonth">第 1 个月</span>
             <span class="rabbit-count" id="rabbitCount">兔子：</span>
           </div>
-          <input type="range" id="rabbitRange" min="1" max="12" value="1">
+          <input type="range" id="rabbitRange" min="1" max="11" value="1">
           <div class="rabbit-sequence" id="rabbitSeq"></div>
         </div>
         <p style="color:var(--muted); font-size:0.85rem; margin-top:12px;">

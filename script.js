@@ -59,7 +59,7 @@
    2.5 问题引入 · 交互式杨辉三角 + 斜对角线和高亮
    ===================================================================== */
 (function yanghuiIntro() {
-  const ROWS = 9; // 杨辉三角行数
+  const ROWS = 8; // 杨辉三角行数
   const container = document.getElementById('yanghuiTri');
   const note = document.getElementById('yanghuiNote');
   if (!container || !note) return;
@@ -153,10 +153,10 @@
   const track = document.getElementById('rabbitTrack');
   const seqBox = document.getElementById('rabbitSeq');
   if (range && monthLabel && countLabel && track && seqBox) {
-    // 每月 (成兔, 幼兔)
+    // 每月 (成兔, 幼兔)，展示 1–11 个月
     const months = [];
     let adult = 0, young = 1;
-    for (let m = 1; m <= 12; m++) {
+    for (let m = 1; m <= 11; m++) {
       months.push({ adult, young });
       const na = adult + young; // 幼兔长大为成兔
       const ny = adult;         // 成兔各产一对
@@ -171,20 +171,18 @@
       countLabel.innerHTML = '兔子：<b style="color:var(--gold-1)">' + total + '</b> 对';
 
       track.innerHTML = '';
+      // 兔子保持固定可辨识尺寸，由 .rabbit-track 自动多行换行；
+      // 对数较多时框内纵向滚动查看（.rabbit-field 已设置 overflow-y:auto）
+      const mk = (cl) => {
+        const el = document.createElement('span');
+        el.className = 'rabbit-pair' + cl;
+        el.textContent = '🐇';
+        return el;
+      };
       // 成兔
-      for (let i = 0; i < data.adult; i++) {
-        const el = document.createElement('span');
-        el.className = 'rabbit-pair adult';
-        el.textContent = '🐇';
-        track.appendChild(el);
-      }
+      for (let i = 0; i < data.adult; i++) track.appendChild(mk(' adult'));
       // 幼兔
-      for (let i = 0; i < data.young; i++) {
-        const el = document.createElement('span');
-        el.className = 'rabbit-pair';
-        el.textContent = '🐇';
-        track.appendChild(el);
-      }
+      for (let i = 0; i < data.young; i++) track.appendChild(mk(''));
 
       // 底部序列 chips
       seqBox.innerHTML = '';
