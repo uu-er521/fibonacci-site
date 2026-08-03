@@ -514,6 +514,26 @@
 })();
 
 /* =====================================================================
+   3.9 Hero 首屏：滚动时渐隐淡出 + 上移
+   ===================================================================== */
+(function heroFade() {
+  const hero = document.querySelector('.hero');
+  if (!hero) return;
+  const fadeStart = 120;      // 滚动超过该值后开始淡出
+  const fadeLength = hero.offsetHeight * 0.6; // 继续滚动此距离后完全消失
+
+  function update() {
+    const y = window.pageYOffset || document.documentElement.scrollTop;
+    const t = Math.min(1, Math.max(0, (y - fadeStart) / fadeLength));
+    hero.style.opacity = (1 - t).toFixed(3);
+    hero.style.transform = 'translateY(' + (t * 70) + 'px)';
+    hero.style.pointerEvents = t > 0.9 ? 'none' : '';
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
+/* =====================================================================
    4. 滚动渐显
    ===================================================================== */
 (function revealOnScroll() {

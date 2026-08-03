@@ -89,6 +89,35 @@ nav .links a:hover { color: var(--gold-1); }
   text-align: center;
   padding: 120px 5% 60px;
   position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* 银河视差背景层 */
+.hero-milky {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: url('image/银河图片.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  /* 背景固定 = 页面向下滚动时背景相对视口不动，产生视差分层感 */
+  background-attachment: fixed;
+  will-change: transform;
+}
+/* 渐变遮罩：压暗画面，让前景文字清晰，并在底部过渡到页面主背景色 */
+.hero-milky::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right,
+      rgba(15,21,36,0.45), rgba(15,21,36,0.15) 40%, rgba(15,21,36,0.5)),
+    linear-gradient(to bottom,
+      rgba(15,21,36,0.35) 0%,
+      rgba(15,21,36,0.45) 50%,
+      var(--bg) 100%);
 }
 .hero h1 {
   font-size: clamp(2.2rem, 6vw, 4.5rem);
