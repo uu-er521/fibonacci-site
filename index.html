@@ -317,32 +317,32 @@
     </div>
 
     <div class="nature-grid">
-      <div class="nature-card reveal">
+            <div class="nature-card reveal" data-img="image/向日葵图片.png">
         <div class="emoji">🌻</div>
         <h3>向日葵</h3>
         <p>向日葵种子以对数螺旋排列，往往呈现出 21、34、55… 的斐波那契数列，左右螺旋的数量通常是相邻的两个斐波那契数。</p>
       </div>
-      <div class="nature-card reveal">
+            <div class="nature-card reveal" data-img="image/鹦鹉螺图片.png">
         <div class="emoji">🐚</div>
         <h3>鹦鹉螺</h3>
         <p>鹦鹉螺的壳在其生长过程中不断按黄金比例扩张，形成了标志性的对数螺旋结构，既坚固美观又节省空间。</p>
       </div>
-      <div class="nature-card reveal">
+            <div class="nature-card reveal" data-img="image/菠萝图片.png">
         <div class="emoji">🌲</div>
         <h3>松果 & 菠萝</h3>
         <p>松果鳞片和菠萝的鳞皮常以 5 和 8、8 和 13 等相邻斐波那契数排列成螺旋，帮助种子最优地分布排列。</p>
       </div>
-      <div class="nature-card reveal">
+            <div class="nature-card reveal" data-img="image/植物叶片图片.png">
         <div class="emoji">🌿</div>
         <h3>叶片生长</h3>
         <p>许多植物的叶片呈螺旋状排列，相邻叶片间的夹角接近 137.5°，恰是黄金角，让叶片几乎互不遮挡。</p>
       </div>
-      <div class="nature-card reveal">
+            <div class="nature-card reveal" data-img="image/蜜蜂图片.png">
         <div class="emoji">🐝</div>
         <h3>蜜蜂的家族树</h3>
         <p>雄蜂是单倍体（只有母系祖先），其家谱正好遵循斐波那契数：每一代的祖先数量依次为 1, 1, 2, 3, 5, 8…</p>
       </div>
-      <div class="nature-card reveal">
+            <div class="nature-card reveal" data-img="image/银河图片.png">
         <div class="emoji">🌌</div>
         <h3>银河旋臂</h3>
         <p>某些星系（如螺旋星系）的旋臂轨迹也可以用对数螺旋近似描述，与黄金螺旋有着惊人的视觉相似性。</p>
@@ -397,7 +397,21 @@
   <footer>
     <p>用 <span class="heart">♥</span> 与 <span class="gold">φ</span> 编织的数字之美 · Fibonacci Learning Site</p>
     <p style="margin-top:8px; font-size:0.8rem;">0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987…</p>
-  </footer>
+    </footer>
+
+  <!-- Nature 全屏沉浸阅读模态 -->
+  <div class="fs-overlay" id="fsOverlay" aria-hidden="true">
+    <div class="fs-bg" id="fsBg"></div>
+    <div class="fs-content" id="fsContent">
+      <div class="fs-emoji" id="fsEmoji"></div>
+      <h2 class="fs-title" id="fsTitle"></h2>
+      <div class="fs-body" id="fsBody"></div>
+      <div class="fs-dots" id="fsDots"></div>
+    </div>
+    <button class="fs-nav fs-prev" id="fsPrev" type="button" aria-label="上一张">‹</button>
+    <button class="fs-nav fs-next" id="fsNext" type="button" aria-label="下一张">›</button>
+    <button class="fs-close" id="fsClose" type="button" aria-label="关闭">✕</button>
+  </div>
 
   <!-- 脚本已拆分至外部文件 script.js（普通脚本，可双击 file:// 直接运行） -->
   <script src="script.js"></script>
