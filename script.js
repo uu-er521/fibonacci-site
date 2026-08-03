@@ -56,6 +56,183 @@
 })();
 
 /* =====================================================================
+   2.5 问题引入 · 交互式杨辉三角 + 斜对角线和高亮
+   ===================================================================== */
+(function yanghuiIntro() {
+  const ROWS = 9; // 杨辉三角行数
+  const container = document.getElementById('yanghuiTri');
+  const note = document.getElementById('yanghuiNote');
+  if (!container || !note) return;
+
+  // 生成组合数表 C(r, k)，r 行 k 列（均从 0 开始）
+  const tri = [];
+  for (let r = 0; r < ROWS; r++) {
+    tri[r] = [];
+    for (let k = 0; k <= r; k++) {
+      if (k === 0 || k === r) tri[r][k] = 1;
+      else tri[r][k] = tri[r - 1][k - 1] + tri[r - 1][k];
+    }
+  }
+
+  /*
+    斜对角线和 = 斐波那契数列
+    杨辉三角中，NE–SW 方向（r+k 恒定）的对角线，其和恰好为斐波那契数：
+        r+k=0 → 1
+        r+k=1 → 1
+        r+k=2 → 1+1 = 2
+        r+k=3 → 1+2 = 3
+        r+k=4 → 1+3+1 = 5
+        r+k=5 → 3+4+1 = 8 …
+    悬停任意格子，会高亮它所在的整条对角线，并显示该条之和对应的斐波那契数。
+  */
+  const fibNums = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
+
+  // 预存每个格子的 (r, k) 及其所在对角线编号 d = r + k
+  const cells = {}; // key: r,k -> 格子元素
+  // 记录每条对角线上有哪些格子，用于高亮整条对角线
+  const diagCells = {}; // d -> [ {cell, val} ]
+
+  // 渲染三角
+  for (let r = 0; r < ROWS; r++) {
+    const rowEl = document.createElement('div');
+    rowEl.className = 'yh-row';
+    for (let k = 0; k <= r; k++) {
+      const d = r + k; // 对角线编号
+      const cell = document.createElement('span');
+      cell.className = 'yh-cell';
+      cell.textContent = tri[r][k];
+      cell.dataset.r = r;
+      cell.dataset.k = k;
+      // 悬停交互：高亮整条对角线
+      cell.addEventListener('mouseenter', () => highlightDiag(d));
+      cell.addEventListener('mouseleave', clearHighlight);
+      rowEl.appendChild(cell);
+
+      cells[r + ',' + k] = cell;
+      if (!diagCells[d]) diagCells[d] = [];
+      diagCells[d].push({ cell: cell, val: tri[r][k] });
+    }
+    container.appendChild(rowEl);
+  }
+
+  // 高亮某条对角线并更新数值
+  function highlightDiag(d) {
+    // 清除全部高亮
+    Object.values(cells).forEach(c => c.classList.remove('fib'));
+    // 高亮这条对角线上的所有格子
+    const group = diagCells[d] || [];
+    group.forEach(item => item.cell.classList.add('fib'));
+    // 求和并显示对应斐波那契数
+    const sum = group.reduce((acc, item) => acc + item.val, 0);
+    note.innerHTML =
+      '对角线 <b style="color:var(--teal)">r+k = ' + d + '</b> 的和 = ' +
+      group.map(item => item.val).join(' + ') + ' = <span class="fib-nums">' + sum +
+      '</span><br><span style="font-size:0.85rem;color:var(--muted);">悬停任意格子查看对应斜对角线和。</span>';
+  }
+
+  function clearHighlight() {
+    // 恢复默认：不高亮任何对角线，恢复提示文案
+    Object.values(cells).forEach(c => c.classList.remove('fib'));
+    note.innerHTML =
+      '杨辉三角的斜对角线和，正好是斐波那契数列。<span class="fib-nums">1, 1, 2, 3, 5, 8, 13, 21…</span>' +
+      '<br><span style="font-size:0.85rem;color:var(--muted);">悬停任意格子，即可高亮它所在的那条斜对角线。</span>';
+  }
+
+  // 初始化显示说明
+  clearHighlight();
+})();
+
+/* =====================================================================
+   2.6 问题引入 · 兔子繁衍动效 + 数学家 accordion 折叠
+   ===================================================================== */
+(function introPhenomena() {
+  /* ---- 兔子繁衍动效 ---- */
+  const range = document.getElementById('rabbitRange');
+  const monthLabel = document.getElementById('rabbitMonth');
+  const countLabel = document.getElementById('rabbitCount');
+  const track = document.getElementById('rabbitTrack');
+  const seqBox = document.getElementById('rabbitSeq');
+  if (range && monthLabel && countLabel && track && seqBox) {
+    // 每月 (成兔, 幼兔)
+    const months = [];
+    let adult = 0, young = 1;
+    for (let m = 1; m <= 12; m++) {
+      months.push({ adult, young });
+      const na = adult + young; // 幼兔长大为成兔
+      const ny = adult;         // 成兔各产一对
+      adult = na; young = ny;
+    }
+    const fibSeq = months.map(x => x.adult + x.young);
+
+    function render(m) {
+      const data = months[m - 1];
+      monthLabel.textContent = '第 ' + m + ' 个月';
+      const total = data.adult + data.young;
+      countLabel.innerHTML = '兔子：<b style="color:var(--gold-1)">' + total + '</b> 对';
+
+      track.innerHTML = '';
+      // 成兔
+      for (let i = 0; i < data.adult; i++) {
+        const el = document.createElement('span');
+        el.className = 'rabbit-pair adult';
+        el.textContent = '🐇';
+        track.appendChild(el);
+      }
+      // 幼兔
+      for (let i = 0; i < data.young; i++) {
+        const el = document.createElement('span');
+        el.className = 'rabbit-pair';
+        el.textContent = '🐇';
+        track.appendChild(el);
+      }
+
+      // 底部序列 chips
+      seqBox.innerHTML = '';
+      fibSeq.forEach((v, i) => {
+        const c = document.createElement('span');
+        c.className = 'rabbit-seq-chip' + (i <= m - 1 ? ' active' : '');
+        c.textContent = v;
+        c.style.animationDelay = (i * 0.08) + 's';
+        if (i <= m - 1) { c.style.animation = 'fadeSlide 0.4s ease both'; }
+        seqBox.appendChild(c);
+      });
+    }
+    range.value = 1;
+    render(1);
+    range.addEventListener('input', () => render(+range.value));
+  }
+
+  /* ---- 数学家 accordion 折叠 ---- */
+  const accordion = document.getElementById('matAccordion');
+  if (accordion) {
+    const items = Array.from(accordion.querySelectorAll('.mat-item'));
+
+    items.forEach(item => {
+      const head = item.querySelector('.mat-head');
+      head.addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+        // accordion：先全部关闭
+        items.forEach(i => i.classList.remove('open', 'expand'));
+        if (!isOpen) item.classList.add('open', 'expand');
+      });
+    });
+
+    // 滚动入场：从左向右弹出
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e, idx) => {
+        if (e.isIntersecting) {
+          const m = e.target;
+          m.classList.add('entered');
+          m.style.transitionDelay = (items.indexOf(m) * 0.15) + 's';
+          io.unobserve(m);
+        }
+      });
+    }, { threshold: 0.2 });
+    items.forEach(item => io.observe(item));
+  }
+})();
+
+/* =====================================================================
    3. 黄金螺旋拖拽拼图
    7 个正方形（边长 1,1,2,3,5,8,13），每个内部绘制一段 90° 弧，
    拖入正确位置后拼接成完整的黄金螺旋。

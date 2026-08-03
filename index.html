@@ -25,6 +25,7 @@
   <nav>
     <div class="logo"><span class="mark">φ</span> FIBONACCI</div>
     <div class="links">
+      <a href="#intro">问题引入</a>
       <a href="#sequence">数列</a>
       <a href="#golden">黄金比例</a>
       <a href="#nature">自然</a>
@@ -47,7 +48,157 @@
 
     <div class="seq-strip" id="heroSeq"></div>
     <div class="scroll-hint">▾ 向下滑动</div>
-  </header>
+    </header>
+
+    <!-- Question intro: 兔子数列 × 中国古代垛积术 / 数学家 -->
+  <section id="intro">
+    <div class="sec-head reveal">
+      <div class="kicker">A Question in Time</div>
+      <h2>一串数字的东方与西方</h2>
+      <p>在动手之前，先认识"问题本身"——它如何从一个虚构的兔子谜题出发，又在中国古人的垛积术与算表中若隐若现。东西方殊途，却指向同一串数字。</p>
+    </div>
+
+    <div class="intro-grid reveal">
+      <!-- 左：兔子繁衍交互 -->
+      <div class="intro-card">
+        <h3 style="font-size:1.3rem; margin-bottom:10px;">🐇 西方的"兔子"问题</h3>
+        <p style="color:var(--muted); margin-bottom:14px;">
+          斐波那契在《计算之书》(1202) 中设问：一对兔子每月产一对，新兔次月即可生育。
+          拖动 <b style="color:var(--gold-1)">月份</b>，看兔子的对数如何繁殖、一年后变成多少对？
+        </p>
+        <div class="rabbit-stage" id="rabbitStage">
+          <div class="rabbit-field">
+            <div class="rabbit-track" id="rabbitTrack"></div>
+          </div>
+          <div class="rabbit-meta">
+            <span class="rabbit-month" id="rabbitMonth">第 1 个月</span>
+            <span class="rabbit-count" id="rabbitCount">兔子：</span>
+          </div>
+          <input type="range" id="rabbitRange" min="1" max="12" value="1">
+          <div class="rabbit-sequence" id="rabbitSeq"></div>
+        </div>
+        <p style="color:var(--muted); font-size:0.85rem; margin-top:12px;">
+          💡 从第 1 个月起逐月累加的对数 <strong style="color:var(--gold-1)">1, 1, 2, 3, 5, 8, 13, 21…</strong>
+          正是斐波那契数列——每一项都是前两项之和。
+        </p>
+      </div>
+
+      <!-- 右：杨辉三角交互 -->
+      <div class="intro-card">
+        <h3 style="font-size:1.3rem; margin-bottom:10px; color:var(--teal);">🧮 东方的垛积术</h3>
+        <p style="color:var(--muted); margin-bottom:14px;">
+          贾宪首创、杨辉收录的「开方作法本源」正是我们熟知的杨辉三角。
+          <b style="color:var(--teal);">悬停任意格子</b>，会高亮它所在的斜对角线——
+          而每条斜对角线的和，恰好就是斐波那契数。
+        </p>
+        <div class="yanghui-wrap" id="yanghui">
+          <div class="yanghui-tri" id="yanghuiTri"></div>
+          <div class="yanghui-note" id="yanghuiNote"></div>
+        </div>
+        <p style="color:var(--muted); font-size:0.85rem; margin-top:12px;">
+          💡 东方垛积术用"堆垛求和"算组合计数，西方用它解释兔子的繁殖——
+          殊途同归地通向同一条数列。
+        </p>
+      </div>
+    </div>
+
+    <!-- 三位数学家：横向折叠 accordion -->
+    <div class="mat-section reveal">
+      <h3 style="font-size:1.5rem; margin-bottom:6px; text-align:center;">▶ 问题的讲述者</h3>
+      <p style="color:var(--muted); text-align:center; margin-bottom:28px;">
+        点击下方任意一位数学家，卡片将横向展开，讲述他们与这条数列的故事。
+      </p>
+
+      <div class="mat-accordion" id="matAccordion">
+        <div class="mat-item" data-mat="fib">
+          <button class="mat-head" type="button">
+            <span class="mat-avatar av-fib">🐇<em>φ</em></span>
+            <span class="mat-title">
+              <strong>列奥纳多·斐波那契</strong>
+              <small>意大利 · 约1170 – 1250</small>
+            </span>
+            <span class="mat-chev">›</span>
+          </button>
+          <div class="mat-body">
+            <p class="mat-bio">
+              全名列奥纳多·斐波那契（Fibonacci，意为"波那契之子"），中世纪意大利数学家。
+              他随做商人的父亲游历地中海沿岸，把阿拉伯数字与十进制计数法带回欧洲，
+              《计算之书》(Liber Abaci, 1202) 由此成为西方数学的里程碑。
+            </p>
+            <ul class="mat-facts">
+              <li><b>代表著作：</b>《计算之书》《平方数书》</li>
+              <li><b>历史地位：</b>西方第一位系统研究"兔子问题"的人，把阿拉伯数字推广到欧洲</li>
+            </ul>
+            <p class="mat-link">
+              🔗 <b>与斐波那契数列的联系：</b>正是《计算之书》里的兔子问题，让后人记住了
+              <span class="fib-str">1, 1, 2, 3, 5, 8, 13…</span> 这条以他命名的数列。
+            </p>
+            <blockquote class="mat-quote">
+              "把一方丈的土地分成 100 份，每一份又分成 100 份……" —— 《计算之书·序》，展示其对数字的精妙运用
+            </blockquote>
+          </div>
+        </div>
+
+        <div class="mat-item" data-mat="jiaxian">
+          <button class="mat-head" type="button">
+            <span class="mat-avatar av-jiaxian">🧮<em>▲</em></span>
+            <span class="mat-title">
+              <strong>贾宪</strong>
+              <small>中国·北宋 · 约11世纪</small>
+            </span>
+            <span class="mat-chev">›</span>
+          </button>
+          <div class="mat-body">
+            <p class="mat-bio">
+              贾宪，北宋数学家，著有《黄帝九章算法细草》《算法斆古集》（均佚，赖后人辑录见其大要）。
+              他首创「开方作法本源」图——即我们今天所说的杨辉三角，
+              并发明「增乘开方法」，把高次开方推进到任意次幂。
+            </p>
+            <ul class="mat-facts">
+              <li><b>代表著作：</b>《黄帝九章算法细草》（已佚）</li>
+              <li><b>历史地位：</b>"开方作法本源"即杨辉三角，比欧洲帕斯卡三角早约 600 年</li>
+            </ul>
+            <p class="mat-link">
+              🔗 <b>与斐波那契数列的联系：</b>杨辉三角的斜对角线和正是斐波那契数——
+              贾宪的「本源图」在东方隐秘地藏纳着这条数列。
+            </p>
+            <blockquote class="mat-quote">
+              "贾宪用古法增乘开方以求廉隅，其法精妙，后世莫能易也。" —— 后世对贾宪算法的评价
+            </blockquote>
+          </div>
+        </div>
+
+        <div class="mat-item" data-mat="yanghui">
+          <button class="mat-head" type="button">
+            <span class="mat-avatar av-yanghui">📖<em>∑</em></span>
+            <span class="mat-title">
+              <strong>杨辉</strong>
+              <small>中国·南宋 · 约1238 – 1298</small>
+            </span>
+            <span class="mat-chev">›</span>
+          </button>
+          <div class="mat-body">
+            <p class="mat-bio">
+              杨辉，南宋数学家、数学教育家，著作颇丰。他在《详解九章算法》(1261) 中
+              完整收录并传播了「开方作法本源」图，让杨辉三角得以流传后世；
+              同书系统整理了中国古代的「垛积术」——堆垛物品求和的组合计数方法。
+            </p>
+            <ul class="mat-facts">
+              <li><b>代表著作：</b>《详解九章算法》《日用算法》《杨辉算法》</li>
+              <li><b>历史地位：</b>杨辉三角的"传名者"，中国古代数学的集大成整理者</li>
+            </ul>
+            <p class="mat-link">
+              🔗 <b>与斐波那契数列的联系：</b>杨辉三角的对角线和数列恰是斐波那契——
+              杨辉在东方用"垛"的视角，独立看见了西方兔子问题背后的同一规律。
+            </p>
+            <blockquote class="mat-quote">
+              "夫垛者，兵家以陈，局筹以列……积而成数，其法甚密。" —— 杨辉对垛积术的阐述
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Sequence generator -->
   <section id="sequence">
