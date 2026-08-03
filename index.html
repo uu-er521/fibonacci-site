@@ -203,14 +203,36 @@
     </div>
   </section>
 
-  <!-- Sequence generator -->
+    <!-- Sequence: 数列定义 + 递推公式 + 内容特点 -->
   <section id="sequence">
     <div class="sec-head reveal">
-      <div class="kicker">Interactive Lab</div>
-      <h2>斐波那契数列生成器</h2>
-      <p>拖动滑杆，观察这套神奇的数列如何一步一步构建出来。每一项都是前两项之和。</p>
+      <div class="kicker">Definition</div>
+      <h2>什么是斐波那契数列？</h2>
+      <p>这是一条已有八百年历史的递推数列：从两个初始值出发，之后的每一项都等于前两项之和，就这样一步一步"推"出全部数字。</p>
     </div>
 
+        <!-- 定义 + 递推公式 -->
+    <div class="def-grid">
+      <div class="def-card reveal">
+        <div class="kicker kicker-inline">The Definition</div>
+        <h3>递推定义</h3>
+        <p class="def-lead">斐波那契数列由「两个初始值」加「一条递推规则」共同严格定义：</p>
+        <div class="def-recur">
+          <div class="def-terms">
+            <div class="def-term"><span>F(0)</span><b>= 0</b></div>
+            <div class="def-term"><span>F(1)</span><b>= 1</b></div>
+          </div>
+          <div class="def-arrow">↓ 初值条件（种子）</div>
+          <div class="formula def-formula">
+            F(n) = F(n−1) + F(n−2)&nbsp;&nbsp;<span class="vars">( n ≥ 2 )</span>
+          </div>
+          <p class="def-hint">当 n ≥ 2 时，第 n 项 = 前两项之和 —— 这就是最基础的<span class="strong">递推公式</span>。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 动手算一算（保留生成器互动） -->
+    <h3 class="def-play-title reveal"><span class="ico">🧮</span> 动手算一算，跟着递推走</h3>
     <div class="two-col">
       <div class="generator-wrap reveal">
         <div class="gen-controls">
@@ -226,9 +248,9 @@
       </div>
 
       <div class="reveal">
-        <h3 style="font-size:1.4rem; margin-bottom:12px;">规则何止简单？</h3>
+        <h3 style="font-size:1.4rem; margin-bottom:12px;">规则，其实只有一句</h3>
         <p style="color:var(--muted); margin-bottom:18px;">
-          数列从 <strong style="color:var(--gold-1)">0</strong> 和
+                    数列从 <strong style="color:var(--gold-1)">0</strong> 和
           <strong style="color:var(--gold-1)">1</strong> 开始，之后的每一项
           都等于它前面 <strong>两项之和</strong>：
         </p>
@@ -236,8 +258,8 @@
           F(n) = F(n−1) + F(n−2)
         </div>
         <p style="color:var(--muted); margin-top:18px;">
-          这看起来稀松平常，但正是这条简单的规则，衍生出了植物器官排列、
-          贝壳的螺旋、甚至人类的骨骼比例等自然界中最普遍的美学模式。
+          拖动滑杆就是在反复应用这条递推公式。注意看相邻两项之比
+          多么快就"收敛"到黄金比例 φ —— 这正是这条数列最迷人的属性之一。
         </p>
       </div>
     </div>
