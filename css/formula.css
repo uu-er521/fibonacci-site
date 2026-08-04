@@ -1,0 +1,177 @@
+/* ============================================================
+   formula.css — 性质推导·黑板全屏画廊
+   （斐波那契教学页面 · 样式封装 part 6）
+   结构沿用 natureFullscreen 的全屏容器模式，但视觉独立为"黑板"。
+   ============================================================ */
+
+/* ---- 性质卡"点击打开推导"角标 ----
+   .fact 卡（facts-list 内）需 position:relative 以定位角标 */
+.fact { position: relative; cursor: pointer; }
+.fo-open {
+  position: absolute;
+  right: 14px; bottom: 12px;
+  font-size: 0.72rem; letter-spacing: 1px;
+  color: var(--gold-1);
+  background: rgba(15,21,36,0.6);
+  border: 1px solid var(--card-border);
+  padding: 5px 12px; border-radius: 20px;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 2;
+  pointer-events: none;
+}
+.fact:hover .fo-open { opacity: 1; transform: translateY(0); }
+
+/* ---- 黑板全屏容器 ---- */
+.fo-overlay {
+  position: fixed; inset: 0; z-index: 240;
+  display: grid; place-items: center;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 0.45s ease, visibility 0.45s;
+}
+.fo-overlay.show { opacity: 1; visibility: visible; pointer-events: auto; }
+
+/* 黑板背景：直接使用 image/黑板图片.png 作全屏背景，去掉模糊与强压暗，让黑板清晰可见 */
+.fo-bg {
+  position: absolute; inset: 0;
+  background: url('../image/黑板图片.png') center/cover no-repeat;
+  filter: brightness(1.05) contrast(1.02);
+}
+/* 极淡的渐变遮罩，仅用于保证四周文字在边缘处的可读性，不影响黑板质感 */
+.fo-bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(15,21,36,0.35) 100%);
+}
+
+/* 内容板书面：半透明，让黑板背景透出，同时保证文字可读 */
+.fo-content {
+  position: relative; z-index: 2;
+  max-width: 860px; width: 92%;
+  max-height: 84vh; overflow-y: auto;
+  background: rgba(10, 14, 22, 0.32);
+  border: 1px solid rgba(251,191,36,0.4);
+  border-radius: 20px;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.55);
+  padding: 44px 52px 34px;
+}
+/* 粉笔金标题 */
+.fo-kicker {
+  text-align: center;
+  letter-spacing: 4px;
+  font-size: 0.75rem;
+  color: var(--gold-1);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+.fo-title {
+  text-align: center;
+  font-family: 'Times New Roman', Georgia, serif;
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+}
+.fo-state {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 22px;
+}
+
+/* 结论速览条 */
+.fo-claim {
+  border-left: 4px solid var(--gold-1);
+  background: rgba(251,191,36,0.08);
+  padding: 12px 18px;
+  border-radius: 0 10px 10px 0;
+  font-size: 1.1rem;
+  color: var(--gold-1);
+  margin-bottom: 22px;
+  font-weight: 600;
+}
+
+/* 分步推导 */
+.fo-steps { display: flex; flex-direction: column; gap: 6px; }
+.fo-step { display: flex; gap: 14px; align-items: flex-start; }
+.fo-step .snum {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  color: #0f1524;
+  border-radius: 50%;
+  font-weight: 800; font-size: 0.8rem;
+  margin-top: 4px;
+}
+.fo-step .sbody { flex: 1; }
+.fo-step .sbody p { color: var(--text); font-size: 0.98rem; line-height: 1.8; margin-bottom: 6px; }
+.fo-step .sbody .ml { color: var(--muted); font-size: 0.9rem; }
+.fo-step .sbody .formula {
+  background: rgba(15,21,36,0.55);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 12px 18px;
+  margin: 8px 0 10px;
+  font-family: 'Times New Roman', Georgia, serif;
+  text-align: center;
+  color: var(--gold-1);
+  font-size: 1.05rem;
+}
+.fo-step .sbody .formula .vars { color: var(--teal); }
+
+/* 为什么重要 */
+.fo-why {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(255,255,255,0.18);
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.fo-why .wico { font-size: 1.3rem; }
+.fo-why p { color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
+
+/* 底部状态点 */
+.fo-dots {
+  margin-top: 26px;
+  display: flex; gap: 8px; justify-content: center;
+}
+.fo-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  transition: background 0.3s, transform 0.3s;
+}
+.fo-dot.active { background: var(--gold-1); transform: scale(1.35); }
+
+/* 左右切换 + 关闭 */
+.fo-nav, .fo-close {
+  position: fixed; z-index: 3;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(12,16,26,0.6);
+  color: var(--text);
+  font-size: 1.8rem; line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 0.3s, color 0.3s;
+}
+.fo-nav:hover, .fo-close:hover { background: rgba(251,191,36,0.25); color: var(--gold-1); }
+.fo-prev { left: 24px; top: 50%; transform: translateY(-50%); }
+.fo-next { right: 24px; top: 50%; transform: translateY(-50%); }
+.fo-close { top: 22px; right: 26px; }
+
+/* 翻页滑入 */
+@keyframes foSlideLeft  { from { transform: translateX(60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes foSlideRight { from { transform: translateX(-60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.fo-content.anim-left  { animation: foSlideLeft 0.4s ease; }
+.fo-content.anim-right { animation: foSlideRight 0.4s ease; }
+
+@media (max-width: 700px) {
+  .fo-content { padding: 38px 24px 28px; }
+  .fo-title { font-size: 1.5rem; }
+  .fo-prev { left: 10px; }
+  .fo-next { right: 10px; }
+  .fo-close { right: 14px; top: 14px; }
+}

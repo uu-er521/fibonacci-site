@@ -8,8 +8,9 @@
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/sequence.css">
   <link rel="stylesheet" href="css/intro.css">
-  <link rel="stylesheet" href="css/golden.css">
+    <link rel="stylesheet" href="css/golden.css">
   <link rel="stylesheet" href="css/quiz.css">
+  <link rel="stylesheet" href="css/formula.css">
 </head>
 
 <body>
@@ -287,12 +288,14 @@
       <p style="color:var(--muted);">这些性质让斐波那契数列成为数论与编程中的「明星」。</p>
     </div>
 
-    <div class="facts-list" style="margin-top:30px;">
-      <div class="fact reveal"><span class="num">1</span><p><strong>相邻项互质：</strong>相邻的两个斐波那契数最大公约数总是 1，即它们总是互质的。</p></div>
-      <div class="fact reveal"><span class="num">2</span><p><strong>平方和求和：</strong>前 n 项的平方和等于第 n 项与第 n+1 项的乘积：F₁²+…+Fₙ² = Fₙ·Fₙ₊₁。</p></div>
-      <div class="fact reveal"><span class="num">3</span><p><strong>可被整除：</strong>当且仅当 n 能整除 m 时，Fₙ 能整除 Fₘ。这使得斐波那契数列成为理解整除性的绝佳例证。</p></div>
-      <div class="fact reveal"><span class="num">4</span><p><strong>与编程：</strong>斐波那契是递归与动态规划的经典教学案例，也是测试性能与缓存技巧的常用基准。</p></div>
-    </div>
+        <div class="facts-list" style="margin-top:30px;">
+          <div class="fact reveal fo-card" data-fo="0"><span class="num">1</span><p><strong>奇偶规律：</strong>斐波那契数列中，当且仅当某项的下标是 3 的倍数时它才是偶数，其余各项均为奇数——每三个数里恰有一个偶数。</p><span class="fo-open">📖 推导</span></div>
+          <div class="fact reveal fo-card" data-fo="1"><span class="num">2</span><p><strong>前 n 项和：</strong>从第 1 项加到第 n 项之和，恰好等于第 n+2 项减 1：F₁+…+Fₙ = Fₙ₊₂ − 1。</p><span class="fo-open">📖 推导</span></div>
+          <div class="fact reveal fo-card" data-fo="2"><span class="num">3</span><p><strong>奇数项和：</strong>前 n 个奇数下标项（F₁+F₃+…+F₂ₙ₋₁）之和，恰好等于第 2n 项 F₂ₙ。</p><span class="fo-open">📖 推导</span></div>
+          <div class="fact reveal fo-card" data-fo="3"><span class="num">4</span><p><strong>偶数项和：</strong>前 n 个偶数下标项（F₂+F₄+…+F₂ₙ）之和，恰好等于第 2n+1 项减 1：F₂ₙ₊₁ − 1。</p><span class="fo-open">📖 推导</span></div>
+          <div class="fact reveal fo-card" data-fo="4"><span class="num">5</span><p><strong>相邻项互质：</strong>相邻的两个斐波那契数最大公约数总是 1，即它们总是互质的。</p><span class="fo-open">📖 推导</span></div>
+          <div class="fact reveal fo-card" data-fo="5"><span class="num">6</span><p><strong>平方和求和：</strong>前 n 项的平方和等于第 n 项与第 n+1 项的乘积：F₁²+…+Fₙ² = Fₙ·Fₙ₊₁。</p><span class="fo-open">📖 推导</span></div>
+        </div>
   </section>
 
   <!-- Golden ratio & spiral -->
@@ -414,7 +417,24 @@
     </div>
     <button class="fs-nav fs-prev" id="fsPrev" type="button" aria-label="上一张">‹</button>
     <button class="fs-nav fs-next" id="fsNext" type="button" aria-label="下一张">›</button>
-    <button class="fs-close" id="fsClose" type="button" aria-label="关闭">✕</button>
+        <button class="fs-close" id="fsClose" type="button" aria-label="关闭">✕</button>
+  </div>
+
+  <!-- 性质推导·黑板全屏画廊 -->
+  <div class="fo-overlay" id="foOverlay" aria-hidden="true">
+    <div class="fo-bg"></div>
+    <div class="fo-content" id="foContent">
+      <div class="fo-kicker" id="foKicker"></div>
+      <h2 class="fo-title" id="foTitle"></h2>
+      <div class="fo-state" id="foState"></div>
+      <div class="fo-claim" id="foClaim"></div>
+      <div class="fo-steps" id="foSteps"></div>
+      <div class="fo-why" id="foWhy"></div>
+      <div class="fo-dots" id="foDots"></div>
+    </div>
+    <button class="fo-nav fo-prev" id="foPrev" type="button" aria-label="上一性质">‹</button>
+    <button class="fo-nav fo-next" id="foNext" type="button" aria-label="下一性质">›</button>
+    <button class="fo-close" id="foClose" type="button" aria-label="关闭">✕</button>
   </div>
 
     <!-- 脚本已拆分为 js/ 目录，按模块分文件引入（普通脚本，可双击 file:// 直接运行） -->
@@ -424,8 +444,9 @@
   <script src="js/intro.js"></script>
   <script src="js/yanghui.js"></script>
   <script src="js/golden.js"></script>
-  <script src="js/nature.js"></script>
+    <script src="js/nature.js"></script>
   <script src="js/quiz.js"></script>
+  <script src="js/formula.js"></script>
 
 </body>
 </html>

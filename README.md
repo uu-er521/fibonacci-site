@@ -29,7 +29,8 @@
 │   ├── sequence.css   数列定义 · 生成器 · 公式 · 趣味事实
 │   ├── intro.css      问题引入（兔子 × 杨辉三角 × 数学家 accordion）
 │   ├── golden.css     黄金螺旋拼图 · 自然卡片 · 全屏沉浸阅读
-│   └── quiz.css       测验模块
+│   ├── quiz.css       测验模块
+│   └── formula.css    性质推导 · 黑板全屏画廊
 ├── js/             交互逻辑，按 IIFE 模块拆分
 │   ├── ui.js          navActive 导航高亮 + revealOnScroll 滚动渐显
 │   ├── hero.js        heroSequence 首屏数列 + heroFade 滚动淡出
@@ -38,8 +39,10 @@
 │   ├── yanghui.js     yanghuiIntro 杨辉三角对角线高亮（含防抖）
 │   ├── golden.js      spiralPuzzle 黄金螺旋拖拽拼图
 │   ├── nature.js      natureFullscreen 自然全屏展厅
-│   └── quiz.js        quiz 测验
-├── image/          图片资源（兔子、垛积术、向日葵、鹦鹉螺、菠萝、叶片、蜜蜂、银河）
+│   ├── quiz.js        quiz 测验
+│   └── formula.js     formulaGallery 性质推导黑板画廊
+├── image/          图片资源（兔子、垛积术、向日葵、鹦鹉螺、菠萝、叶片、蜜蜂、银河、黑板）
+├── formula.txt     斐波那契数列性质汇总（纯文本，可分发）
 └── README.md       本说明文件
 ```
 
@@ -87,6 +90,7 @@
 | `golden.js` | `spiralPuzzle` | 黄金螺旋拖拽拼图 |
 | `nature.js` | `natureFullscreen` | 自然全屏沉浸展厅 |
 | `quiz.js` | `quiz` | 数测验 |
+| `formula.js` | `formulaGallery` | 性质推导·黑板全屏画廊（6 条性质翻页） |
 
 > **兼容性说明**：为在 `file://` 协议下双击即可运行，全部脚本使用**普通 `<script>`**、**未使用 `import/export`**。请勿改回 ES Module，否则浏览器会因 CORS 拦截而无法通过本地文件方式运行。
 >
