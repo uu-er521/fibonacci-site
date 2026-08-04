@@ -92,6 +92,9 @@
   // 记录每条对角线上有哪些格子，用于高亮整条对角线
   const diagCells = {}; // d -> [ {cell, val} ]
 
+  // 防抖：合并鼠标在行间缝隙快速来回触发的 enter/leave，避免高亮来回闪烁抽搐
+  let debounceTimer = null;
+
   // 渲染三角
   for (let r = 0; r < ROWS; r++) {
     const rowEl = document.createElement('div');
@@ -103,9 +106,15 @@
       cell.textContent = tri[r][k];
       cell.dataset.r = r;
       cell.dataset.k = k;
-      // 悬停交互：高亮整条对角线
-      cell.addEventListener('mouseenter', () => highlightDiag(d));
-      cell.addEventListener('mouseleave', clearHighlight);
+      // 悬停交互：高亮整条对角线（加入 45ms 防抖，稳定切换）
+      cell.addEventListener('mouseenter', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => highlightDiag(d), 45);
+      });
+      cell.addEventListener('mouseleave', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(clearHighlight, 45);
+      });
       rowEl.appendChild(cell);
 
       cells[r + ',' + k] = cell;
@@ -722,4 +731,41 @@
   });
 
   loadQuestion();
+})();
+
+/* =====================================================================
+   6. 导航栏：高亮当前所在模块（滚动定位）
+   ===================================================================== */
+(function navActive() {
+  const links = Array.from(document.querySelectorAll('nav .links a[href^="#"]'));
+  const areas = links
+    .map(a => {
+      const el = document.querySelector(a.getAttribute('href'));
+      return el ? { link: a, el } : null;
+    })
+    .filter(Boolean);
+  if (!areas.length) return;
+
+  function update() {
+    const y = window.pageYOffset || document.documentElement.scrollTop;
+    const navH = 70; // 导航栏高度，作为"当前"判定点
+    let currentId = null;
+    for (const { link, el } of areas) {
+      const rect = el.getBoundingClientRect();
+      // 该 section 顶部进入视口导航区以下 1/3 处，视为当前
+      if (rect.top <= navH + 10) {
+        currentId = link.getAttribute('href');
+      }
+    }
+    // 若已滚到底部则高亮最后一个
+    if ((window.innerHeight + window.pageYOffset) >= document.body.scrollHeight - 4) {
+      currentId = areas[areas.length - 1].link.getAttribute('href');
+    }
+    if (currentId === null) currentId = areas[0].link.getAttribute('href'); // 默认第一个
+    areas.forEach(({ link }) => link.classList.toggle('active', link.getAttribute('href') === currentId));
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+  update();
 })();
