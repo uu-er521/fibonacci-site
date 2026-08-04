@@ -26,10 +26,10 @@
     <div class="logo"><span class="mark">φ</span> FIBONACCI</div>
     <div class="links">
       <a href="#intro">问题引入</a>
-      <a href="#sequence">数列</a>
+            <a href="#sequence">数列</a>
+      <a href="#formula">公式</a>
       <a href="#golden">黄金比例</a>
       <a href="#nature">自然</a>
-      <a href="#formula">公式</a>
       <a href="#quiz">测验</a>
     </div>
   </nav>
@@ -265,6 +265,32 @@
     </div>
   </section>
 
+    <!-- 从递推 → 封闭公式：紧接数列定义后，回答"能否一步算出任一项" -->
+  <section id="formula">
+    <div class="sec-head reveal">
+      <div class="kicker">The Math</div>
+      <h2>从递推到封闭公式</h2>
+      <p>除了逐项相加，还有一个惊人的事实：你可以直接用黄金比例 φ 算出任意一项——无需计算它之前的所有项。</p>
+    </div>
+
+    <div class="formula reveal">
+      F(n) = <span class="vars">φ<sup>n</sup> − (1−φ)<sup>n</sup></span> / √5
+      <p class="caption">其中 φ = (1 + √5) / 2 ≈ 1.618，这就是著名的「比奈公式」，由法国数学家雅克·比奈于 1843 年发现。</p>
+    </div>
+
+    <div style="text-align:center; margin-top:40px;" class="reveal">
+      <h3 style="font-size:1.3rem; margin-bottom:8px;">斐波那契的惊人性质</h3>
+      <p style="color:var(--muted);">这些性质让斐波那契数列成为数论与编程中的「明星」。</p>
+    </div>
+
+    <div class="facts-list" style="margin-top:30px;">
+      <div class="fact reveal"><span class="num">1</span><p><strong>相邻项互质：</strong>相邻的两个斐波那契数最大公约数总是 1，即它们总是互质的。</p></div>
+      <div class="fact reveal"><span class="num">2</span><p><strong>平方和求和：</strong>前 n 项的平方和等于第 n 项与第 n+1 项的乘积：F₁²+…+Fₙ² = Fₙ·Fₙ₊₁。</p></div>
+      <div class="fact reveal"><span class="num">3</span><p><strong>可被整除：</strong>当且仅当 n 能整除 m 时，Fₙ 能整除 Fₘ。这使得斐波那契数列成为理解整除性的绝佳例证。</p></div>
+      <div class="fact reveal"><span class="num">4</span><p><strong>与编程：</strong>斐波那契是递归与动态规划的经典教学案例，也是测试性能与缓存技巧的常用基准。</p></div>
+    </div>
+  </section>
+
   <!-- Golden ratio & spiral -->
   <section id="golden">
     <div class="sec-head reveal">
@@ -347,32 +373,6 @@
         <h3>银河旋臂</h3>
         <p>某些星系（如螺旋星系）的旋臂轨迹也可以用对数螺旋近似描述，与黄金螺旋有着惊人的视觉相似性。</p>
       </div>
-    </div>
-  </section>
-
-  <!-- Formula / math -->
-  <section id="formula">
-    <div class="sec-head reveal">
-      <div class="kicker">The Math</div>
-      <h2>从递推到封闭公式</h2>
-      <p>除了逐项相加，还有一个惊人的事实：你可以直接用黄金比例 φ 算出任意一项——无需计算它之前的所有项。</p>
-    </div>
-
-    <div class="formula reveal">
-      F(n) = <span class="vars">φ<sup>n</sup> − (1−φ)<sup>n</sup></span> / √5
-      <p class="caption">其中 φ = (1 + √5) / 2 ≈ 1.618，这就是著名的「比奈公式」，由法国数学家雅克·比奈于 1843 年发现。</p>
-    </div>
-
-    <div style="text-align:center; margin-top:40px;" class="reveal">
-      <h3 style="font-size:1.3rem; margin-bottom:8px;">斐波那契的惊人性质</h3>
-      <p style="color:var(--muted);">这些性质让斐波那契数列成为数论与编程中的「明星」。</p>
-    </div>
-
-    <div class="facts-list" style="margin-top:30px;">
-      <div class="fact reveal"><span class="num">1</span><p><strong>相邻项互质：</strong>相邻的两个斐波那契数最大公约数总是 1，即它们总是互质的。</p></div>
-      <div class="fact reveal"><span class="num">2</span><p><strong>平方和求和：</strong>前 n 项的平方和等于第 n 项与第 n+1 项的乘积：F₁²+…+Fₙ² = Fₙ·Fₙ₊₁。</p></div>
-      <div class="fact reveal"><span class="num">3</span><p><strong>可被整除：</strong>当且仅当 n 能整除 m 时，Fₙ 能整除 Fₘ。这使得斐波那契数列成为理解整除性的绝佳例证。</p></div>
-      <div class="fact reveal"><span class="num">4</span><p><strong>与编程：</strong>斐波那契是递归与动态规划的经典教学案例，也是测试性能与缓存技巧的常用基准。</p></div>
     </div>
   </section>
 
