@@ -1,0 +1,227 @@
+/* ============================================================
+   golden.css — 黄金螺旋拼图 / 自然卡片 / 全屏沉浸阅读
+   （斐波那契教学页面 · 样式封装 part 4）
+   ============================================================ */
+
+/* ---------- Golden spiral card ---------- */
+.spiral-card {
+  text-align: center;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+.spiral-card svg { width: 100%; max-width: 420px; }
+
+/* ---------- Golden spiral puzzle ---------- */
+.puzzle-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.puzzle-board {
+  position: relative;
+  border-radius: 8px;
+  background:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+    var(--bg-2);
+  background-size: 30px 30px;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow);
+  touch-action: none;
+  user-select: none;
+}
+.target-slot {
+  position: absolute;
+  border: 1px dashed rgba(251,191,36,0.35);
+  border-radius: 4px;
+  background: rgba(251,191,36,0.06);
+  z-index: 1;
+}
+.target-slot.filled { border-color: transparent; background: transparent; }
+.piece-shape {
+  position: absolute;
+  border-radius: 4px;
+  background: linear-gradient(145deg, rgba(24,33,54,0.95), rgba(30,42,68,0.95));
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  z-index: 3;
+  cursor: grab;
+  transition: box-shadow 0.2s, transform 0.2s;
+  touch-action: none;
+}
+.piece-shape.dragging { cursor: grabbing; box-shadow: 0 14px 34px rgba(0,0,0,0.65); }
+.piece-shape.placed { cursor: default; box-shadow: 0 4px 10px rgba(251,191,36,0.15); }
+.piece-shape.targets { border-color: var(--gold-1); box-shadow: 0 0 0 3px rgba(251,191,36,0.4); }
+.piece-shape.locked { border: 1px solid rgba(251,191,36,0.8); }
+.arc-svg {
+  position: absolute;
+  left: 0; top: 0;
+  max-width: none;
+  width: 100%; height: 100%;
+  display: block;
+  pointer-events: none;
+  overflow: visible;
+}
+.piece-shape .size-label {
+  position: absolute;
+  right: 5px; bottom: 3px;
+  font-size: 0.7rem;
+  color: var(--muted);
+  opacity: 0.85;
+  pointer-events: none;
+}
+.puzzle-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 12px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  min-width: 320px;
+}
+.puzzle-tray .tray-piece {
+  width: 40px; height: 40px;
+  border-radius: 6px;
+  background: linear-gradient(145deg, rgba(24,33,54,0.95), rgba(30,42,68,0.95));
+  border: 1px solid rgba(255,255,255,0.2);
+  display: grid; place-items: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text);
+  cursor: grab;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+.puzzle-tray .tray-piece.dragging { opacity: 0.4; }
+.puzzle-tray .tray-piece.used { opacity: 0.15; pointer-events: none; cursor: default; }
+.puzzle-msg { font-size: 0.95rem; color: var(--muted); min-height: 24px; }
+.puzzle-msg .done { color: var(--teal); font-weight: 700; }
+.puzzle-reset { margin-top: 4px; }
+
+/* ---------- Nature cards ---------- */
+.nature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+}
+.nature-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 26px;
+  transition: transform 0.3s, border-color 0.3s;
+  position: relative; overflow: hidden;
+  cursor: pointer;
+}
+.nature-card:hover { transform: translateY(-6px); border-color: var(--gold-1); }
+.nature-card .emoji { font-size: 2.6rem; margin-bottom: 14px; }
+.nature-card h3 { font-size: 1.15rem; margin-bottom: 8px; }
+.nature-card p { color: var(--muted); font-size: 0.95rem; }
+.nature-card::after {
+  content: '';
+  position: absolute; top: -40px; right: -40px;
+  width: 90px; height: 90px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(251,191,36,0.15), transparent 70%);
+}
+.nature-card::before {
+  content: '🔍 全屏阅读';
+  position: absolute; right: 14px; bottom: 12px;
+  font-size: 0.72rem; letter-spacing: 1px;
+  color: var(--text);
+  background: rgba(15,21,36,0.6);
+  border: 1px solid var(--card-border);
+  padding: 5px 12px; border-radius: 20px;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 2;
+}
+.nature-card:hover::before { opacity: 1; transform: translateY(0); }
+
+/* ---------- Nature 全屏沉浸阅读 ---------- */
+.fs-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  display: grid; place-items: center;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 0.45s ease, visibility 0.45s;
+}
+.fs-overlay.show { opacity: 1; visibility: visible; pointer-events: auto; }
+.fs-bg {
+  position: absolute; inset: -4%;
+  background-size: cover; background-position: center;
+  filter: blur(8px) brightness(0.6) saturate(1.1);
+  transition: background-image 0.6s ease;
+}
+.fs-bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(15,21,36,0.35), rgba(15,21,36,0.72));
+}
+.fs-content {
+  position: relative; z-index: 2;
+  max-width: 680px; width: 90%;
+  max-height: 82vh; overflow-y: auto;
+  background: rgba(15,21,36,0.35);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 22px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 30px 90px rgba(0,0,0,0.6);
+  padding: 46px 48px 36px;
+  text-align: center;
+}
+.fs-emoji {
+  width: 84px; height: 84px; margin: 0 auto 18px;
+  border-radius: 50%;
+  background-size: cover; background-position: center;
+  border: 2px solid rgba(251,191,36,0.6);
+  box-shadow: 0 0 30px rgba(251,191,36,0.35);
+  font-size: 2.4rem;
+  display: grid; place-items: center;
+  overflow: hidden;
+}
+.fs-title { font-size: 2rem; font-weight: 800; margin-bottom: 18px; letter-spacing: 1px; }
+.fs-body {
+  font-size: 1.08rem; line-height: 2;
+  color: var(--text);
+  text-align: justify; text-align-last: center;
+}
+.fs-dots { margin-top: 26px; display: flex; gap: 8px; justify-content: center; }
+.fs-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  transition: background 0.3s, transform 0.3s;
+}
+.fs-dot.active { background: var(--gold-1); transform: scale(1.35); }
+
+/* 左右切换 + 关闭 */
+.fs-nav, .fs-close {
+  position: fixed; z-index: 3;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  border: 1px solid var(--card-border);
+  background: rgba(15,21,36,0.5);
+  color: var(--text);
+  font-size: 1.8rem; line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 0.3s, color 0.3s;
+}
+.fs-nav:hover, .fs-close:hover { background: rgba(251,191,36,0.25); color: var(--gold-1); }
+.fs-close:hover { transform: scale(1.05); }
+.fs-prev { left: 24px; top: 50%; transform: translateY(-50%); }
+.fs-next { right: 24px; top: 50%; transform: translateY(-50%); }
+.fs-close { top: 22px; right: 26px; }
+
+/* 滑入动画 */
+@keyframes fsSlideLeft  { from { transform: translateX(60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes fsSlideRight { from { transform: translateX(-60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.fs-content.anim-left  { animation: fsSlideLeft 0.4s ease; }
+.fs-content.anim-right { animation: fsSlideRight 0.4s ease; }
+
+@media (max-width: 700px) {
+  .fs-content { padding: 40px 26px 30px; }
+  .fs-prev { left: 10px; }
+  .fs-next { right: 10px; }
+  .fs-close { right: 14px; top: 14px; }
+}

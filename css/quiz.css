@@ -1,0 +1,43 @@
+/* ============================================================
+   quiz.css — 测验模块
+   （斐波那契教学页面 · 样式封装 part 5）
+   ============================================================ */
+
+.quiz-box {
+  max-width: 680px;
+  margin: 0 auto;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 34px;
+  box-shadow: var(--shadow);
+}
+.quiz-q { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; min-height: 55px; }
+.quiz-options { display: grid; gap: 12px; }
+.quiz-opt {
+  text-align: left;
+  padding: 15px 20px;
+  border-radius: 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-family: inherit;
+}
+.quiz-opt:hover { border-color: var(--gold-1); transform: translateX(5px); }
+.quiz-opt.correct { background: rgba(45,212,191,0.15); border-color: var(--teal); }
+.quiz-opt.wrong { background: rgba(244,114,182,0.15); border-color: var(--pink); }
+.quiz-opt:disabled { cursor: not-allowed; }
+.quiz-foot {
+  margin-top: 22px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.quiz-score { font-weight: 800; color: var(--gold-1); }
+.quiz-next {
+  padding: 10px 26px; border-radius: 50px;
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  color: #0f1524; font-weight: 700; border: none; cursor: pointer;
+}
+.quiz-next:disabled { opacity: 0.4; cursor: not-allowed; }

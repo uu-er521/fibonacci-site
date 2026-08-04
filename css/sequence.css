@@ -1,0 +1,117 @@
+/* ============================================================
+   sequence.css — 数列定义 / 生成器 / 公式 / 趣味事实
+   （斐波那契教学页面 · 样式封装 part 2）
+   ============================================================ */
+
+/* ---------- 数列定义（Definition） ---------- */
+.def-grid { max-width: 720px; margin: 0 auto 50px; }
+.def-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 26px;
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow);
+}
+.def-card h3 { font-size: 1.35rem; margin-bottom: 10px; }
+.def-lead { color: var(--muted); font-size: 0.95rem; margin-bottom: 16px; }
+.kicker-inline { margin-bottom: 10px; font-size: 0.75rem; }
+
+.def-recur {
+  background: var(--bg-2);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.def-terms { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.def-term {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-size: 1rem;
+}
+.def-term span { color: var(--muted); font-size: 0.88rem; }
+.def-term b { color: var(--gold-1); font-size: 1.1rem; }
+.def-arrow { color: var(--muted); font-size: 0.82rem; letter-spacing: 1px; }
+.def-formula { width: 100%; padding: 16px; font-size: 1.2rem; }
+.def-hint { color: var(--muted); font-size: 0.9rem; text-align: center; line-height: 1.6; }
+.strong { color: var(--gold-1); font-weight: 800; }
+
+.def-play-title { font-size: 1.4rem; text-align: center; margin-bottom: 30px; }
+.def-play-title .ico { margin-right: 4px; }
+
+/* ---------- Generator ---------- */
+.generator-wrap {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 30px;
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow);
+}
+.gen-controls { display: flex; gap: 12px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
+.gen-controls input[type=range] {
+  flex: 1; min-width: 180px;
+  accent-color: var(--gold-1);
+}
+.gen-controls .badge {
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  color: #0f1524; font-weight: 800;
+  padding: 6px 16px; border-radius: 50px; font-size: 0.95rem;
+}
+.seq-display { display: flex; flex-wrap: wrap; gap: 10px; min-height: 60px; }
+.term-box {
+  min-width: 46px; height: 46px;
+  display: grid; place-items: center;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  font-weight: 700;
+  transition: all 0.3s;
+  animation: fadeSlide 0.4s ease both;
+}
+.term-box.gold {
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  color:#0f1524; border:none; box-shadow: 0 4px 15px rgba(251,191,36,0.4);
+}
+.ratio-line {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--card-border);
+  font-size: 0.95rem; color: var(--muted);
+}
+.ratio-line strong { color: var(--gold-1); font-size: 1.2rem; }
+
+/* ---------- Formula ---------- */
+.formula {
+  background: var(--bg-2);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 30px;
+  text-align: center;
+  font-family: 'Times New Roman', Georgia, serif;
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  box-shadow: var(--shadow);
+}
+.formula sup { font-size: 0.7em; }
+.formula .vars { color: var(--gold-1); font-weight: bold; }
+.formula p.caption { font-family: inherit; color: var(--muted); margin-top: 14px; font-size: 0.85rem; }
+
+/* ---------- Fun facts ---------- */
+.facts-list { display: grid; gap: 16px; max-width: 800px; margin: 0 auto; }
+.fact {
+  display: flex; gap: 18px; align-items: flex-start;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-left: 4px solid var(--gold-1);
+  padding: 18px 22px;
+  border-radius: 12px;
+}
+.fact .num { font-size: 1.4rem; font-weight: 900; color: var(--gold-1); min-width: 28px; }
+.fact p { color: var(--text); font-size: 0.99rem; }

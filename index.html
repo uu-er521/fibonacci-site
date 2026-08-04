@@ -3,9 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>斐波那契 · 数字的完美之舞</title>
-  <!-- 样式已拆分为外部文件 style.css，便于维护 -->
-  <link rel="stylesheet" href="style.css">
+      <title>斐波那契 · 数字的完美之舞</title>
+  <!-- 样式已拆分为 css/ 目录，按模块分文件引入 -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/sequence.css">
+  <link rel="stylesheet" href="css/intro.css">
+  <link rel="stylesheet" href="css/golden.css">
+  <link rel="stylesheet" href="css/quiz.css">
 </head>
 
 <body>
@@ -413,8 +417,15 @@
     <button class="fs-close" id="fsClose" type="button" aria-label="关闭">✕</button>
   </div>
 
-  <!-- 脚本已拆分至外部文件 script.js（普通脚本，可双击 file:// 直接运行） -->
-  <script src="script.js"></script>
+    <!-- 脚本已拆分为 js/ 目录，按模块分文件引入（普通脚本，可双击 file:// 直接运行） -->
+  <script src="js/ui.js"></script>
+  <script src="js/hero.js"></script>
+  <script src="js/sequence.js"></script>
+  <script src="js/intro.js"></script>
+  <script src="js/yanghui.js"></script>
+  <script src="js/golden.js"></script>
+  <script src="js/nature.js"></script>
+  <script src="js/quiz.js"></script>
 
 </body>
 </html>

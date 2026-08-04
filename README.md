@@ -1,26 +1,12 @@
 # 斐波那契 · 数字的完美之舞
 
-一个纯前端、单页、沉浸式的**斐波那契数列**教学互动网页。通过首屏动态数列、交互式生成器、拖拽拼图、自然实例、比奈公式和测验，生动呈现斐波那契数列与黄金比例背后的数学之美。
+一个纯前端、单页、沉浸式的**斐波那契数列**教学互动网页。通过首屏动态数列、兔子问题、杨辉三角、拖拽拼图、自然实例、比奈公式和测验，生动呈现斐波那契数列与黄金比例背后的数学之美。
 
 - **技术栈**：原生 HTML5 · CSS3 · Vanilla JavaScript（零框架、零构建、零依赖）
 - **运行方式**：直接**双击 `index.html`** 即可在浏览器打开，无需服务器
+- **代码组织**：样式与脚本**按功能模块拆分**到 `css/`、`js/` 目录，便于定位与维护；单个文件体积更小
 
-
-## 目录结构
-
-```
-斐波那契网页设计/
-├── index.html   页面骨架（纯结构，约 11 KB）
-├── style.css    全部样式（约 13 KB，按区块分区注释）
-├── script.js    全部交互逻辑（约 15 KB，5 大功能模块）
-├── image/       图片资源（预留，当前主要使用 SVG/内联绘制）
-└── README.md    本说明文件
-```
-
-> **编码要求**：三个文件均为 **UTF-8**（`index.html` 带 BOM，`style.css` / `script.js` 无 BOM，均已声明 `<meta charset="UTF-8">`）。修改时请保持 UTF-8 编码，避免中文乱码。
->
-> **运行前提**：`index.html`、`style.css`、`script.js` 必须位于**同一目录**且文件名对应（已在 HTML 中以相对路径引用），否则页面会失去样式或交互。
-
+---
 
 ## 快速开始
 
@@ -29,53 +15,88 @@
    - **数列生成器**：拖动滑杆，实时生成数列并观察项之比趋近 φ≈1.618。
    - **黄金螺旋拼图**：把托盘中的 7 个正方形（边长 1,1,2,3,5,8,13）拖进虚线框，拼满后 7 段 90° 圆弧连成完整黄金螺旋线。
 
+> 若页面无样式或无交互，请确认 `index.html` 与 `css/`、`js/`、`image/` 处于**同一目录**且相对路径未被改动。
+
+---
+
+## 目录结构
+
+```
+斐波那契网页设计/
+├── index.html      页面骨架（纯结构，仅引用外部样式/脚本）
+├── css/            样式，按功能模块拆分
+│   ├── base.css       设计系统变量 · 背景 · 导航 · Hero · 通用 section/footer
+│   ├── sequence.css   数列定义 · 生成器 · 公式 · 趣味事实
+│   ├── intro.css      问题引入（兔子 × 杨辉三角 × 数学家 accordion）
+│   ├── golden.css     黄金螺旋拼图 · 自然卡片 · 全屏沉浸阅读
+│   └── quiz.css       测验模块
+├── js/             交互逻辑，按 IIFE 模块拆分
+│   ├── ui.js          navActive 导航高亮 + revealOnScroll 滚动渐显
+│   ├── hero.js        heroSequence 首屏数列 + heroFade 滚动淡出
+│   ├── sequence.js    generator 数列生成器
+│   ├── intro.js       introPhenomena 兔子繁衍 + 数学家 accordion
+│   ├── yanghui.js     yanghuiIntro 杨辉三角对角线高亮（含防抖）
+│   ├── golden.js      spiralPuzzle 黄金螺旋拖拽拼图
+│   ├── nature.js      natureFullscreen 自然全屏展厅
+│   └── quiz.js        quiz 测验
+├── image/          图片资源（兔子、垛积术、向日葵、鹦鹉螺、菠萝、叶片、蜜蜂、银河）
+└── README.md       本说明文件
+```
+
+> **说明**：最早的单文件版 `style.css`、`script.js` 仍保留在根目录，作为基准备份；**当前页面引用的是 `css/` 与 `js/` 拆分后的文件**。若无特殊需求，后续修改应改 `css/`、`js/` 下的文件。
+
+---
 
 ## 页面板块
 
 | 板块锚点 | 内容 |
 |---|---|
-| `#sequence` | 数列生成器 — 拖动滑杆逐项构建数列，展示相邻项之比逼近黄金比例 |
-| `#golden` | 黄金比例 — **拖拽拼图**拼出黄金螺旋 + 1.618 由来讲解 |
-| `#nature` | 自然实例 — 向日葵、鹦鹉螺、松果、叶片、蜜蜂家谱、银河旋臂 |
+| `#intro` | 问题引入 — 兔子繁衍动效 + 杨辉三角对角线 + 数学家 accordion |
+| `#sequence` | 数列定义 — 递推规则、生成器，观察比值逼近黄金比例 |
 | `#formula` | 比奈公式 — 从递推到封闭公式，附 4 条惊人性质 |
+| `#golden` | 黄金比例 — **拖拽拼图**拼出黄金螺旋 + 1.618 由来 |
+| `#nature` | 自然实例 — 向日葵、鹦鹉螺、松果、叶片、蜜蜂家谱、银河 |
 | `#quiz` | 小测验 — 5 题选择，即时计分与反馈 |
 
+导航栏顺序与页面板块顺序完全一致（`问题引入 → 数列 → 公式 → 黄金比例 → 自然 → 测验`），滚动时当前模块会自动高亮（见 `js/ui.js` 的 `navActive`）。
 
-## 文件职责与维护指南
+---
 
-### `index.html` — 结构层
-只负责**页面骨架与内容**，不含样式与逻辑。包含导航、Hero、以及各板块的固定容器 `id`。主要容器：
+## 样式模块（`css/`）
 
-| 容器 ID | 用途 |
-|---|---|
-| `heroSeq` | 首屏数列 chips 容器 |
-| `countRange` / `countLabel` / `seqDisplay` / `curRatio` | 数列生成器控件 |
-| `puzzleBoard` / `puzzleTray` / `puzzleMsg` / `puzzleReset` | 黄金螺旋拼图 |
-| `quizQ` / `quizOptions` / `quizScore` / `quizNext` | 测验控件 |
+设计系统集中在 `css/base.css` 的 `:root` CSS 变量中（背景 `#0f1524`、金色 `#fbbf24`、青绿 `#2dd4bf`、紫 `#a78bfa`、粉 `#f472b6` 等），改整体配色只需调整这些变量。
 
-> **注意**：如需改动交互容器，请同步确认 `script.js` 中 `getElementById` 的 ID 名称一致。
+- **跨模块共享样式**（`.formula`、`.reveal`、`@keyframes fadeSlide/popIn/float`）均集中在 **base.css** 定义，各模块复用，避免重复。
+- **图片路径**：因 CSS 位于 `css/` 子目录，内部图片引用一律写成 `../image/xxx.png`（如 `base.css` 的银河图、`intro.css` 的兔子图与垛积术图）。新增图片背景时请保持该相对路径规则。
+- **加载顺序**：`index.html` 按 `base → sequence → intro → golden → quiz` 依次 `<link>`（base 最先，确保变量与通用样式就绪）。
+- **交互容器**：如需改动交互容器，请同步确认 `js/` 中 `getElementById` 的 ID 名称一致。
 
-### `style.css` — 表现层
-只负责**外观与动画**，按功能分区注释，依次为：Reset/Base、SVG Background、Navbar、Hero、Sections、Generator、Spiral card、Puzzle、Nature cards、Quiz、Fun facts、Formula、Footer、Reveal。
+---
 
-- 设计系统集中在 `:root` 的 CSS 变量中（背景 `#0f1524`、金色 `#fbbf24`、青绿 `#2dd4bf`、紫 `#a78bfa`、粉 `#f472b6` 等）。改整体配色只需调整这些变量。
-- 拼图相关关键样式：`.arc-svg`（绝对定位、全尺寸、`pointer-events:none`）、`.target-slot`（落位虚线框）、`.piece-shape`（棋盘上的方块）。
+## 脚本模块（`js/`）
 
-### `script.js` — 行为层
-只负责**交互逻辑**，由 **5 个 IIFE（立即执行函数）** 模块化隔离，避免污染全局：
+所有脚本均为**普通 `<script>`**（非 ES Module），以 **IIFE（立即执行函数）** 隔离，避免污染全局；多个文件按 `<script>` 顺序依次加载，`file://` 双击即可运行。
 
-1. `heroSequence()` — 动态生成首屏斐波那契数列 chips。
-2. `generator()` — 数列生成器：`fib(n)` 生成数列、`renderSeq()` 渲染并计算比值。
-3. `spiralPuzzle()` — **黄金螺旋拖拽拼图**（核心模块，详见下节）。
-4. `revealOnScroll()` — `IntersectionObserver` 实现滚动渐显（`.reveal` / `.visible`）。
-5. `quiz()` — 5 题测验：出题、判分、即时反馈。
+| 文件 | IIFE | 内容 |
+|---|---|---|
+| `ui.js` | `navActive` / `revealOnScroll` | 导航高亮 + 滚动渐显（`.reveal`/`.visible`） |
+| `hero.js` | `heroSequence` / `heroFade` | 首屏数列 chips + 滚动淡出 |
+| `sequence.js` | `generator` | 数列生成器（`fib(n)` + 比值） |
+| `intro.js` | `introPhenomena` | 兔子繁衍 + 数学家 accordion |
+| `yanghui.js` | `yanghuiIntro` | 杨辉三角对角线高亮（45ms 防抖） |
+| `golden.js` | `spiralPuzzle` | 黄金螺旋拖拽拼图 |
+| `nature.js` | `natureFullscreen` | 自然全屏沉浸展厅 |
+| `quiz.js` | `quiz` | 数测验 |
 
-> **兼容性说明**：为了让页面在 `file://` 协议下双击即可运行，`script.js` 使用**普通 `<script>`**（非 ES Module），**未使用 `import/export`**。请勿改回 ES Module，否则浏览器会因 CORS 拦截而无法通过本地文件方式运行。
+> **兼容性说明**：为在 `file://` 协议下双击即可运行，全部脚本使用**普通 `<script>`**、**未使用 `import/export`**。请勿改回 ES Module，否则浏览器会因 CORS 拦截而无法通过本地文件方式运行。
+>
+> **加载原则**：各 IIFE 之间无跨模块依赖，任意顺序均可运行；`index.html` 中仍按逻辑顺序（ui → hero → sequence → intro → yanghui → golden → nature → quiz）引入，便于阅读。
 
+---
 
 ## 黄金螺旋拼图模块详解
 
-`spiralPuzzle()` 是页面最核心的交互模块，使用 **Pointer Events API**（`setPointerCapture`）实现跨鼠标/触屏拖拽。
+`golden.js` 的 `spiralPuzzle()` 是页面最核心的交互模块，使用 **Pointer Events API**（`setPointerCapture`）实现跨鼠标/触屏拖拽。
 
 ### 坐标系
 - 棋盘为 **21 宽 × 13 高**的网格（`GRID_W = 21`, `GRID_H = 13`）。
@@ -112,24 +133,28 @@ y_svg        = 13 − (平面左下角 y + 边长)
 正确拼合后，7 段圆弧端点链条连续：`(0,0)→(13,13)→(21,5)→(16,0)→(13,3)→(15,5)→(16,4)→(15,3)`，构成完整黄金螺旋。
 
 ### 若要偏移/重排坐标
-- 只需调整 `PIE` 数组中的 `x / y / ox / oy / a1 / a2` 六项。
-- 修改后请对照上面的换算公式与弧端连续性公式进行数学验证。
+需调整 `PIE` 数组中的 `x / y / ox / oy / a1 / a2` 六项，并对照上面的换算公式与弧端连续性公式进行数学验证。
 
+---
 
 ## 常见问题（FAQ）
 
 **Q1：双击打开后页面没有样式或没有交互？**
-A：请确认 `index.html`、`style.css`、`script.js` 三个文件在**同一目录**且文件名未被修改。CSS/JS 以相对路径引用，文件不在同级就会失效。
+A：请确认 `index.html` 与 `css/`、`js/`、`image/` 在**同一目录**且文件、子目录名未被改动。CSS/JS 均以相对路径引用，文件夹缺一即失效。
 
-**Q2：是否支持移动端 / 触屏拖拽？**
+**Q2：我改了 `style.css` / `script.js` 却没生效？**
+A：当前入口引用的已是 `css/`、`js/` 拆分文件，根目录的旧单文件只是备份，不再被页面读取。请修改 `css/`、`js/` 下的文件。
+
+**Q3：是否支持移动端 / 触屏拖拽？**
 A：支持。拼图使用 Pointer Events，天然兼容鼠标与触屏。页面也做了响应式（`grid-template-columns`、`clamp()` 等）适配多数屏幕。
 
-**Q3：能否用服务器方式运行？**
+**Q4：能否用服务器方式运行？**
 A：可以，但没必要。纯静态页面直接双击即可。若用 VS Code 等工具起本地静态服务器，同样正常。
 
+---
 
 ## 后续可扩展方向（供参考）
 
-- 将 `script.js` 中 5 个 IIFE 进一步拆为独立文件（如 `puzzle.js`、`quiz.js`），仍用普通 `<script>` 多次引入即可。
+- 将 `spiralPuzzle` 的 `PIE` 配置开放为可视化编辑器，实时调弧线坐标。
 - 为拼图完成增加庆祝动画或音效。
 - 增加更多比奈公式 / 黄金比例的可视化实验（如动态 φ 分割工具）。

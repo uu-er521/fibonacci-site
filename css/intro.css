@@ -1,0 +1,311 @@
+/* ============================================================
+   intro.css — 问题引入：兔子繁衍 × 杨辉三角 × 数学家 accordion
+   （斐波那契教学页面 · 样式封装 part 3）
+   注意：图片相对路径指向 ../image/
+   ============================================================ */
+
+#intro { scroll-margin-top: 80px; }
+
+/* ---- 左右两栏（兔子 + 杨辉三角） ---- */
+.intro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+  margin-bottom: 60px;
+}
+@media (max-width: 900px) { .intro-grid { grid-template-columns: 1fr; } }
+.intro-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 26px;
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+}
+
+/* 兔子 / 垛积术：把交互卡片做成"图挂"背景（图片偏亮 → 叠加深色玻璃遮罩保证文字清晰） */
+.intro-card--rabbit {
+  position: relative;
+  background-image:
+    linear-gradient(180deg, rgba(15,21,36,0.82), rgba(15,21,36,0.9)),
+    url('../image/兔子图片.png');
+  background-size: cover;
+  background-position: center center;
+  border-color: rgba(251,191,36,0.25);
+}
+.intro-card--triangle {
+  position: relative;
+  background-image:
+    linear-gradient(180deg, rgba(15,21,36,0.82), rgba(15,21,36,0.9)),
+    url('../image/垛积术图片.png');
+  background-size: cover;
+  background-position: center center;
+  border-color: rgba(45,212,191,0.25);
+}
+/* 鼠标悬停时略微压暗遮罩、透出更多图片，提示可交互 */
+.intro-card--rabbit:hover { background-image: linear-gradient(180deg, rgba(15,21,36,0.7), rgba(15,21,36,0.82)), url('../image/兔子图片.png'); }
+.intro-card--triangle:hover { background-image: linear-gradient(180deg, rgba(15,21,36,0.7), rgba(15,21,36,0.82)), url('../image/垛积术图片.png'); }
+
+/* 卡片底部"图源"角标 */
+.intro-card--rabbit::after,
+.intro-card--triangle::after {
+  content: attr(data-badge);
+  position: absolute;
+  right: 14px; bottom: 12px;
+  font-size: 0.72rem; letter-spacing: 1px;
+  color: var(--text);
+  background: rgba(15,21,36,0.65);
+  border: 1px solid var(--card-border);
+  padding: 4px 12px; border-radius: 20px;
+}
+.intro-card--rabbit::after { color: var(--gold-1); }
+.intro-card--triangle::after { color: var(--teal); }
+
+/* ---- 兔子繁衍交互 ---- */
+.rabbit-stage { margin-top: 6px; }
+.rabbit-field {
+  position: relative;
+  min-height: 132px;
+  background: rgba(255,255,255,0.02);
+  border: 1px dashed var(--card-border);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+}
+.rabbit-track {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  max-width: 100%;
+}
+.rabbit-pair {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  line-height: 1;
+  display: grid; place-items: center;
+  flex-shrink: 0;
+  background: radial-gradient(circle at 35% 30%, #fde68a, #f59e0b);
+  animation: popIn 0.4s ease both;
+}
+.rabbit-pair.adult { background: radial-gradient(circle at 35% 30%, #f9a8d4, #db2777); }
+.rabbit-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px 2px 6px;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+.rabbit-month { color: var(--gold-1); font-weight: 800; }
+.rabbit-count { color: var(--text); font-weight: 700; }
+.rabbit-stage input[type=range] { width: 100%; accent-color: var(--gold-1); }
+.rabbit-sequence {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+.rabbit-seq-chip {
+  min-width: 34px; height: 34px;
+  display: grid; place-items: center;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.rabbit-seq-chip.active {
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  color: #0f1524;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(251,191,36,0.35);
+}
+
+/* ---- 杨辉三角 ---- */
+.yanghui-wrap {
+  margin-top: 4px;
+  padding: 16px;
+  background: rgba(15,21,36,0.06);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+}
+.yanghui-tri {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+}
+.yh-row { display: flex; gap: 6px; justify-content: center; }
+.yh-cell {
+  min-width: 40px;
+  height: 40px;
+  display: grid; place-items: center;
+  padding: 0 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text);
+  cursor: pointer;
+  /* 只过渡颜色，避免 shadow/transform 渐变在行间缝隙反复切换时产生闪烁抽搐 */
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  animation: fadeSlide 0.4s ease both;
+  backdrop-filter: blur(3px);
+  will-change: auto;
+}
+.yh-cell:hover {
+  /* 用背景/边框反馈代替位移，避免行间 hover 引发的布局抖动 */
+  transform: none;
+  background: rgba(255,255,255,0.14);
+  border-color: rgba(251,191,36,0.6);
+}
+.yh-cell.fib {
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  color: #0f1524;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(251,191,36,0.35);
+  font-weight: 800;
+  transform: none;
+}
+.yh-cell.fib:hover { transform: none; }
+.yanghui-note {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--card-border);
+  text-align: center;
+  font-size: 1rem;
+  color: var(--text);
+  /* 固定最小高度，避免悬停时文案高度变化引起卡片布局抖动/抽搐 */
+  min-height: 96px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+.yanghui-note .fib-nums {
+  display: inline-block;
+  margin-top: 6px;
+  color: var(--gold-1);
+  font-weight: 800;
+  letter-spacing: 3px;
+  font-size: 1.1rem;
+}
+
+/* ---- 数学家横向折叠 accordion ---- */
+.mat-section { margin-top: 10px; }
+.mat-accordion {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+.mat-item {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(-70px);
+  transition:
+    transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.5s ease,
+    border-color 0.3s;
+}
+.mat-item.entered { opacity: 1; transform: translateX(0); }
+.mat-item:hover { border-color: var(--gold-1); }
+.mat-head {
+  width: 100%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--text);
+  font-family: inherit;
+  text-align: left;
+}
+.mat-title { flex: 1; }
+.mat-title strong { display: block; font-size: 1.02rem; }
+.mat-title small { color: var(--muted); font-size: 0.78rem; }
+.mat-chev {
+  font-size: 1.5rem;
+  color: var(--gold-1);
+  line-height: 1;
+  transition: transform 0.35s;
+  flex-shrink: 0;
+}
+.mat-item.open .mat-chev { transform: rotate(90deg); }
+.mat-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+  padding: 0 20px;
+}
+.mat-item.open .mat-body { max-height: 900px; }
+.mat-body .mat-bio,
+.mat-link { color: var(--text); font-size: 0.92rem; line-height: 1.7; }
+.mat-body .mat-bio { padding-bottom: 10px; }
+.mat-facts { padding: 0 0 4px 18px; margin: 0 0 10px; color: var(--muted); font-size: 0.88rem; }
+.mat-facts li { margin-bottom: 6px; }
+.mat-link {
+  background: rgba(251,191,36,0.06);
+  border-left: 3px solid var(--gold-1);
+  padding: 10px 14px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 14px;
+}
+.mat-link .fib-str { color: var(--gold-1); font-weight: 800; letter-spacing: 1px; }
+.mat-quote {
+  font-style: italic;
+  color: var(--muted);
+  border-left: 3px solid var(--teal);
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  margin: 0 0 18px;
+}
+.mat-avatar {
+  width: 70px; height: 70px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 2rem;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.mat-avatar em {
+  position: absolute;
+  right: 5px; bottom: 2px;
+  font-style: normal;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f1524;
+}
+.av-fib { background: radial-gradient(circle at 30% 30%, #fde68a, #f59e0b); box-shadow: 0 6px 20px rgba(251,191,36,0.4); }
+.av-jiaxian { background: radial-gradient(circle at 30% 30%, #99f6e4, #0d9488); box-shadow: 0 6px 20px rgba(45,212,191,0.4); }
+.av-yanghui { background: radial-gradient(circle at 30% 30%, #ddd6fe, #7c3aed); box-shadow: 0 6px 20px rgba(167,139,250,0.4); }
+
+/* 宽屏（≥1100px）：点击展开时，将展开的卡片横向扩张 */
+.mat-item.expand {
+  grid-column: span 1;
+  transform: scale(1.02);
+  border-color: var(--gold-1);
+}
+@media (max-width: 900px) {
+  .mat-accordion { grid-template-columns: 1fr; }
+}
