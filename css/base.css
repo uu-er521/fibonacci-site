@@ -371,3 +371,66 @@ html, body {
 @media (max-width: 640px) {
   .next-btn { right: 16px; bottom: 16px; padding: 11px 18px; font-size: 0.85rem; }
 }
+
+/* ============================================================
+   自定义光标：紫色圆形代替默认箭头
+   ============================================================ */
+html.cursor-custom,
+html.cursor-custom body {
+  cursor: none;
+}
+html.cursor-custom a,
+html.cursor-custom button,
+html.cursor-custom [role="button"],
+html.cursor-custom input[type=range],
+html.cursor-custom input[type="checkbox"],
+html.cursor-custom label,
+html.cursor-custom select,
+html.cursor-custom .nature-card,
+html.cursor-custom .quiz-opt,
+html.cursor-custom .mat-head,
+html.cursor-custom .yh-cell,
+html.cursor-custom .tray-piece,
+html.cursor-custom .piece-shape,
+html.cursor-custom .next-btn,
+html.cursor-custom .next-btn-inline,
+html.cursor-custom .fs-nav,
+html.cursor-custom .fs-close,
+html.cursor-custom .fo-nav,
+html.cursor-custom .fo-close {
+  cursor: none;
+}
+
+/* 跟随鼠标的粉色圆点（无光晕，黑色描边） */
+.cursor-dot {
+  position: fixed;
+  z-index: 100000;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--pink), var(--purple));
+  border: 2px solid #000;
+  box-shadow: none;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, opacity 0.2s;
+  will-change: left, top;
+}
+/* 交互态：放大 */
+.cursor-dot.is-hover {
+  width: 34px;
+  height: 34px;
+  box-shadow: none;
+}
+/* 触屏 / 禁用动画偏好时隐藏自定义光标 */
+@media (pointer: coarse) {
+  .cursor-dot { display: none; }
+  html.cursor-custom, html.cursor-custom body,
+  html.cursor-custom a, html.cursor-custom button,
+  html.cursor-custom [role="button"],
+  html.cursor-custom input[type=range] { cursor: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cursor-dot { display: none; }
+  html.cursor-custom, html.cursor-custom body { cursor: auto; }
+}
