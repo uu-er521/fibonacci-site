@@ -1,37 +1,92 @@
 /* ============================================================
    hero.js — Hero 首屏模块
    1) heroSequence()  生成首屏斐波那契数列 chips
-   2) heroFade()      滚动时首屏渐隐淡出 + 上移
-   （斐波那契教学页面 · 脚本封装 part 2）
+   2) heroIntro()     GSAP 3D 飞入入场（数列 chips 立体翻转）
+   3) heroFade()      ScrollTrigger 滚动驱动：银河视差 + 首屏淡出上移
+   （斐波那契教学页面 · 脚本封装 part 2，升级为 GSAP 3D 效果）
    ============================================================ */
 
 /* ---------- 1. Hero 数列展示 ---------- */
 (function heroSequence() {
   const heroSeq = document.getElementById('heroSeq');
+  if (!heroSeq) return;
   const heroFib = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
-  heroFib.forEach((v, i) => {
+  heroFib.forEach((v) => {
     const c = document.createElement('div');
     c.className = 'seq-chip';
     c.textContent = v;
-    c.style.animationDelay = (i * 0.15) + 's';
+    // GSAP 会通过内联 transform 控制入场，故不再用 CSS animationDelay / popIn
     heroSeq.appendChild(c);
   });
 })();
 
-/* ---------- 2. Hero 首屏滚动淡出 ---------- */
+/* ---------- 2. Hero 3D 飞入入场（GSAP） ---------- */
+(function heroIntro() {
+  if (typeof gsap === 'undefined') return;
+  const chips = document.querySelectorAll('#heroSeq .seq-chip');
+  if (!chips.length) return;
+
+  // 先做一次小抖动再飞入，增强“数字之舞”的灵动感
+  gsap.from(chips, {
+    x: (i) => (i % 2 === 0 ? -140 : 140),   // 左右交替入场
+    y: 90,
+    z: -260,
+    rotationY: (i) => (i % 2 === 0 ? -75 : 75),
+    rotationX: 30,
+    opacity: 0,
+    scale: 0.7,
+    stagger: 0.09,
+    ease: 'power3.out',
+    duration: 1.1,
+    delay: 0.35,
+    clearProps: 'transform'
+  });
+
+  // 标题与描述文字同步浮现
+  gsap.from('.hero h1', {
+    y: 60, opacity: 0, duration: 1, ease: 'power3.out', delay: 0.1
+  });
+  gsap.from('.hero p.desc', {
+    y: 40, opacity: 0, duration: 1, ease: 'power3.out', delay: 0.2
+  });
+  gsap.from('.hero .cta', {
+    y: 30, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 0.3
+  });
+})();
+
+/* ---------- 3. Hero 滚动驱动：银河视差 + 淡出上移（GSAP + ScrollTrigger） ---------- */
 (function heroFade() {
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
   const hero = document.querySelector('.hero');
   if (!hero) return;
-  const fadeStart = 120;      // 滚动超过该值后开始淡出
-  const fadeLength = hero.offsetHeight * 0.6; // 继续滚动此距离后完全消失
 
-  function update() {
-    const y = window.pageYOffset || document.documentElement.scrollTop;
-    const t = Math.min(1, Math.max(0, (y - fadeStart) / fadeLength));
-    hero.style.opacity = (1 - t).toFixed(3);
-    hero.style.transform = 'translateY(' + (t * 70) + 'px)';
-    hero.style.pointerEvents = t > 0.9 ? 'none' : '';
-  }
-  window.addEventListener('scroll', update, { passive: true });
-  update();
+  // 银河背景视差：滚动时被放大并缓慢上移，产生 3D 景深
+  gsap.to('.hero-milky', {
+    scale: 1.25,
+    yPercent: 18,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: hero,
+      start: 'top top',
+      end: 'bottom top',
+      scrub: true
+    }
+  });
+
+  // Hero 整体淡出 + 上移（替代原手动 JS 滚动淡出）
+  gsap.to(hero, {
+    opacity: 0,
+    y: 80,
+    ease: 'none',
+    pointerEvents: 'none',
+    scrollTrigger: {
+      trigger: hero,
+      start: 'top top',
+      end: 'bottom top',
+      scrub: true
+    }
+  });
+
+  // ScrollTrigger 会自动在滚动结束后刷新布局，无需额外监听
+  ScrollTrigger.refresh();
 })();

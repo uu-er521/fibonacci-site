@@ -206,6 +206,8 @@ nav .links a.active::after {
   max-width: 800px;
   width: 100%;
   box-shadow: var(--shadow);
+  /* 为 chips 的 GSAP 3D 翻转提供透视景深 */
+  perspective: 900px;
 }
 .seq-chip {
   width: 52px; height: 52px;
@@ -215,7 +217,7 @@ nav .links a.active::after {
   font-size: 1.05rem;
   background: var(--card);
   border: 1px solid var(--card-border);
-  animation: popIn 0.6s ease both;
+  /* 入场 3D 动画改由 GSAP 控制（hero.js），移除 CSS 的 popIn 避免覆盖 transform */
 }
 /* 桌面 / 全屏：数列 chips 收拢为同一行（13 项自适应收缩） */
 @media (min-width: 760px) {
