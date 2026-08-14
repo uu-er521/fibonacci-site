@@ -49,9 +49,9 @@
       从向日葵的种子到银河的旋臂，斐波那契数列以最优雅的方式
       诠释了大自然的秩序与美学。向下滚动，探索这串神奇数字背后的秘密。
     </p>
-    <div class="cta">
+        <div class="cta">
       <a href="#intro" class="btn btn-primary">开始探索 →</a>
-      <a href="#quiz" class="btn btn-ghost">挑战测验</a>
+      <span class="cta-meta">explore</span>
     </div>
 
     <div class="seq-strip" id="heroSeq"></div>
@@ -438,6 +438,9 @@
   </div>
 
     <!-- 脚本已拆分为 js/ 目录，按模块分文件引入（普通脚本，可双击 file:// 直接运行） -->
+  <!-- 第三方库：GSAP 核心 + ScrollTrigger（本地化，断网可用，仅 CDN 一次性下载） -->
+  <script src="js/gsap.min.js"></script>
+  <script src="js/ScrollTrigger.min.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/hero.js"></script>
   <script src="js/sequence.js"></script>
