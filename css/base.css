@@ -178,6 +178,27 @@ nav .links a.active::after {
   border: none;
 }
 .btn:hover { transform: translateY(-3px); }
+/* Hero 内联 Next 按钮（金色主按钮，触发屏切换） */
+.next-btn-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 34px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  color: #0f1524;
+  font-weight: 800;
+  font-size: 1.02rem;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(251,191,36,0.35);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.next-btn-inline:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 34px rgba(251,191,36,0.5);
+}
+.next-btn-inline .arr { font-size: 1.3rem; line-height: 1; }
 .btn-primary {
   background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
   color: #0f1524;
@@ -276,3 +297,77 @@ footer {
   background: var(--bg-2);
 }
 footer .heart { color: var(--pink); }
+
+/* ============================================================
+   View 单屏切换（架构升级）+ 过渡层 + Next 按钮
+   ============================================================ */
+html, body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+/* 全屏视图容器 */
+.views {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;               /* 移动端地址栏适配 */
+}
+.view {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  opacity: 0;
+  overflow-y: auto;             /* 单屏内部内容超高时可独立滚动 */
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  z-index: 1;
+}
+.view.active { visibility: visible; opacity: 1; z-index: 2; }
+
+/* 全屏扩散过渡覆盖层（由 view.js 用 GSAP 控制） */
+.page-transition {
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 9999;
+  width: 8px; height: 8px;
+  visibility: hidden;
+  opacity: 0;
+  background: radial-gradient(circle at 35% 30%, var(--gold-1), var(--gold-2) 55%, var(--gold-3));
+  box-shadow: 0 0 60px rgba(251,191,36,0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform, opacity, width, height, margin;
+}
+
+/* 统一 Next 按钮（固定于每屏右下角，供主跳转） */
+.next-btn {
+  position: fixed;
+  right: 30px; bottom: 30px;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 26px;
+  border-radius: 50px;
+  border: 1px solid var(--card-border);
+  background: rgba(15,21,36,0.6);
+  backdrop-filter: blur(8px);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: border-color 0.3s, color 0.3s, transform 0.3s, box-shadow 0.3s;
+  box-shadow: var(--shadow);
+}
+.next-btn:hover {
+  border-color: var(--gold-1);
+  color: var(--gold-1);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(251,191,36,0.3);
+}
+.next-btn .arr { font-size: 1.2rem; line-height: 1; }
+@media (max-width: 640px) {
+  .next-btn { right: 16px; bottom: 16px; padding: 11px 18px; font-size: 0.85rem; }
+}

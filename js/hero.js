@@ -54,39 +54,7 @@
   });
 })();
 
-/* ---------- 3. Hero 滚动驱动：银河视差 + 淡出上移（GSAP + ScrollTrigger） ---------- */
-(function heroFade() {
-  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
-  const hero = document.querySelector('.hero');
-  if (!hero) return;
-
-  // 银河背景视差：滚动时被放大并缓慢上移，产生 3D 景深
-  gsap.to('.hero-milky', {
-    scale: 1.25,
-    yPercent: 18,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: hero,
-      start: 'top top',
-      end: 'bottom top',
-      scrub: true
-    }
-  });
-
-  // Hero 整体淡出 + 上移（替代原手动 JS 滚动淡出）
-  gsap.to(hero, {
-    opacity: 0,
-    y: 80,
-    ease: 'none',
-    pointerEvents: 'none',
-    scrollTrigger: {
-      trigger: hero,
-      start: 'top top',
-      end: 'bottom top',
-      scrub: true
-    }
-  });
-
-  // ScrollTrigger 会自动在滚动结束后刷新布局，无需额外监听
-  ScrollTrigger.refresh();
-})();
+/* ---------- 3. Hero 滚动驱动（单屏模式下已由 view.js 接管退出，故移除） ----------
+   原滚动淡出逻辑在「整屏跳转」架构下不再需要：点击 Next 时 view.js 会
+   完成当前屏的 GSAP 退出过渡。此模块保留为空占位，未来如需在 Hero 内
+   做滚动视差，可在本处扩展。 */

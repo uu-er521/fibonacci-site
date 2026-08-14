@@ -37,29 +37,31 @@
       <a href="#nature">自然</a>
       <a href="#quiz">测验</a>
     </div>
-  </nav>
+    </nav>
 
-    <!-- Hero -->
-  <header class="hero">
-    <!-- 银河视差背景（background-attachment:fixed 实现固定视差）+ 渐变遮罩 -->
+  <main class="views">
+
+    <!-- Hero 屏 -->
+  <header class="hero view active" id="hero">
+    <!-- 银河视差背景 -->
     <div class="hero-milky" aria-hidden="true"></div>
 
     <h1>自然法则中<br><span class="grad">隐藏的数字之舞</span></h1>
-    <p class="desc">
+        <p class="desc">
       从向日葵的种子到银河的旋臂，斐波那契数列以最优雅的方式
-      诠释了大自然的秩序与美学。向下滚动，探索这串神奇数字背后的秘密。
+      诠释了大自然的秩序与美学。点击「开始探索」，踏上这串神奇数字的旅程。
     </p>
-        <div class="cta">
-      <a href="#intro" class="btn btn-primary">开始探索 →</a>
+
+    <div class="cta">
+      <button class="next-btn-inline" data-next="intro"><span>开始探索</span><span class="arr">→</span></button>
       <span class="cta-meta">explore</span>
     </div>
 
-    <div class="seq-strip" id="heroSeq"></div>
-    <div class="scroll-hint">▾ 向下滑动</div>
+        <div class="seq-strip" id="heroSeq"></div>
     </header>
 
-    <!-- Question intro: 兔子数列 × 中国古代垛积术 / 数学家 -->
-  <section id="intro">
+        <!-- Question intro: 兔子数列 × 中国古代垛积术 / 数学家 -->
+  <section id="intro" class="view">
     <div class="sec-head reveal">
       <div class="kicker">A Question in Time</div>
       <h2>一串数字的东方与西方</h2>
@@ -206,10 +208,11 @@
         </div>
       </div>
     </div>
+    <button class="next-btn" data-next="definition"><span>认识数列</span><span class="arr">→</span></button>
   </section>
 
-    <!-- Sequence: 数列定义 + 递推公式 + 内容特点 -->
-    <section id="definition">
+        <!-- Sequence: 数列定义 + 递推公式 + 内容特点 -->
+    <section id="definition" class="view">
     <div class="sec-head reveal">
       <div class="kicker">Definition</div>
       <h2>什么是斐波那契数列？</h2>
@@ -266,12 +269,13 @@
           拖动滑杆就是在反复应用这条递推公式。注意看相邻两项之比
           多么快就"收敛"到黄金比例 φ —— 这正是这条数列最迷人的属性之一。
         </p>
-      </div>
+            </div>
     </div>
+  <button class="next-btn" data-next="properties"><span>惊人性质</span><span class="arr">→</span></button>
   </section>
 
-    <!-- 从递推 → 封闭公式：紧接数列定义后，回答"能否一步算出任一项" -->
-    <section id="properties">
+        <!-- 从递推 → 封闭公式：紧接数列定义后，回答"能否一步算出任一项" -->
+    <section id="properties" class="view">
     <div class="sec-head reveal">
       <div class="kicker">The Math</div>
       <h2>从递推到封闭公式</h2>
@@ -295,11 +299,12 @@
           <div class="fact reveal fo-card" data-fo="3"><span class="num">4</span><p><strong>偶数项和：</strong>前 n 个偶数下标项（F₂+F₄+…+F₂ₙ）之和，恰好等于第 2n+1 项减 1：F₂ₙ₊₁ − 1。</p><span class="fo-open">📖 推导</span></div>
           <div class="fact reveal fo-card" data-fo="4"><span class="num">5</span><p><strong>相邻项互质：</strong>相邻的两个斐波那契数最大公约数总是 1，即它们总是互质的。</p><span class="fo-open">📖 推导</span></div>
           <div class="fact reveal fo-card" data-fo="5"><span class="num">6</span><p><strong>平方和求和：</strong>前 n 项的平方和等于第 n 项与第 n+1 项的乘积：F₁²+…+Fₙ² = Fₙ·Fₙ₊₁。</p><span class="fo-open">📖 推导</span></div>
-        </div>
+                </div>
+  <button class="next-btn" data-next="golden"><span>黄金比例</span><span class="arr">→</span></button>
   </section>
 
-  <!-- Golden ratio & spiral -->
-  <section id="golden">
+    <!-- Golden ratio & spiral -->
+  <section id="golden" class="view">
     <div class="sec-head reveal">
       <div class="kicker">Golden Ratio</div>
       <h2>黄金螺旋：永恒的优雅</h2>
@@ -338,11 +343,12 @@
           便会连成自然界中那条完美的黄金螺旋。
         </p>
       </div>
-    </div>
+        </div>
+  <button class="next-btn" data-next="nature"><span>走向自然</span><span class="arr">→</span></button>
   </section>
 
-  <!-- Nature -->
-  <section id="nature">
+    <!-- Nature -->
+  <section id="nature" class="view">
     <div class="sec-head reveal">
       <div class="kicker">In Nature</div>
       <h2>大自然中的斐波那契</h2>
@@ -380,11 +386,12 @@
         <h3>银河旋臂</h3>
         <p>某些星系（如螺旋星系）的旋臂轨迹也可以用对数螺旋近似描述，与黄金螺旋有着惊人的视觉相似性。</p>
       </div>
-    </div>
+        </div>
+  <button class="next-btn" data-next="quiz"><span>终极测验</span><span class="arr">→</span></button>
   </section>
 
-  <!-- Quiz -->
-  <section id="quiz">
+    <!-- Quiz -->
+  <section id="quiz" class="view">
     <div class="sec-head reveal">
       <div class="kicker">Quiz Time</div>
       <h2>检测你的理解</h2>
@@ -397,9 +404,12 @@
       <div class="quiz-foot">
         <span class="quiz-score" id="quizScore">得分：0 / 0</span>
         <button class="quiz-next" id="quizNext" disabled>下一题 →</button>
-      </div>
+            </div>
     </div>
+  <button class="next-btn" data-next="hero"><span>重新开始</span><span class="arr">↺</span></button>
   </section>
+
+  </main>
 
   <footer>
     <p>用 <span class="heart">♥</span> 与 <span class="gold">φ</span> 编织的数字之美 · Fibonacci Learning Site</p>
@@ -448,8 +458,10 @@
   <script src="js/yanghui.js"></script>
   <script src="js/golden.js"></script>
     <script src="js/nature.js"></script>
-  <script src="js/quiz.js"></script>
+    <script src="js/quiz.js"></script>
   <script src="js/formula.js"></script>
+  <!-- 单屏 View 切换核心（依赖 GSAP） -->
+  <script src="js/view.js"></script>
 
 </body>
 </html>
