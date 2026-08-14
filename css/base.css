@@ -178,7 +178,7 @@ nav .links a.active::after {
   border: none;
 }
 .btn:hover { transform: translateY(-3px); }
-/* Hero 内联 Next 按钮（金色主按钮，触发屏切换） */
+/* Hero 内联 Next 按钮（粉紫色主按钮，触发屏切换） */
 .next-btn-inline {
   display: inline-flex;
   align-items: center;
@@ -186,30 +186,30 @@ nav .links a.active::after {
   padding: 14px 34px;
   border: none;
   border-radius: 50px;
-  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  background: linear-gradient(135deg, var(--purple), var(--pink));
   color: #0f1524;
   font-weight: 800;
   font-size: 1.02rem;
   cursor: pointer;
-  box-shadow: 0 8px 25px rgba(251,191,36,0.35);
+  box-shadow: 0 8px 25px rgba(167,139,250,0.4);
   transition: transform 0.25s, box-shadow 0.25s;
 }
 .next-btn-inline:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 34px rgba(251,191,36,0.5);
+  box-shadow: 0 12px 34px rgba(244,114,182,0.5);
 }
 .next-btn-inline .arr { font-size: 1.3rem; line-height: 1; }
 .btn-primary {
-  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  background: linear-gradient(135deg, var(--purple), var(--pink));
   color: #0f1524;
-  box-shadow: 0 8px 25px rgba(251,191,36,0.35);
+  box-shadow: 0 8px 25px rgba(167,139,250,0.4);
 }
 .btn-ghost {
   background: transparent;
   color: var(--text);
   border: 1px solid var(--card-border);
 }
-.btn-ghost:hover { border-color: var(--gold-1); color: var(--gold-1); }
+.btn-ghost:hover { border-color: var(--purple); color: var(--purple); }
 
 /* Sequence ticker in hero */
 .seq-strip {
@@ -333,8 +333,8 @@ html, body {
   width: 8px; height: 8px;
   visibility: hidden;
   opacity: 0;
-  background: radial-gradient(circle at 35% 30%, var(--gold-1), var(--gold-2) 55%, var(--gold-3));
-  box-shadow: 0 0 60px rgba(251,191,36,0.6);
+  background: radial-gradient(circle at 35% 30%, var(--purple), var(--pink) 55%, var(--purple));
+  box-shadow: 0 0 60px rgba(167,139,250,0.6);
   border-radius: 50%;
   pointer-events: none;
   will-change: transform, opacity, width, height, margin;
@@ -350,7 +350,7 @@ html, body {
   gap: 8px;
   padding: 13px 26px;
   border-radius: 50px;
-  border: 1px solid var(--card-border);
+  border: 1px solid rgba(167,139,250,0.45);
   background: rgba(15,21,36,0.6);
   backdrop-filter: blur(8px);
   color: var(--text);
@@ -359,13 +359,13 @@ html, body {
   cursor: pointer;
   letter-spacing: 1px;
   transition: border-color 0.3s, color 0.3s, transform 0.3s, box-shadow 0.3s;
-  box-shadow: var(--shadow);
+  box-shadow: 0 0 18px rgba(167,139,250,0.15);
 }
 .next-btn:hover {
-  border-color: var(--gold-1);
-  color: var(--gold-1);
+  border-color: var(--pink);
+  color: var(--purple);
   transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(251,191,36,0.3);
+  box-shadow: 0 12px 32px rgba(244,114,182,0.3);
 }
 .next-btn .arr { font-size: 1.2rem; line-height: 1; }
 @media (max-width: 640px) {

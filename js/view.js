@@ -35,17 +35,34 @@
   }
 
   /* ---------- 工具：切到某屏 ----------
-     opts.clickPos = {x, y} 过渡扩散的起点（通常是按钮位置）
+     clickPos = {x, y} 过渡扩散的起点（通常是按钮位置）
+     useOverlay = false 时直接切换（导航跳转，不播放色块填充）
   */
-  function show(i, clickPos) {
+  function show(i, clickPos, useOverlay) {
     if (i < 0 || i >= order.length) return;
     const next = order[i];
-    if (animating) return; // 动画进行中忽略重复点击
     if (next === current) return; // 点击当前屏则不重复切
+    if (useOverlay !== false && animating) return; // 动画进行中忽略重复点击
 
-    animating = true;
     const from = current;
     const to = next;
+
+    // 导航跳转：无过度，直接切换（无色块填充）
+    if (useOverlay === false) {
+      from.classList.remove('active');
+      from.style.visibility = 'hidden';
+      from.style.opacity = '';
+      to.classList.add('active');
+      to.style.visibility = 'visible';
+      to.style.opacity = '';
+      to.scrollTop = 0;
+      activateReveals(to);
+      current = to;
+      updateNav(to);
+      return;
+    }
+
+    animating = true;
     const cx = clickPos ? clickPos.x : window.innerWidth / 2;
     const cy = clickPos ? clickPos.y : window.innerHeight / 2;
 
@@ -147,14 +164,14 @@
     });
   });
 
-  /* ---------- 绑定导航链接 ---------- */
+  /* ---------- 绑定导航链接（导航跳转不做色块填充，直接切换） ---------- */
   document.querySelectorAll('nav .links a[href^="#"]').forEach((a) => {
     a.addEventListener('click', (e) => {
       e.preventDefault();
       const targetId = a.getAttribute('href').slice(1);
       const idx = order.findIndex(v => v.id === targetId);
       if (idx !== -1) {
-        show(idx, { x: window.innerWidth / 2, y: window.innerHeight / 2 });
+        show(idx, null, false);
       }
     });
   });
