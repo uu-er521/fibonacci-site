@@ -113,11 +113,12 @@ nav .links a.active::after {
 }
 /* 中央大圆形 FIBONACCI 按钮（x/y 同步加长、强制保持正圆） */
 .hero-orb {
-  /* 以高度为主控尺寸：为数字条 + 简介文字 与圆球 同屏 预留空间 */
-  width: min(58vh, 58vw, 720px);
-  height: min(58vh, 58vw, 720px);
-  max-width: min(58vh, 58vw, 720px);
-  max-height: min(58vh, 58vw, 720px);
+  /* 基准尺寸 = 用户认可的大小：默认即达到此前 hover(×1.04) 的视觉效果，
+     hover 时再放大 4% 作为稍微变大的强化效果 */
+  width: min(59vh, 59vw, 720px);
+  height: min(59vh, 59vw, 720px);
+  max-width: min(59vh, 59vw, 720px);
+  max-height: min(59vh, 59vw, 720px);
   aspect-ratio: 1 / 1;          /* 强制定比 1:1，避免被拉伸成椭圆 */
   min-width: 0;
   min-height: 0;
@@ -149,9 +150,9 @@ nav .links a.active::after {
     inset 0 0 46px rgba(0, 0, 0, 0.18);
 }
 .orb-text {
-  font-size: clamp(1.6rem, 7vmin, 4.5rem);
-  letter-spacing: clamp(3px, 1.2vmin, 10px);
-  padding-left: clamp(3px, 1.2vmin, 10px); /* 抵消 letterspacing 造成的视觉偏移 */
+  font-size: clamp(1.1rem, 4.5vmin, 3rem);
+  letter-spacing: clamp(2px, 0.8vmin, 6px);
+  padding-left: clamp(2px, 0.8vmin, 6px); /* 抵消 letterspacing 造成的视觉偏移 */
   color: #ffffff;
   text-shadow: 0 3px 16px rgba(0, 0, 0, 0.45);
   user-select: none;
@@ -261,9 +262,9 @@ nav .links a.active::after {
 }
 .btn-ghost:hover { border-color: var(--purple); color: var(--purple); }
 
-/* Sequence ticker in hero（下移：置于大按钮下方） */
+/* Sequence ticker in hero（置于大按钮下方，间距由 .hero 的 gap 统一控制） */
 .seq-strip {
-  margin-top: 4px;
+  margin-top: 0;
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
