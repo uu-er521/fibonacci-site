@@ -159,7 +159,17 @@
       const idx = order.findIndex(v => v.id === targetId);
       if (idx !== -1) {
         const r = btn.getBoundingClientRect();
-        show(idx, { x: r.left + r.width / 2, y: r.top + r.height / 2 });
+        let pos;
+        if (btn.classList.contains('edge-start')) {
+          // 从圆形按钮的右下边缘开始扩散（而非中心）
+          pos = {
+            x: r.left + r.width * 0.85,
+            y: r.top + r.height * 0.85
+          };
+        } else {
+          pos = { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+        }
+        show(idx, pos);
       }
     });
   });

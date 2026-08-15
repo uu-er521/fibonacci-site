@@ -98,15 +98,63 @@ nav .links a.active::after {
 /* ---------- Hero ---------- */
 .hero {
   min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: clamp(8px, 2vh, 20px);
   text-align: center;
-  padding: 120px 5% 60px;
+  padding: 14px 5%;
   position: relative;
   overflow: hidden;
   isolation: isolate;
+}
+/* 中央大圆形 FIBONACCI 按钮（x/y 同步加长、强制保持正圆） */
+.hero-orb {
+  /* 以高度为主控尺寸：为数字条 + 简介文字 与圆球 同屏 预留空间 */
+  width: min(58vh, 58vw, 720px);
+  height: min(58vh, 58vw, 720px);
+  max-width: min(58vh, 58vw, 720px);
+  max-height: min(58vh, 58vw, 720px);
+  aspect-ratio: 1 / 1;          /* 强制定比 1:1，避免被拉伸成椭圆 */
+  min-width: 0;
+  min-height: 0;
+  flex: 0 0 auto;               /* 防止 flex 拉伸变形 */
+  border-radius: 50%;
+  border: none;
+  /* 无渐变：纯色底 + 噪点颗粒纹理 */
+  background-color: #8b5bd0;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+  background-blend-mode: soft-light;
+  color: #0f1524;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: none;
+  box-shadow:
+    0 34px 90px rgba(0, 0, 0, 0.55),
+    inset 0 0 46px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+  z-index: 2;
+}
+.hero-orb:hover {
+  transform: scale(1.04);
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.6),
+    inset 0 0 46px rgba(0, 0, 0, 0.18);
+}
+.orb-text {
+  font-size: clamp(1.6rem, 7vmin, 4.5rem);
+  letter-spacing: clamp(3px, 1.2vmin, 10px);
+  padding-left: clamp(3px, 1.2vmin, 10px); /* 抵消 letterspacing 造成的视觉偏移 */
+  color: #ffffff;
+  text-shadow: 0 3px 16px rgba(0, 0, 0, 0.45);
+  user-select: none;
 }
 /* 银河视差背景层 */
 .hero-milky {
@@ -148,11 +196,13 @@ nav .links a.active::after {
   color: transparent;
 }
 .hero p.desc {
-  max-width: 640px;
+  max-width: 560px;
   color: var(--muted);
-  font-size: 1.12rem;
-  margin-bottom: 40px;
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.6;
 }
+/* 大按钮下方的小字提示（预留） */
 .cta {
   display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
   align-items: center;
@@ -211,15 +261,15 @@ nav .links a.active::after {
 }
 .btn-ghost:hover { border-color: var(--purple); color: var(--purple); }
 
-/* Sequence ticker in hero */
+/* Sequence ticker in hero（下移：置于大按钮下方） */
 .seq-strip {
-  margin-top: 60px;
+  margin-top: 4px;
   display: flex;
-  gap: 14px;
+  gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  padding: 22px 30px;
+  padding: 14px 24px;
   background: var(--card);
   border: 1px solid var(--card-border);
   border-radius: var(--radius);
@@ -247,9 +297,9 @@ nav .links a.active::after {
     flex: 1 1 0;
     min-width: 0;
     width: auto;
-    height: clamp(34px, 6vw, 54px);
+    height: clamp(30px, 5vw, 46px);
     max-width: 58px;
-    font-size: clamp(0.78rem, 1.9vw, 1.05rem);
+    font-size: clamp(0.76rem, 1.7vw, 1rem);
   }
 }
 @keyframes popIn {
@@ -333,8 +383,12 @@ html, body {
   width: 8px; height: 8px;
   visibility: hidden;
   opacity: 0;
-  background: radial-gradient(circle at 35% 30%, var(--purple), var(--pink) 55%, var(--purple));
-  box-shadow: 0 0 60px rgba(167,139,250,0.6);
+    background: radial-gradient(circle at 35% 32%,
+        #302a44 0%,
+        #232b45 40%,
+        #182136 68%,
+        var(--bg) 100%);
+    box-shadow: 0 0 50px rgba(11,17,30,0.9);
   border-radius: 50%;
   pointer-events: none;
   will-change: transform, opacity, width, height, margin;
@@ -422,6 +476,30 @@ html.cursor-custom .fo-close {
   height: 34px;
   box-shadow: none;
 }
+/* 大圆形按钮特化：悬停时小球大幅放大，内部显示 explore */
+.cursor-dot::after {
+  content: 'explore';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  transition: opacity 0.18s;
+  pointer-events: none;
+}
+.cursor-dot.is-explore {
+  width: 64px;
+  height: 64px;
+  background: radial-gradient(circle at 35% 30%, var(--pink), var(--purple));
+  box-shadow: none;
+}
+.cursor-dot.is-explore::after { opacity: 1; }
 /* 触屏 / 禁用动画偏好时隐藏自定义光标 */
 @media (pointer: coarse) {
   .cursor-dot { display: none; }

@@ -46,19 +46,20 @@
     <!-- 银河视差背景 -->
     <div class="hero-milky" aria-hidden="true"></div>
 
-    <h1>自然法则中<br><span class="grad">隐藏的数字之舞</span></h1>
-        <p class="desc">
+        <!-- 中央大圆形 FIBONACCI 按钮（占半屏、居中；点击后从按钮边缘扩散） -->
+        <button class="hero-orb edge-start" id="heroOrb" data-next="intro" aria-label="开始探索">
+          <span class="orb-text">FIBONACCI</span>
+        </button>
+
+    <!-- 数列数字飞入框（下移） -->
+    <div class="seq-strip" id="heroSeq"></div>
+
+    <!-- 缩小介绍文字（置于数字框下方） -->
+    <p class="desc">
       从向日葵的种子到银河的旋臂，斐波那契数列以最优雅的方式
       诠释了大自然的秩序与美学。点击「开始探索」，踏上这串神奇数字的旅程。
     </p>
-
-    <div class="cta">
-      <button class="next-btn-inline" data-next="intro"><span>开始探索</span><span class="arr">→</span></button>
-      <span class="cta-meta">explore</span>
-    </div>
-
-        <div class="seq-strip" id="heroSeq"></div>
-    </header>
+  </header>
 
         <!-- Question intro: 兔子数列 × 中国古代垛积术 / 数学家 -->
   <section id="intro" class="view">

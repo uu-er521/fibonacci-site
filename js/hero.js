@@ -42,15 +42,13 @@
     clearProps: 'transform'
   });
 
-  // 标题与描述文字同步浮现
-  gsap.from('.hero h1', {
-    y: 60, opacity: 0, duration: 1, ease: 'power3.out', delay: 0.1
-  });
+  // 描述文字浮现
   gsap.from('.hero p.desc', {
     y: 40, opacity: 0, duration: 1, ease: 'power3.out', delay: 0.2
   });
-  gsap.from('.hero .cta', {
-    y: 30, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 0.3
+  // 中央大圆形按钮从底部放大浮现
+  gsap.from('.hero-orb', {
+    scale: 0.4, opacity: 0, y: 40, duration: 1.1, ease: 'power3.out', delay: 0.25
   });
 })();
 

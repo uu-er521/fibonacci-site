@@ -56,13 +56,24 @@
     '.fs-nav', '.fs-close', '.fo-nav', '.fo-close'
   ].join(',');
 
+  // 大圆形按钮：小球放大并显示 explore
+  const ORB_SEL = '.hero-orb';
+
   document.addEventListener('mouseover', (e) => {
-    if (e.target && e.target.closest && e.target.closest(HOVER_SEL)) {
+    if (!e.target || !e.target.closest) return;
+    if (e.target.closest(ORB_SEL)) {
+      dot.classList.remove('is-hover');
+      dot.classList.add('is-explore');
+    } else if (e.target.closest(HOVER_SEL)) {
+      dot.classList.remove('is-explore');
       dot.classList.add('is-hover');
     }
   });
   document.addEventListener('mouseout', (e) => {
-    if (e.target && e.target.closest && e.target.closest(HOVER_SEL)) {
+    if (!e.target || !e.target.closest) return;
+    if (e.target.closest(ORB_SEL)) {
+      dot.classList.remove('is-explore');
+    } else if (e.target.closest(HOVER_SEL)) {
       dot.classList.remove('is-hover');
     }
   });
