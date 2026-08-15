@@ -122,14 +122,17 @@ nav .links a.active::after {
   aspect-ratio: 1 / 1;          /* 强制定比 1:1，避免被拉伸成椭圆 */
   min-width: 0;
   min-height: 0;
-  flex: 0 0 auto;               /* 防止 flex 拉伸变形 */
+  flex: 0 0 auto;              /* 防止 flex 拉伸变形 */
   border-radius: 50%;
   border: none;
-  /* 无渐变：纯色底 + 噪点颗粒纹理 */
-  background-color: #8b5bd0;
-  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
-  background-size: 140px 140px;
-  background-blend-mode: soft-light;
+        /* 无渐变：亮蓝打底 + 蓝色粗粝纹理图（青色高光 + 轻微暗角统一色调） */
+  background-color: #4a6db4;
+  background-image:
+    linear-gradient(160deg, rgba(64,224,255,0.30), rgba(10,20,40,0.22) 60%, rgba(5,12,28,0.40)),
+    url('../image/蓝色粗砺纹理.png');
+  background-size: cover;
+  background-position: center center;
+  background-blend-mode: normal;
   color: #0f1524;
   display: grid;
   place-items: center;
