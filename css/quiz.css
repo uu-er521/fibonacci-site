@@ -27,8 +27,40 @@
   font-family: inherit;
 }
 .quiz-opt:hover { border-color: var(--gold-1); transform: translateX(5px); }
-.quiz-opt.correct { background: rgba(45,212,191,0.15); border-color: var(--teal); }
-.quiz-opt.wrong { background: rgba(244,114,182,0.15); border-color: var(--pink); }
+/* 正确：沿用青绿色主题，仅用绿色 ✓ 标记突出对错 */
+.quiz-opt.correct {
+  background: rgba(45,212,191,0.22);
+  border-color: var(--teal);
+  box-shadow: 0 0 0 2px rgba(45,212,191,0.25);
+  color: var(--text);
+  font-weight: 700;
+}
+.quiz-opt.correct::before {
+  content: '✓';
+  margin-right: 10px;
+  font-weight: 900;
+  color: #22c55e;
+  font-size: 1.15rem;
+}
+/* 错误：沿用粉色主题，仅用红色 ✗ 标记突出对错 */
+.quiz-opt.wrong {
+  background: rgba(244,114,182,0.22);
+  border-color: var(--pink);
+  box-shadow: 0 0 0 2px rgba(244,114,182,0.25);
+  color: var(--text);
+  font-weight: 700;
+}
+.quiz-opt.wrong::before {
+  content: '✗';
+  margin-right: 10px;
+  font-weight: 900;
+  color: #ef4444;
+  font-size: 1.15rem;
+}
+/* 当用户选错时，自动标记为正确的高亮选项会带 ✓；其余未选且非正确的选项变暗，进一步突出反馈 */
+.quiz-opt:disabled:not(.correct):not(.wrong) {
+  opacity: 0.45;
+}
 .quiz-opt:disabled { cursor: not-allowed; }
 .quiz-foot {
   margin-top: 22px;
@@ -41,3 +73,4 @@
   color: #0f1524; font-weight: 700; border: none; cursor: pointer;
 }
 .quiz-next:disabled { opacity: 0.4; cursor: not-allowed; }
+
