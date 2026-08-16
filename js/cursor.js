@@ -70,7 +70,7 @@
   const HOVER_SEL = [
     'a', 'button', '[role="button"]', 'input[type=range]',
     'input[type="checkbox"]', 'label', 'select',
-    '.nature-card', '.quiz-opt', '.mat-head', '.yh-cell',
+    '.nature-card', '.quiz-opt', '.fact', '.mat-head', '.yh-cell',
     '.tray-piece', '.piece-shape', '.next-btn', '.next-btn-inline',
     '.fs-nav', '.fs-close', '.fo-nav', '.fo-close'
   ].join(',');
