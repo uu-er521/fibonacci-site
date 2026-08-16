@@ -218,7 +218,7 @@
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;
-  opacity: 0;
+    opacity: 0;
   transform: translateX(-70px);
   transition:
     transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -308,4 +308,47 @@
 }
 @media (max-width: 900px) {
   .mat-accordion { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   问题引入页 · 分方向入场动画
+   （覆盖 base.css 中 .reveal 的统一 3D 翻转：
+     上方标题从上方滑入、左兔子卡片从左侧滑入、
+     右垛积术卡片从右侧滑入、数学家区域保持从左侧弹出）
+   ============================================================ */
+/* 上方标题：3D 飞入（从空间上方高处、略带俯仰地飞入正面） */
+#intro .sec-head.reveal {
+  transform:
+    perspective(1200px)
+    rotateX(26deg)
+    translateY(-80px)
+    translateZ(-180px)
+    scale(0.72);
+  transform-origin: 50% 0%;
+}
+/* 左兔子卡：从左侧滑入 */
+#intro .reveal-left.reveal {
+  transform: translateX(-130px);
+}
+/* 右垛积术卡：从右侧滑入 */
+#intro .reveal-right.reveal {
+  transform: translateX(130px);
+}
+/* 数学家区域：整体从左侧横向滑入 */
+#intro .mat-section.reveal {
+  transform: translateX(-120px);
+}
+/* 数学家卡片在容器内不各自错落弹出，随大块一起同步滑入 */
+#intro .mat-item {
+  transition-delay: 0s !important;
+}
+/* 归位 */
+#intro .sec-head.reveal.visible {
+  transform: perspective(1200px) rotateX(0deg) translateY(0) translateZ(0) scale(1);
+  transform-origin: 50% 50%;
+}
+#intro .reveal-left.reveal.visible,
+#intro .reveal-right.reveal.visible,
+#intro .mat-section.reveal.visible {
+  transform: translateX(0);
 }

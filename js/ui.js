@@ -40,9 +40,16 @@
   update();
 })();
 
-/* ---------- 2. 滚动渐显 ---------- */
+/* ---------- 2. 滚动渐显 ----------
+   注意：单屏模式下（.view 整屏跳转），.view 内部叠加放置、observer 会在
+   加载时就把所有重叠的 .reveal 误判为"可见"并提前加 .visible，导致切屏时
+   3D 入场被吞掉。故这里只观察"不在任一 .view 内"的元素；
+   .view 内的 .reveal 由 view.js 的 activateReveals 统一接管触发。
+   -------------------------------------------------------- */
 (function revealOnScroll() {
-  const revealEls = document.querySelectorAll('.reveal');
+  const revealEls = Array.from(document.querySelectorAll('.reveal'))
+    .filter(el => !el.closest('.view'));
+  if (!revealEls.length) return;
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }

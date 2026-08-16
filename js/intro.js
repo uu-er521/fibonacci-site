@@ -57,7 +57,7 @@
     range.addEventListener('input', () => render(+range.value));
   }
 
-  /* ---- 数学家 accordion 折叠 ---- */
+  /* ---- 数学家 accordion 折叠 + 滚动才入场 + 展开自动下移 ---- */
   const accordion = document.getElementById('matAccordion');
   if (accordion) {
     const items = Array.from(accordion.querySelectorAll('.mat-item'));
@@ -68,21 +68,56 @@
         const isOpen = item.classList.contains('open');
         // accordion：先全部关闭
         items.forEach(i => i.classList.remove('open', 'expand'));
-        if (!isOpen) item.classList.add('open', 'expand');
+        if (!isOpen) {
+          item.classList.add('open', 'expand');
+          // 展开后把生平正文平滑滚动进入视口，确保「信息可以全部看见」
+          setTimeout(() => {
+            const body = item.querySelector('.mat-body');
+            if (body) body.scrollIntoView({ behavior: 'smooth', block: 'end' });
+          }, 120);
+        }
       });
     });
 
-    // 滚动入场：从左向右弹出
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e, idx) => {
-        if (e.isIntersecting) {
-          const m = e.target;
-          m.classList.add('entered');
-          m.style.transitionDelay = (items.indexOf(m) * 0.15) + 's';
-          io.unobserve(m);
-        }
+    // 滚动才入场：整个数学家区域「滚动到视口后才入场」（容器从左滑入、带动内部卡片）
+    // 单屏模式下所有 .view 重叠放置，若一开始就 observe，隐藏屏（#intro 未激活）里的
+    // mat-section 会在加载时就被 IntersectionObserver 误判为可见而提前入场。
+    // 因此仅在"问题引入屏被激活（viewactive）"后才真正启动滚动监听。
+    const section = accordion.closest('.mat-section');
+    if (section) {
+      let started = false;
+      const startScrollReveal = () => {
+        if (started) return;
+        started = true;
+
+        // 数学家区域容器：滚动进入视口才从左滑入
+        const secIO = new IntersectionObserver((entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              section.classList.add('visible');
+              secIO.unobserve(section);
+            }
+          });
+        }, { threshold: 0.2 });
+        secIO.observe(section);
+
+        // 内部卡片：随容器滚动呈现
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('entered');
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.2 });
+        items.forEach(item => io.observe(item));
+      };
+
+      window.addEventListener('viewactive', (ev) => {
+        if (ev.detail === 'intro') startScrollReveal();
       });
-    }, { threshold: 0.2 });
-    items.forEach(item => io.observe(item));
+      // 若当前激活屏正是问题引入（如导航直跳），立即启动
+      if (accordion.closest('.view').classList.contains('active')) startScrollReveal();
+    }
   }
 })();

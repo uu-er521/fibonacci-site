@@ -98,7 +98,7 @@
       duration: 0.95,
       ease: 'power2.in',
       onComplete: () => {
-        // ---- 阶段 B：切换屏幕 ----
+                // ---- 阶段 B：切换屏幕 ----
         current.classList.remove('active');
         current.style.visibility = 'hidden';
         current.style.opacity = '';
@@ -107,10 +107,7 @@
         to.style.visibility = 'visible';
         to.style.opacity = '';
 
-        // 激活当前屏内部 .reveal（单屏模式手动触发交互动画）
-        activateReveals(to);
-
-        // ---- 阶段 C：色块淡出，露出新屏 ----
+        // ---- 阶段 C：色块淡出，露出新屏；完全淡出后再触发 3D 引入 ----
         // 铺满的瞬间立即淡出（无 delay），露出新屏
         gsap.to(overlay, {
           opacity: 0,
@@ -118,6 +115,9 @@
           ease: 'power2.out',
           onComplete: () => {
             overlay.style.visibility = 'hidden';
+            // 等色块彻底消失后，再播放新屏内容的 3D 立体引入，
+            // 避免 3D 翻转动画与扩散色块的残影重叠、被遮挡而看不清。
+            activateReveals(to);
             animating = false;
           }
         });
@@ -129,17 +129,36 @@
     });
   }
 
-  /* ---------- 触发布局入场动画（reveal + 各屏内部的进入态） ---------- */
+    /* ---------- 触发布局入场动画（reveal + 各屏内部的进入态） ----------
+     ・首页 hero 屏不使用 .reveal，不受影响；
+     ・问题引入页（#intro）：让标题单独优先入场，左右卡片随后错落入场，
+       而数学家区域（.mat-section）改由「滚动到视口才入场」，交给 intro.js 的滚动 observer，
+       切屏时不提前触发其动画。
+     ------------------------------------------------------------ */
   function activateReveals(container) {
-    container.querySelectorAll('.reveal').forEach((el) => {
+    const isIntro = container.id === 'intro';
+    container.querySelectorAll('.reveal').forEach((el, idx) => {
+      // 数学家区域：由滚动 observer 触发，不在此处理
+      if (el.classList.contains('mat-section')) return;
+      // 问题引入页：标题最先单独入场，卡片与它拉开明显间隔
+      let delay;
+      if (isIntro) {
+        delay = el.classList.contains('sec-head') ? 0 : 0.5 + idx * 0.5;
+      } else {
+        delay = idx * 0.22;
+      }
+      el.style.transitionDelay = delay + 's';
       el.classList.add('visible');
     });
-    // 单屏模式下非首屏内的滚动入场元素，切屏时一并触发
-    // 数学家 accordion 卡片
-    container.querySelectorAll('.mat-item').forEach((el, idx) => {
-      el.style.transitionDelay = (idx * 0.15) + 's';
+        // 数学家 accordion 卡片：同样交给 intro.js 的滚动 observer，切屏时不再处理
+    container.querySelectorAll('.mat-item').forEach((el) => {
+      if (el.closest('.mat-section')) return;
+      el.style.transitionDelay = '0s';
       el.classList.add('entered');
     });
+
+    // 广播"某屏已激活"，供需要「滚动到视口才入场」的模块（如问题引入页的数学家区域）择机启动
+    window.dispatchEvent(new CustomEvent('viewactive', { detail: container.id }));
   }
 
   /* ---------- 导航高亮 ---------- */
