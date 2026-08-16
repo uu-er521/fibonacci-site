@@ -154,7 +154,8 @@
         '<span class="done-emoji">' + emoji + '</span>' +
         '<div class="done-title">' + score + ' / ' + quizData.length + ' · ' + pct + '%</div>' +
         '<div class="done-stars">' + stars + '</div>' +
-        '<p style="color:var(--muted); margin-top:14px;">' + (pct === 100 ? '满分！你已完全掌握斐波那契的奥秘 🎉' : '测验完成！可重新测验检验掌握程度，或继续探索这个迷人的数列世界。') + '</p>' +
+        '<p style="color:var(--muted); margin-top:14px;">' + (pct === 100 ? '满分！你已完全掌握斐波那契的奥秘 🎉' : '测验完成！可点击下方按钮重新测验，或继续探索这个迷人的数列世界。') + '</p>' +
+        '<button class="quiz-retry" id="quizRetry">↻ 重新测验</button>' +
         '</div>';
       if (hasGSAP) {
         gsap.fromTo('.quiz-done', { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.6)' });
@@ -162,6 +163,18 @@
       updateProgress();
       quizScore.textContent = '最终得分：' + score + ' / ' + quizData.length;
       bumpScore();
+
+      // 重新测验：重置进度并回退到个人页尾部入口（保持单页面 view，按钮触发重播）
+      const retryBtn = document.getElementById('quizRetry');
+      if (retryBtn) {
+        retryBtn.addEventListener('click', () => {
+          qIndex = 0; score = 0;
+          quizOptions.innerHTML = '';
+          quizScore.textContent = '得分：0 / 0';
+          updateProgress();
+          loadQuestion();
+        });
+      }
       return;
     }
     updateProgress();

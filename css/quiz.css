@@ -221,5 +221,16 @@
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .quiz-done .done-stars { font-size: 1.4rem; letter-spacing: 6px; margin-top: 6px; }
+.quiz-retry {
+  margin-top: 20px;
+  padding: 12px 34px; border-radius: 50px;
+  background: linear-gradient(135deg, var(--teal), var(--purple));
+  color: #0f1524; font-weight: 700; font-size: 1rem; border: none; cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.quiz-retry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(45,212,191,0.35);
+}
 
 
