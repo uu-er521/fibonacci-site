@@ -403,8 +403,12 @@
       <p>回答下面的小测验，看看你对斐波那契了解了多少。</p>
     </div>
 
-    <div class="quiz-box reveal">
-            <div class="quiz-q" id="quizQ"></div>
+        <div class="quiz-box reveal">
+      <div class="quiz-progress">
+        <div class="quiz-progress-track"><div class="quiz-progress-fill" id="quizProgressFill"></div></div>
+        <span class="quiz-progress-label" id="quizProgressLabel">1 / 10</span>
+      </div>
+      <div class="quiz-q" id="quizQ"></div>
       <div class="quiz-options" id="quizOptions"></div>
       <div class="quiz-expl" id="quizExpl" hidden></div>
       <div class="quiz-foot">

@@ -1,7 +1,15 @@
 /* ============================================================
    quiz.js — 测验模块
-   quiz()：10 题选择，即时计分、反馈与解析
+   quiz()：10 题选择，即时计分、反馈、解析与交互动画
    （斐波那契教学页面 · 脚本封装 part 8）
+
+   交互亮点：
+   · 顶部渐变进度条 + 题号提示
+   · 每题题目淡入、选项 A/B/C/D 逐个错落弹入（GSAP）
+   · 选项悬停浮起光晕（CSS）
+   · 作答后：选对弹跳 ✓ / 选错抖动 ✗ + 正确项高亮、未选项淡出
+   · 解析框柔和滑入、得分数字弹跳
+   · 全部完成后渐变标题 + 星级庆祝
    ============================================================ */
 
 (function quiz() {
@@ -17,54 +25,150 @@
     { q: '雄蜂（单倍体）的家谱，每一代的祖先数量依次是？', opts: ['按黄金比例递增', '正好是斐波那契数', '按 2 的幂增长', '总是奇数'], a: 1, expl: '雄蜂只有母系祖先，其家谱每一代祖先数正好遵循斐波那契数列：1, 1, 2, 3, 5, 8…' },
     { q: '片叶之间的夹角常接近哪个「黄金角」？', opts: ['90°', '137.5°', '120°', '180°'], a: 1, expl: '许多植物叶片之间的夹角接近 137.5°，即黄金角（360° × (1 − 1/φ)），能让叶子几乎互不遮挡地充分采光。' }
   ];
-  let qIndex = 0, score = 0, answered = false;
+  const KEYS = ['A', 'B', 'C', 'D', 'E', 'F'];
+  let qIndex = 0, score = 0, answered = false, hasGSAP = typeof gsap !== 'undefined';
 
+  const quizBox = document.querySelector('.quiz-box');
   const quizQ = document.getElementById('quizQ');
   const quizOptions = document.getElementById('quizOptions');
   const quizExpl = document.getElementById('quizExpl');
   const quizScore = document.getElementById('quizScore');
   const quizNext = document.getElementById('quizNext');
+  const progressFill = document.getElementById('quizProgressFill');
+  const progressLabel = document.getElementById('quizProgressLabel');
+
+  // 更新顶部进度条
+  function updateProgress() {
+    const total = quizData.length;
+    const filled = qIndex / total * 100;
+    progressFill.style.width = filled + '%';
+    progressLabel.textContent = (qIndex >= total ? '完成' : (qIndex + 1) + ' / ' + total);
+  }
+
+  // 分数弹跳（重新触发动画）
+  function bumpScore() {
+    quizScore.classList.remove('bump');
+    void quizScore.offsetWidth; // 强制 reflow 以重触发 animation
+    quizScore.classList.add('bump');
+  }
 
   function loadQuestion() {
     answered = false;
     quizNext.disabled = true;
-    quizExpl.hidden = true;
+    quizExpl.classList.remove('revealed');
+    if (hasGSAP) gsap.set(quizExpl, { opacity: 0, y: 14 });
+    quizExpl.style.display = 'none';
+
     const item = quizData[qIndex];
-    quizQ.textContent = (qIndex + 1) + '. ' + item.q;
+    // 题目 + 序号圆徽
+    quizQ.innerHTML = '<span class="q-num">' + (qIndex + 1) + '</span><span class="q-text">' + item.q + '</span>';
+    if (hasGSAP) {
+      gsap.fromTo(quizQ, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' });
+    }
+
     quizOptions.innerHTML = '';
     item.opts.forEach((opt, i) => {
       const btn = document.createElement('button');
       btn.className = 'quiz-opt';
-      btn.textContent = opt;
+      btn.innerHTML = '<span class="opt-key">' + KEYS[i] + '</span><span class="opt-text">' + opt + '</span>';
+      if (hasGSAP) gsap.set(btn, { opacity: 0, y: 22 });
       btn.addEventListener('click', () => {
         if (answered) return;
         answered = true;
         const all = quizOptions.querySelectorAll('.quiz-opt');
-        if (i === item.a) { btn.classList.add('correct'); score++; }
-        else { btn.classList.add('wrong'); all[item.a].classList.add('correct'); }
+        const correct = all[item.a];
+
+        if (i === item.a) {
+          // 选对：正确项弹跳
+          btn.classList.add('correct', 'pop-correct');
+          score++;
+        } else {
+          // 选错：所选抖动 + 正确项高亮
+          btn.classList.add('wrong', 'shake-wrong');
+          correct.classList.add('correct', 'pop-correct');
+        }
         all.forEach(b => b.disabled = true);
-        // 展示本题解析
-        quizExpl.hidden = false;
-        quizExpl.innerHTML = '<span class="expl-label">📖 解析：</span>' + item.expl;
+
+        // 未选项淡出
+        if (hasGSAP) {
+          const dims = Array.from(all).filter(b => !b.classList.contains('correct') && !b.classList.contains('wrong'));
+          gsap.to(dims, { opacity: 0.4, duration: 0.35, ease: 'power2.out' });
+        }
+
+        // 展示解析（滑入）
+        if (hasGSAP) {
+          quizExpl.style.display = 'block';
+          quizExpl.innerHTML = '<span class="expl-label">📖 解析</span>' + item.expl;
+          gsap.fromTo(quizExpl, { opacity: 0, y: 14 }, {
+            opacity: 1, y: 0, duration: 0.45, ease: 'power2.out', delay: 0.15
+          });
+          quizExpl.classList.add('revealed');
+        } else {
+          quizExpl.hidden = false;
+          quizExpl.innerHTML = '<span class="expl-label">📖 解析</span>' + item.expl;
+        }
+
         quizScore.textContent = '得分：' + score + ' / ' + (qIndex + 1);
+        bumpScore();
         quizNext.disabled = false;
+
+        // 下一题按钮点亮动效
+        if (hasGSAP) {
+          gsap.fromTo(quizNext, { scale: 0.92 }, { scale: 1, duration: 0.3, ease: 'back.out(2)' });
+        }
       });
       quizOptions.appendChild(btn);
     });
+
+    // 选项错落入场动画
+    if (hasGSAP) {
+      const btns = quizOptions.querySelectorAll('.quiz-opt');
+      gsap.to(btns, {
+        opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'back.out(1.7)',
+        delay: 0.2, onComplete() {
+          // 释放 transform，让 CSS hover 位移生效
+          btns.forEach(b => gsap.set(b, { clearProps: 'transform' }));
+        }
+      });
+    }
   }
 
   quizNext.addEventListener('click', () => {
     qIndex++;
     if (qIndex >= quizData.length) {
-      quizQ.textContent = '🎉 测验完成！' + score + ' / ' + quizData.length;
-      quizOptions.innerHTML = '<p style="color:var(--muted);">你已学完所有题目。往上翻刷新可以重来，或继续探索这个迷人的数列世界！</p>';
-      quizExpl.hidden = true;
+      // ---- 完成庆祝 ----
+      answered = true;
+      quizQ.innerHTML = '';
+      quizExpl.style.display = 'none';
       quizNext.disabled = true;
+
+      const pct = Math.round(score / quizData.length * 100);
+      let emoji, stars;
+      if (pct === 100) { emoji = '🏆'; stars = '⭐⭐⭐⭐⭐'; }
+      else if (pct >= 80) { emoji = '🌟'; stars = '⭐⭐⭐⭐'; }
+      else if (pct >= 60) { emoji = '👏'; stars = '⭐⭐⭐'; }
+      else { emoji = '💪'; stars = '⭐⭐'; }
+
+      quizOptions.innerHTML =
+        '<div class="quiz-done">' +
+        '<span class="done-emoji">' + emoji + '</span>' +
+        '<div class="done-title">' + score + ' / ' + quizData.length + ' · ' + pct + '%</div>' +
+        '<div class="done-stars">' + stars + '</div>' +
+        '<p style="color:var(--muted); margin-top:14px;">' + (pct === 100 ? '满分！你已完全掌握斐波那契的奥秘 🎉' : '测验完成！可重新测验检验掌握程度，或继续探索这个迷人的数列世界。') + '</p>' +
+        '</div>';
+      if (hasGSAP) {
+        gsap.fromTo('.quiz-done', { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.6)' });
+      }
+      updateProgress();
       quizScore.textContent = '最终得分：' + score + ' / ' + quizData.length;
+      bumpScore();
       return;
     }
+    updateProgress();
     loadQuestion();
   });
 
+  // 初始化
+  updateProgress();
   loadQuestion();
 })();
