@@ -119,4 +119,49 @@
     else if (e.key === 'ArrowRight') go(1);
     else if (e.key === 'Escape') close();
   });
+
+  // ---- 自然页入场：六个 emoji 卡先在界面中心浮现，再散开到各自网格位并放大成框 ----
+  // 仅在自然屏被激活（viewactive）后首次播放；避免单屏模式下隐藏屏被提前触发。
+  const grid = document.querySelector('.nature-grid');
+  let natureIntroDone = false;
+
+  function runNatureIntro() {
+    if (natureIntroDone || !grid || cards.length === 0) return;
+    // 若 GSAP 未加载，退化为直接显示（兜底）
+    if (typeof gsap === 'undefined') {
+      cards.forEach(c => { c.style.opacity = '1'; });
+      return;
+    }
+    natureIntroDone = true;
+
+    const gRect = grid.getBoundingClientRect();
+    const cx = gRect.left + gRect.width / 2;
+    const cy = gRect.top + gRect.height / 2;
+
+    // ① 先把六张卡"聚拢到网格中心"，只显示缩略 emoji（缩小 + 透明→浮现）
+    gsap.set(cards, {
+      x: (i, el) => -(el.getBoundingClientRect().left + el.getBoundingClientRect().width / 2 - cx),
+      y: (i, el) => -(el.getBoundingClientRect().top + el.getBoundingClientRect().height / 2 - cy),
+      scale: 0.32,
+      opacity: 0,
+      transformOrigin: 'center center'
+    });
+    // ② 再平滑散开到各自原位，同时由缩略放大成完整卡片框
+    gsap.timeline({ defaults: { ease: 'power3.out' } })
+      .to(cards, {
+        x: 0,
+        y: 0,
+        scale: 1,
+        opacity: 1,
+        duration: 0.95,
+        stagger: 0.09
+      })
+      .set(cards, { clearProps: 'transform' }); // 结束后清除，恢复 hover 位移
+  }
+
+  window.addEventListener('viewactive', (ev) => {
+    if (ev.detail === 'nature') runNatureIntro();
+  });
+  // 若初始化时当前屏正是自然（如导航直跳），立即播放
+  if (grid && grid.closest('.view').classList.contains('active')) runNatureIntro();
 })();

@@ -139,6 +139,11 @@
 }
 .nature-card:hover::before { opacity: 1; transform: translateY(0); }
 
+/* 自然页入场改为「六个 emoji 卡先在界面中心浮现 → 散开到各自网格位并放大成框」，
+   由 nature.js 用 GSAP 驱动；这里覆盖 base .reveal 的 3D 翻转，避免冲突。 */
+#nature .nature-card.reveal { transform: none; }
+#nature .nature-card.reveal:hover { transform: translateY(-6px); }
+
 /* ---------- Nature 全屏沉浸阅读 ---------- */
 .fs-overlay {
   position: fixed; inset: 0; z-index: 200;

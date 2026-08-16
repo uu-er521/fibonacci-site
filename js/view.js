@@ -137,9 +137,11 @@
      ------------------------------------------------------------ */
   function activateReveals(container) {
     const isIntro = container.id === 'intro';
-    container.querySelectorAll('.reveal').forEach((el, idx) => {
+        container.querySelectorAll('.reveal').forEach((el, idx) => {
       // 数学家区域：由滚动 observer 触发，不在此处理
       if (el.classList.contains('mat-section')) return;
+      // 自然页六个卡片：由 nature.js 中心散开动画驱动，不在此做通用翻转
+      if (el.classList.contains('nature-card')) return;
       // 问题引入页：标题最先单独入场，卡片与它拉开明显间隔
       let delay;
       if (isIntro) {
