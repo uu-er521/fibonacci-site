@@ -177,17 +177,9 @@
       const targetId = btn.getAttribute('data-next');
       const idx = order.findIndex(v => v.id === targetId);
       if (idx !== -1) {
-        const r = btn.getBoundingClientRect();
-        let pos;
-        if (btn.classList.contains('edge-start')) {
-          // 从圆形按钮的右下边缘开始扩散（而非中心）
-          pos = {
-            x: r.left + r.width * 0.85,
-            y: r.top + r.height * 0.85
-          };
-        } else {
-          pos = { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-        }
+                const r = btn.getBoundingClientRect();
+        // 统一从按钮中心开始扩散（含 hero 大球，保证色块扩散从圆心发起）
+        const pos = { x: r.left + r.width / 2, y: r.top + r.height / 2 };
         show(idx, pos);
       }
     });
