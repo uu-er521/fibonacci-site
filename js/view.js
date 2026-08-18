@@ -34,11 +34,47 @@
     document.body.appendChild(overlay);
   }
 
-  /* ---------- 工具：切到某屏 ----------
-     clickPos = {x, y} 过渡扩散的起点（通常是按钮位置）
-     useOverlay = false 时直接切换（导航跳转，不播放色块填充）
-  */
-  function show(i, clickPos, useOverlay) {
+    /* ---------- 工具：从当前 URL hash 解析目标屏（无 hash 或不存在时返回 null） ---------- */
+  function hashTarget() {
+    const h = (location.hash || '').replace('#', '');
+    if (!h) return null;
+    return order.find(v => v.id === h) || null;
+  }
+
+    /* ---------- 主动切屏推进历史栈：记录当前屏的 hash，支持浏览器前进/后退 ----------
+     首屏（order[0]，hero）视为根地址，不挂 hash；其余屏才带 #id。 */
+  function pushHash(view) {
+    const isHome = (view === order[0]);
+    const url = isHome ? location.pathname : '#' + view.id;
+    history.pushState({ viewId: view.id }, '', url);
+  }
+
+  /* ---------- 替换当前历史记录（用于初始化 / 直跳：不新增历史条目） ---------- */
+  function replaceHash(view) {
+    const isHome = (view === order[0]);
+    const url = isHome ? location.pathname : '#' + view.id;
+    history.replaceState({ viewId: view.id }, '', url);
+  }
+
+    /* ---------- 无过渡直跳切屏（导航跳转 / 后退前进复用；永不播放色块填充） ---------- */
+  function directShow(to, from) {
+    from.classList.remove('active');
+    from.style.visibility = 'hidden';
+    from.style.opacity = '';
+    to.classList.add('active');
+    to.style.visibility = 'visible';
+    to.style.opacity = '';
+    to.scrollTop = 0;
+    activateReveals(to);
+    current = to;
+    updateNav(to);
+  }
+
+  /* ---------- 工具：切到某屏（核心切换入口） ----------
+     · clickPos  = {x, y} 色块过渡扩散起点（默认屏幕中心）
+     · useOverlay = false 时无过渡直跳（导航链接 / 后退前进）
+     · fromHistory = true 时仅切屏、不压栈（popstate 回放用） */
+  function show(i, clickPos, useOverlay, fromHistory) {
     if (i < 0 || i >= order.length) return;
     const next = order[i];
     if (next === current) return; // 点击当前屏则不重复切
@@ -47,18 +83,18 @@
     const from = current;
     const to = next;
 
-    // 导航跳转：无过度，直接切换（无色块填充）
+    // 前进 / 后退回放（来自 popstate 或 hashchange）：只切屏，不再压入历史栈
+    if (fromHistory) {
+      directShow(to, from);
+      return;
+    }
+
+    // 主动切换：先把当前屏写入历史栈（供浏览器前进/后退）
+    pushHash(to);
+
+    // 导航跳转：无过渡，直接切换（无色块填充）
     if (useOverlay === false) {
-      from.classList.remove('active');
-      from.style.visibility = 'hidden';
-      from.style.opacity = '';
-      to.classList.add('active');
-      to.style.visibility = 'visible';
-      to.style.opacity = '';
-      to.scrollTop = 0;
-      activateReveals(to);
-      current = to;
-      updateNav(to);
+      directShow(to, from);
       return;
     }
 
@@ -135,9 +171,9 @@
        而数学家区域（.mat-section）改由「滚动到视口才入场」，交给 intro.js 的滚动 observer，
        切屏时不提前触发其动画。
      ------------------------------------------------------------ */
-  function activateReveals(container) {
+    function activateReveals(container) {
     const isIntro = container.id === 'intro';
-        container.querySelectorAll('.reveal').forEach((el, idx) => {
+    container.querySelectorAll('.reveal').forEach((el, idx) => {
       // 数学家区域：由滚动 observer 触发，不在此处理
       if (el.classList.contains('mat-section')) return;
       // 自然页六个卡片：由 nature.js 中心散开动画驱动，不在此做通用翻转
@@ -199,7 +235,31 @@
     });
   });
 
-  /* ---------- 初始化：高亮当前屏内部 reveal + 导航 ---------- */
-  activateReveals(current);
-  updateNav(current);
+        /* ---------- 浏览器前进/后退：回读 URL （hash 或首屏无 hash）对应屏，直跳切换（不压栈） ---------- */
+  window.addEventListener('popstate', () => {
+    if (!location.hash) {
+      // 无 hash → 首屏（order[0]）
+      if (current !== order[0]) directShow(order[0], current);
+      return;
+    }
+    const t = hashTarget();
+    if (t && t !== current) {
+      show(order.indexOf(t), null, false, true); // fromHistory=true → 仅切屏，不再压栈
+    }
+  });
+
+    /* ---------- 初始化：处理 URL 携带的 hash（书签 / 分享直达；无 hash 则确保地址栏显示当前屏） ----------
+     采用做法一 —— 若 URL 带 hash 且匹配某屏，直接打开该屏并激活其入场动画；
+     否则回落在当前屏（首屏 hero），用 replace 保证地址栏体现当前屏（不新增历史）。 */
+  const initialTarget = hashTarget() || current;
+  if (initialTarget !== current) {
+    // 直达目标屏（directShow 内部已触发 .reveal 入场 + 导航高亮）
+    directShow(initialTarget, current);
+    replaceHash(initialTarget);
+  } else {
+    replaceHash(current); // 地址栏体现当前屏，但不新增历史条目
+    // 当前屏内部 .reveal 已在脚本加载后默认状态，仍显式触发一次入场
+    activateReveals(current);
+    updateNav(current);
+  }
 })();
