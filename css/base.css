@@ -391,6 +391,20 @@ html, body {
 }
 .view.active { visibility: visible; opacity: 1; z-index: 2; }
 
+/* 整屏 .view 的细窄滚动条：贴合最右侧、青色统一风格
+   （仅当内容超高触发 overflow-y:auto 时才出现，内容不高则无滚动条） */
+.view::-webkit-scrollbar { width: 6px; }
+.view::-webkit-scrollbar-track { background: transparent; }
+.view::-webkit-scrollbar-thumb {
+  background: rgba(45, 212, 191, 0.35);   /* 青色半透明滑块 */
+  border-radius: 50px;
+}
+.view::-webkit-scrollbar-thumb:hover {
+  background: rgba(45, 212, 191, 0.6);    /* 悬停变亮仍保持青色，不会变白 */
+}
+/* Firefox（滚动条宽窄与颜色受浏览器限制，仅在支持时生效） */
+.view { scrollbar-width: thin; scrollbar-color: rgba(45,212,191,0.35) transparent; }
+
 /* 全屏扩散过渡覆盖层（由 view.js 用 GSAP 控制） */
 .page-transition {
   position: fixed;
