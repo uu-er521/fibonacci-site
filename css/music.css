@@ -1,0 +1,203 @@
+/* ============================================================
+   music.css — 右下角悬浮音乐播放器
+   （斐波那契教学页面 · 样式封装 part 7）
+   默认收起为右下角一枚圆形音符钮；悬浮（桌面）或点击（触屏）
+   展开为卡片：专辑封面 + 歌名/歌手 + 进度条 + 音量条 + 播放键。
+   ============================================================ */
+
+.music-player {
+  position: fixed;
+  /* 整体上移，让出右下角区域，避免遮住 quiz 的「下一题」按钮 */
+  bottom: 118px;
+  right: 22px;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;   /* 竖排 */
+  align-items: flex-end;    /* 右对齐，面板向上弹出且不会左扩挡住内容 */
+  gap: 12px;
+  --mp-accent: var(--teal);
+}
+
+/* ---- 收起态：右下角圆形音符钮 ---- */
+.mp-fab {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  border: 1px solid rgba(45,212,191,0.45);
+  background: linear-gradient(160deg, #161d30, #0f1524);
+  color: var(--teal);
+  font-size: 1.4rem;
+  display: grid; place-items: center;
+  cursor: pointer; font-family: inherit;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s;
+  flex-shrink: 0;
+  z-index: 2;
+}
+.mp-fab:hover {
+  transform: translateY(-3px);
+  border-color: var(--gold-1);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.55), 0 0 0 1px rgba(251,191,36,0.2);
+}
+
+/* ---- 展开面板：绝对定位在圆钮上方；展开时整体向上弹出 ---- */
+.mp-panel {
+  position: absolute;            /* 不参与 flex 布局，避免收起时顶开圆钮 */
+  bottom: 100%;                  /* 贴住圆钮顶部，避免悬停间隙导致误收起 */
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 272px;
+  padding: 16px 18px 14px;
+  background: linear-gradient(165deg, #151b2c 0%, #0d1220 100%);
+  border: 1px solid rgba(45,212,191,0.3);
+  border-radius: 18px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05);
+  opacity: 0;
+  transform: translateY(18px);   /* 收起时向下偏移，展开时借上弹显现 */
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  overflow: hidden;
+}
+/* 桌面悬浮 / JS 加 .open → 向上弹出 */
+.music-player:hover .mp-panel,
+.music-player.open .mp-panel {
+  opacity: 1;
+  transform: translateY(0);      /* 上弹到圆钮上方 */
+  pointer-events: auto;
+}
+
+/* 顶栏：封面 + 信息 */
+.mp-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.mp-cover {
+  width: 46px; height: 46px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+  background: #0a0e18;
+}
+.mp-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mp-info { min-width: 0; }
+.mp-title {
+  font-size: 0.92rem; font-weight: 800; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mp-artist {
+  font-size: 0.74rem; color: var(--muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+/* 进度条（面板顶部，向上弹出避让 quiz 的「下一题」按钮） */
+.mp-progress {
+  height: 5px;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.12);
+  cursor: pointer;
+  position: relative;
+  touch-action: none;
+  transition: height 0.2s ease;
+}
+.mp-progress:hover,
+.mp-progress.dragging {
+  height: 7px;
+}
+.mp-progress-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: 50px;
+  background: linear-gradient(90deg, var(--teal), var(--purple));
+  position: relative;
+}
+.mp-progress-fill::after {
+  content: '';
+  position: absolute; right: -5px; top: 50%;
+  transform: translateY(-50%);
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(45,212,191,0.6);
+}
+/* 播放位置气泡：悬停/拖动时向上弹出，显示当前时间 */
+.mp-progress-tip {
+  position: absolute;
+  bottom: 13px;
+  left: 0%;
+  transform: translateX(-50%);
+  padding: 3px 8px;
+  border-radius: 8px 8px 8px 0;
+  background: #0a0e18;
+  border: 1px solid rgba(45,212,191,0.4);
+  color: var(--teal);
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.16s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.mp-progress:hover .mp-progress-tip,
+.mp-progress.dragging .mp-progress-tip {
+  opacity: 1;
+}
+.mp-times {
+  display: flex; justify-content: space-between;
+  font-size: 0.7rem; color: var(--muted); font-variant-numeric: tabular-nums;
+  margin-top: -4px;
+}
+
+/* 音量条 */
+.mp-volume {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 2px;
+}
+.mp-vol-ico { font-size: 0.9rem; flex-shrink: 0; }
+.mp-volume-bar {
+  flex: 1;
+  height: 4px;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.12);
+  cursor: pointer;
+  position: relative;
+  touch-action: none;
+}
+.mp-volume-fill {
+  width: 25%;
+  height: 100%;
+  border-radius: 50px;
+  background: var(--gold-1);
+}
+
+/* 控制按钮 */
+.mp-controls {
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 2px;
+}
+.mp-toggle {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(45,212,191,0.4);
+  background: linear-gradient(135deg, var(--teal), var(--purple));
+  color: #0f1524;
+  font-weight: 800; font-size: 0.95rem; line-height: 1;
+  display: grid; place-items: center;
+  cursor: pointer; font-family: inherit;
+  box-shadow: 0 6px 18px rgba(45,212,191,0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.mp-toggle:hover {
+  transform: scale(1.06);
+  box-shadow: 0 10px 24px rgba(45,212,191,0.4);
+}
+
+@media (max-width: 560px) {
+  .music-player { bottom: 104px; right: 14px; }
+  .mp-panel { width: 244px; }
+}

@@ -9,8 +9,9 @@
   <link rel="stylesheet" href="css/sequence.css">
   <link rel="stylesheet" href="css/intro.css">
     <link rel="stylesheet" href="css/golden.css">
-  <link rel="stylesheet" href="css/quiz.css">
+    <link rel="stylesheet" href="css/quiz.css">
   <link rel="stylesheet" href="css/formula.css">
+  <link rel="stylesheet" href="css/music.css">
 </head>
 
 <body>
@@ -473,12 +474,38 @@
         <li><span>🧑‍🏫</span>适合<b>教师精讲</b>和<b>学生巩固</b></li>
         <li><span>🖨️</span>导出为 PDF，可随时<b>下载打印</b>使用</li>
       </ul>
-      <div class="ql-actions">
+            <div class="ql-actions">
         <button class="ql-cancel" id="qlCancel" type="button">取消</button>
         <button class="ql-go" id="qlGo" type="button">👌 开始下载</button>
       </div>
     </div>
   </div>
+
+  <!-- 右下角悬浮音乐播放器（默认收起为圆形钮；悬浮展开显示封面/歌名/进度/音量） -->
+  <div class="music-player" id="musicPlayer">
+    <audio id="bgMusic" src="audio/ikoliks_aj-background-music-320427.mp3" loop preload="auto"></audio>
+        <div class="mp-panel" id="mpPanel">
+          <!-- 进度条放到面板顶部（向上），避免与 quiz 的「下一题」按钮重叠 -->
+          <div class="mp-progress" id="mpProgress"><div class="mp-progress-fill" id="mpProgressFill"></div><span class="mp-progress-tip" id="mpProgressTip">0:00</span></div>
+          <div class="mp-times"><span id="mpCurrent">0:00</span><span id="mpDur">0:00</span></div>
+          <div class="mp-head">
+            <div class="mp-cover"><img src="audio/backgroundmusic.png" alt="专辑封面"></div>
+            <div class="mp-info">
+              <div class="mp-title">Background Music</div>
+              <div class="mp-artist">ikoliks_aj</div>
+            </div>
+          </div>
+          <div class="mp-volume">
+        <span class="mp-vol-ico" id="mpVolIco">🔊</span>
+        <div class="mp-volume-bar" id="mpVolumeBar"><div class="mp-volume-fill" id="mpVolumeFill"></div></div>
+      </div>
+      <div class="mp-controls">
+        <button class="mp-toggle" id="mpToggle" type="button" aria-label="播放">▶</button>
+      </div>
+    </div>
+    <button class="mp-fab" id="mpFab" type="button" aria-label="背景音乐">🎵</button>
+  </div>
+
 
 
     <!-- 脚本已拆分为 js/ 目录，按模块分文件引入（普通脚本，可双击 file:// 直接运行） -->
@@ -494,8 +521,10 @@
     <script src="js/nature.js"></script>
     <script src="js/quiz.js"></script>
   <script src="js/formula.js"></script>
-    <!-- 单屏 View 切换核心（依赖 GSAP） -->
+        <!-- 单屏 View 切换核心（依赖 GSAP） -->
   <script src="js/view.js"></script>
+  <!-- 右下角悬浮音乐播放器 -->
+  <script src="js/music.js"></script>
   <!-- 自定义紫色圆形光标 -->
   <script src="js/cursor.js"></script>
 
