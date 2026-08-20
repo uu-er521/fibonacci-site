@@ -8,7 +8,7 @@
 .music-player {
   position: fixed;
   /* 整体上移，让出右下角区域，避免遮住 quiz 的「下一题」按钮 */
-  bottom: 118px;
+  bottom: 128px;
   right: 22px;
   z-index: 300;
   display: flex;
@@ -55,9 +55,9 @@
   box-shadow: 0 24px 60px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05);
   opacity: 0;
   transform: translateY(18px);   /* 收起时向下偏移，展开时借上弹显现 */
-  pointer-events: none;
+    pointer-events: none;
   transition: opacity 0.3s ease, transform 0.3s ease;
-  overflow: hidden;
+  /* overflow 不裁剪：允许进度拖动时的时间气泡向上弹出完整显示 */
 }
 /* 桌面悬浮 / JS 加 .open → 向上弹出 */
 .music-player:hover .mp-panel,
@@ -116,13 +116,17 @@
   position: relative;
 }
 .mp-progress-fill::after {
-  content: '';
-  position: absolute; right: -5px; top: 50%;
-  transform: translateY(-50%);
-  width: 11px; height: 11px;
+  content: 'φ';               /* 斐波那契标志 */
+  position: absolute; right: -9px; top: 50%;
+  transform: translateY(-52%);
+  width: 18px; height: 18px;
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 8px rgba(45,212,191,0.6);
+  display: grid; place-items: center;
+  background: #0a0e18;
+  border: 1.5px solid var(--teal);
+  color: var(--teal);
+  font-size: 0.75rem; font-weight: 800; line-height: 1;
+  box-shadow: 0 0 10px rgba(45,212,191,0.6);
 }
 /* 播放位置气泡：悬停/拖动时向上弹出，显示当前时间 */
 .mp-progress-tip {
@@ -198,6 +202,6 @@
 }
 
 @media (max-width: 560px) {
-  .music-player { bottom: 104px; right: 14px; }
+  .music-player { bottom: 114px; right: 14px; }
   .mp-panel { width: 244px; }
 }
