@@ -1,11 +1,11 @@
 # 斐波那契 · 数字的完美之舞
 
-一个**纯前端、单页、沉浸式**的斐波那契数列教学互动网站。采用**单屏整页切换（Single-View）**架构，以叙事化章节呈现：从兔子谜题的东方与西方起源，到数列定义、六大性质及其黑板推导、黄金螺旋拖拽拼图、大自然实例，最后以 10 题测验收尾。
+一个**纯前端、单页、沉浸式**的斐波那契数列教学互动网站。采用**单屏整页切换（Single-View）**架构，以叙事化章节呈现：从兔子谜题的东方与西方起源，到数列定义、六大性质及其黑板推导、黄金螺旋拖拽拼图、大自然实例，最后以 10 题测验收尾。右下角配备常驻**背景音乐播放器**。
 
 - **技术栈**：原生 HTML5 · CSS3 · Vanilla JavaScript · **GSAP + ScrollTrigger**（本地化）
 - **运行方式**：直接**双击根目录 `index.html`** 即可在浏览器打开（`file://` 协议），无需服务器、无需联网
 - **代码组织**：样式与脚本**按功能模块拆分**到 `css/`、`js/` 目录，职责单一、体积小、便于定位维护
-- **架构亮点**：**单屏 `.view` 整页切换**（色块中心扩散铺满 -> 新屏浮现），body 滚动锁定，每屏内部独立滚动；配**自定义青色细窄滚动条**；自定义**紫色圆形光标**
+- **架构亮点**：**单屏 `.view` 整页切换**（色块中心扩散铺满 -> 新屏浮现），body 滚动锁定，每屏内部独立滚动；配**自定义青色细窄滚动条**；自定义**紫色圆形光标**；右下角**悬浮音乐播放器**
 
 ---
 
@@ -24,9 +24,10 @@
 | 性质黑板画廊 | `#properties` | 点击 6 条性质卡片的「📖 推导」，进入**黑板全屏**查看分步证明 |
 | 黄金螺旋拼图 | `#golden` | 把 7 个正方形（边长 1,1,2,3,5,8,13）拖进虚线框，拼满后连成完整螺旋 |
 | 自然全屏展厅 | `#nature` | 点击 6 张自然卡片，进入全屏沉浸阅读完整文案 |
-| 知识测验 | `#quiz` | **10 道**选择题：即时反馈、逐题动画、进度条、星级评分、可重新测验 |
+| 知识测验 | `#quiz` | **10 道**选择题：即时反馈、逐题动画、进度条、星级评分、可重新测验；另可**下载题目 PDF** |
+| 背景音乐 | 右下角 | 首次任意点击后自动播放；悬浮/点击展开面板，可调进度与音量 |
 
-> 若页面无样式或无交互，请确认 `index.html` 与 `css/`、`js/`、`image/` 处于**同一目录**且相对路径未被改动。
+> 若页面无样式或无交互，请确认 `index.html` 与 `css/`、`js/`、`image/`、`audio/` 处于**同一目录**且相对路径未被改动。
 
 ---
 
@@ -34,20 +35,17 @@
 
 ```
 斐波那契网页设计/
-├── index.html      页面骨架（纯结构，仅引用外部样式/脚本，含各板块 id 锚点）
-├── context.txt     自然页全屏文案汇总（纯文本，可分发）
-├── formula.txt     斐波那契数列性质汇总（纯文本，可分发）
-├── style.css       旧单文件版备份（当前页面不再引用）
-├── script.js       旧单文件版备份（当前页面不再引用）
-├── README.md       本说明文件
-├── css/            样式，按功能模块拆分
+├── index.html     页面骨架（纯结构，仅引用外部样式/脚本，含各板块 id 锚点）
+├── README.md      本说明文件
+├── css/           样式，按功能模块拆分
 │   ├── base.css       设计系统变量(:root) · 背景 · 导航 · Hero · 通用 section/footer/animation
 │   ├── sequence.css   数列定义 · 生成器 · 公式
 │   ├── intro.css      问题引入（兔子 × 杨辉三角 × 数学家 accordion）
 │   ├── golden.css     黄金螺旋拼图 · 自然卡片 · 全屏沉浸阅读
-│   ├── quiz.css       测验模块
-│   └── formula.css    性质推导 · 黑板全屏画廊
-├── js/             交互逻辑，按 IIFE 模块拆分
+│   ├── quiz.css       测验模块 · 下载题册弹窗
+│   ├── formula.css    性质推导 · 黑板全屏画廊
+│   └── music.css      右下角悬浮音乐播放器
+├── js/            交互逻辑，按 IIFE 模块拆分
 │   ├── gsap.min.js        GSAP 核心（本地化第三方库，用于动画与单屏切换）
 │   ├── ScrollTrigger.min.js  ScrollTrigger 插件（本地化第三方库）
 │   ├── ui.js          navActive 导航高亮 + revealOnScroll（非 .view 内）滚动渐显
@@ -57,14 +55,15 @@
 │   ├── yanghui.js     yanghuiIntro 杨辉三角对角线高亮（含防抖）
 │   ├── golden.js      spiralPuzzle 黄金螺旋拖拽拼图
 │   ├── nature.js      natureFullscreen 自然全屏展厅
-│   ├── quiz.js        quiz 测验（10 题）
+│   ├── quiz.js        quiz 测验（10 题）+ 下载题册弹窗
 │   ├── formula.js     formulaGallery 性质推导黑板画廊
-│   ├── view.js        **单屏 View 切换核心**（依赖 GSAP，负责 .reveal 触发/导航高亮）
+│   ├── view.js        **单屏 View 切换核心**（依赖 GSAP，负责 .reveal 触发/导航高亮/URL hash 同步）
+│   ├── music.js       背景音乐播放器
 │   └── cursor.js      自定义紫色圆形光标
-└── image/          图片资源（兔子、垛积术、向日葵、鹦鹉螺、菠萝、叶片、蜜蜂、银河、黑板、蓝色粗砺纹理）
+├── image/         图片资源（兔子、垛积术、向日葵、鹦鹉螺、菠萝、叶片、蜜蜂、银河、黑板、蓝色粗砺纹理）
+├── audio/         背景音乐（ikoliks_aj 曲目 mp3）与专辑封面图
+└── download/      测验题目 PDF（quiz-question-v1.pdf）
 ```
-
-> **说明**：最早的单文件版 `style.css`、`script.js` 仍保留在根目录，作为基准备份；**当前页面引用的是 `css/` 与 `js/` 拆分后的文件**。若无特殊需求，后续修改应改 `css/`、`js/` 下的文件。
 
 ---
 
@@ -76,7 +75,8 @@
 - `body` 滚动被锁定（`overflow:hidden`），每屏内容超高时由**该屏内部** `overflow-y:auto` 独立滚动至底部。
 - 切换方式：
   - **点 `next-btn`**：从按钮位置发起 GSAP **色块中心扩散铺满全屏** -> 切换新屏 -> 色块淡出 -> 新屏 `.reveal` 元素依次 3D 入场。
-  - **点导航链接**：不做色块填充，直接切换（`show(idx, null, false)`）。
+  - **点导航链接**：不做色块填充，直接切换（`directShow`）。
+- **URL hash 同步**：每个非首屏具有唯一 hash（如 `#intro`、`#definition`…），首屏为根路径；支持**浏览器前进 / 后退**（`popstate` 监听）与刷新后深链直达对应屏。
 - 切入新屏后 `activateReveals(container)` 统一给该屏内 `.reveal` 加 `.visible` 触发入场，并向 `window` 广播 `viewactive` 事件（`detail = 容器 id`），供需要「滚动到视口才入场」的模块（如问题引入页的数学家区域）择机启动。
 - `.view` 内部滚动条已自定义为**细窄（6px）、青色半透明滑块、贴合最右侧**，仅内容超高时才出现。
 - 加载顺序：`base.css` 最先（设计变量就绪），`.view` / `.reveal` / 滚动条等架构样式都在 base.css。
@@ -97,7 +97,7 @@
 | 3 | `#properties` | 性质 | 比奈公式 F(n)=[φⁿ−(1−φ)ⁿ]/√5 + 6 条惊人性质卡（点击进入**黑板推导**） |
 | 4 | `#golden` | 黄金比例 | **拖拽拼图**拼出黄金螺旋 + 1.618 的由来与灵感 |
 | 5 | `#nature` | 自然 | 向日葵、鹦鹉螺、松果&菠萝、叶片、蜜蜂家谱、银河 6 张卡（点击**全屏阅读**） |
-| 6 | `#quiz` | 测验 | **10 题**选择，即时反馈 + 动画 + 进度 + 评级 + 重新测验 |
+| 6 | `#quiz` | 测验 | **10 题**选择，即时反馈 + 动画 + 进度 + 评级 + 重新测验 + **题目 PDF 下载** |
 
 ---
 
@@ -108,15 +108,15 @@
 - **中央 `FIBONACCI` 大圆球按钮**（蓝色粗粝纹理 + 青色高光），点击从球心发起色块扩散切入 `#intro`；悬停圆球时自定义光标浮现 `explore` 字样。
 
 ### 1. 问题引入（`#intro`）
-- **标题入场**：标题采用专门的上方 3D 翻转入场（`#intro .sec-head.reveal`）；左右两张卡片（兔子 / 垛积术）从左右两侧滑入（`reveal-left` / `reveal-right`）。
+- **标题入场**：标题采用专门的上方 3D 翻转入场；左右两张卡片（兔子 / 垛积术）从左右两侧滑入（`reveal-left` / `reveal-right`）。
 - **兔子繁衍**：`js/intro.js` 按月（1–11）渲染成兔/幼兔数量，左栏卡片以兔子图为底，同步显示逐月数列。
-- **杨辉三角**：`js/yanghui.js` 生成 8 行三角，悬停高亮整条斜对角线（NE–SW，r+k 恒定）并显示其和（恰为斐波那契数），内含 45ms 防抖避免闪烁。
+- **杨辉三角**：`js/yanghui.js` 生成 8 行三角，悬停高亮整条斜对角线（NE–SW）并显示其和（恰为斐波那契数），内含 45ms 防抖避免闪烁。
 - **数学家 accordion**：斐波那契 / 贾宪 / 杨辉 三张卡（`js/intro.js` + `css/intro.css`），点击横向展开生平、成就、与数列的联系及引文；该区域由滚动到视口才触发入场（配合 `viewactive` 事件）。
 
-### 3. 数列定义（`#definition`）
+### 2. 数列定义（`#definition`）
 - 递推定义展示（初值 + 递推公式）+ 数列生成器（`js/sequence.js`）：滑杆选 3–16 项，逐项淡入，实时显示末两项比值逼近 φ。
 
-### 4. 性质与比奈公式（`#properties`）
+### 3. 性质与比奈公式（`#properties`）
 - 比奈公式及说明（`F(n) = [φⁿ − (1−φ)ⁿ] / √5`）。
 - **6 条性质卡**，每条点击进入**黑板全屏画廊**（`js/formula.js` + `css/formula.css`）查看完整分步证明：
 
@@ -134,18 +134,17 @@
   - 每性质含「结论速览条 → 分步公式证明 → 为什么重要」。
   - 左右箭头 / 键盘 ← → 翻页，`Esc` / ✕ / 点击背景关闭，底部状态点。
   - 性质数据在 `js/formula.js` 的 `DATA` 数组中；新增性质需同步增补该数组与卡片 `data-fo` 序号。
-  - `formula.txt` 为 6 条性质（另含「可被整除」「与编程」两条参考）的纯文本汇总，可与页面分享。
 
-### 5. 黄金比例与螺旋（`#golden`）
+### 4. 黄金比例与螺旋（`#golden`）
 - **核心交互**：拖拽拼图（`js/golden.js` + `css/golden.css`），Pointer Events 跨鼠标/触屏，拼满后 7 段 90° 圆弧连成完整黄金螺旋。
 - **右栏**：1.618 的由来讲解与历史美学故事（帕特农神庙、达·芬奇、苹果标志）。
 
-### 6. 自然实例（`#nature`）
+### 5. 自然实例（`#nature`）
 - **入场动画**：6 张自然卡片先在界面**中心浮现、再散开到各自网格位放大成框**（`js/nature.js` 用 GSAP 驱动，覆盖 `.reveal` 默认 3D 翻转）。
 - 6 张自然卡片（向日葵 / 鹦鹉螺 / 松果&菠萝 / 叶片 / 蜜蜂 / 银河），每张以对应图片作 `data-img`。
-- 点击卡片进入**全屏沉浸阅读**（`js/nature.js` + `css/golden.css`）：背景大图 + 完整文案，左右翻页、键盘导航、底部状态点。完整文案见 `context.txt`（与 `js/nature.js` 的 `NATURE` 数据一致）。
+- 点击卡片进入**全屏沉浸阅读**（`js/nature.js` + `css/golden.css`）：背景大图 + 完整文案，左右翻页、键盘导航、底部状态点。完整文案内嵌于 `js/nature.js` 的 `NATURE` 数据。
 
-### 7. 测验（`#quiz`）
+### 6. 测验（`#quiz`）
 - **10 道选择题**（`js/quiz.js`），每题含 `expl` 解析字段，覆盖定义、黄金比例、性质、自然实例等知识点。
 - **交互增强**：
   - 顶部**进度条**（青色单色）+ 题号提示 `n / 10`
@@ -155,6 +154,15 @@
   - 分数数字**弹跳**、下一题按钮点亮
   - 全部完成后按得分率显示**星级/奖杯**庆祝，附带 **「↻ 重新测验」按钮**无缝重玩
   - 无 GSAP 时自动降级为纯 CSS 反馈，基本功能仍可运行
+- **题目 PDF 下载**：点击「📄 下载题目」弹出说明弹窗（`.ql-overlay`），确认后下载 `download/quiz-question-v1.pdf`。
+
+### 7. 背景音乐播放器（右下角）
+- **混合自动播放**：首次任意 `pointerdown` 交互后自动开始播放（规避浏览器自动播放限制）；之后由播放器手动控制。
+- **常驻圆形钮**（`mp-fab`，音符 🎵）固定在右下角，整体上移避让 quiz「下一题」按钮。
+- **展开面板**（桌面悬停 / 触屏点击展开），向上弹出，含：专辑封面、歌名/歌手、进度条、时间显示、音量条、播放/暂停键。进度条进度点以**斐波那契标志 φ** 呈现。
+- **进度/音量可拖拽**（Pointer Events + `setPointerCapture`）；拖动时**时间气泡向上弹出**完整展示当前时间。
+- **跨屏不中断**：全局 `<audio loop>` 循环播放，切屏/滚动不受影响。
+- 音频与封面分别位于 `audio/ikoliks_aj-background-music-320427.mp3`、`audio/backgroundmusic.png`。
 
 ---
 
@@ -165,7 +173,7 @@
 - **跨模块共享样式**（`.formula`、`.reveal`、`@keyframes fadeSlide/popIn/float`）均集中在 **base.css** 定义，各模块复用，避免重复。
 - **单屏架构样式**也在 base.css（`.view`、`.page-transition` 扩散色块、`.next-btn`、`.view::-webkit-scrollbar` 自定义滚动条）。
 - **图片路径**：因 CSS 位于 `css/` 子目录，内部图片引用一律写成 `../image/xxx.png`（如 `base.css` 的银河图、`intro.css` 的兔子图与垛积术图、`formula.css` 的黑板图）。新增图片背景时请保持该相对路径规则。
-- **加载顺序**：`index.html` 按 `base → sequence → intro → golden → quiz → formula` 依次 `<link>`（base 最先，确保变量与通用样式就绪）。
+- **加载顺序**：`index.html` 按 `base → sequence → intro → golden → quiz → formula → music` 依次 `<link>`（base 最先，确保变量与通用样式就绪）。
 - **交互容器**：如需改动交互容器，请同步确认 `js/` 中 `getElementById` 的 ID 名称一致。
 
 > **note**：`js/sequence.js` 与 `css/sequence.css` 对应板块 `#definition`，`js/formula.js` 与 `css/formula.css` 对应板块 `#properties`。锚点已用 `#definition`/`#properties`，文件名仍沿用旧名 `sequence.*`/`formula.*` 不影响功能。
@@ -180,23 +188,24 @@
 |---|---|---|
 | `gsap.min.js` | (第三方库) | GSAP 动画核心（本地化，断网可用） |
 | `ScrollTrigger.min.js` | (第三方库) | GSAP 滚动触发插件（本地化） |
-| `ui.js` | `navActive` / `revealOnScroll` | 导航高亮 + 非 .view 内 reveal 滚动渐显（兼容旧结构） |
+| `ui.js` | `navActive` / `revealOnScroll` | 导航高亮 + 非 .view 内 reveal 滚动渐显 |
 | `hero.js` | `heroSequence` / `heroFade` | 首屏数列 chips + 银河视差 |
 | `sequence.js` | `generator` | 数列生成器（`fib(n)` + 比值） |
 | `intro.js` | `introPhenomena` | 兔子繁衍 + 数学家 accordion |
 | `yanghui.js` | `yanghuiIntro` | 杨辉三角对角线高亮（45ms 防抖） |
 | `golden.js` | `spiralPuzzle` | 黄金螺旋拖拽拼图 |
 | `nature.js` | `natureFullscreen` | 自然全屏沉浸展厅 + 中心散开入场 |
-| `quiz.js` | `quiz` | 10 题测验 |
+| `quiz.js` | `quiz` | 10 题测验 + 下载题册弹窗 |
 | `formula.js` | `formulaGallery` | 性质推导·黑板全屏画廊（6 条性质翻页） |
-| `view.js` | `viewController` | **单屏 View 切换核心**（.reveal 触发 + 导航高亮） |
+| `view.js` | `viewController` | **单屏 View 切换核心**（.reveal 触发 + 导航高亮 + URL hash 同步/前进后退） |
+| `music.js` | `musicPlayer` | 背景音乐播放器（混合自动播放 + 可拖拽进度/音量） |
 | `cursor.js` | `customCursor` | 自定义紫色圆形光标 |
 
 > **兼容性说明**：为在 `file://` 协议下双击即可运行，全部脚本使用**普通 `<script>`**、**未使用 `import/export`**。请勿改回 ES Module，否则浏览器会因 CORS 拦截而无法通过本地文件方式运行。
 >
-> **加载原则**：`index.html` 按 `gsap → ScrollTrigger → ui → hero → sequence → intro → yanghui → golden → nature → quiz → formula → view → cursor` 顺序引入。`view.js` 需在 gsap 之后加载；其余 IIFE 无跨模块依赖。
+> **加载原则**：`index.html` 按 `gsap → ScrollTrigger → ui → hero → sequence → intro → yanghui → golden → nature → quiz → formula → view → music → cursor` 顺序引入。`view.js` 需在 gsap 之后加载；`music.js` 需在 `view.js` 之后；其余 IIFE 无跨模块依赖。
 >
-> **导航高亮说明**：`#navActive` 旧逻辑（滚动高亮）仅对非 `.view` 锚点兜底；当前单屏模式的实际高亮由 `view.js` 的 `updateNav` 在切屏时更新。
+> **导航高亮说明**：当前单屏模式的实际高亮由 `view.js` 的 `updateNav` 在切屏时更新。
 
 ---
 
@@ -246,30 +255,32 @@ y_svg        = 13 − (平面左下角 y + 边长)
 ## 常见问题（FAQ）
 
 **Q1：双击打开后页面没有样式或没有交互？**
-A：请确认 `index.html` 与 `css/`、`js/`、`image/` 在**同一目录**且文件、子目录名未被改动。CSS/JS 均以相对路径引用，文件夹缺一即失效。
+A：请确认 `index.html` 与 `css/`、`js/`、`image/`、`audio/` 在**同一目录**且文件、子目录名未被改动。CSS/JS 均以相对路径引用，文件夹缺一即失效。
 
-**Q2：我改了 `style.css` / `script.js` 却没生效？**
-A：当前入口引用的已是 `css/`、`js/` 拆分文件，根目录的旧单文件只是备份，不再被页面读取。请修改 `css/`、`js/` 下的文件。
-
-**Q3：为什么点按钮切换时有个大色块铺满全屏？**
+**Q2：为什么点按钮切换时有个大色块铺满全屏？**
 A：这是 `js/view.js` 实现的整屏切换过渡——色块（`.page-transition`）从点击点中心扩散铺满，短暂遮盖旧屏后淡出露出新屏，实现沉浸式页面跳转。导航链接跳转则不做此过渡。
 
-**Q4：页面内容一屏放不下，怎么看全？**
-A：每屏 `.view` 内部独立滚动。内容超高时页面最右侧会出现一条**细窄青色滚动条**（6px，内容不高时自动隐藏），用鼠标滚轮或拖滚动条即可在当前屏内滚动到想要的区域。
+**Q3：页面内容一屏放不下，怎么看全？**
+A：每屏 `.view` 内部独立滚动。内容超高时页面最右侧会出现一条**细窄青色滚动条**（6px，内容不高时自动隐藏），用鼠标滚轮或拖滚动条即可在当前屏内滚动。
 
-**Q5：是否支持移动端 / 触屏拖拽？**
-A：支持。拼图使用 Pointer Events，天然兼容鼠标与触屏；自定义光标在触屏 / 低动态偏好下自动关闭（`cursor.js`）。
+**Q4：背景音乐为什么一开始没自动响？**
+A：浏览器策略要求首次播放必须由用户手势触发。本项目采用混合方案：**在页面任意位置第一次点击/触摸后**即自动播放，之后由右下角播放器手动控制。请先任意点击页面一次。
 
-**Q6：能否用服务器方式运行？**
+**Q5：音乐播放器挡住了内容怎么办？**
+A：播放器按钮位于右下角并已整体上移避让 quiz「下一题」按钮。若仍遮挡，可调 `css/music.css` 中 `.music-player` 的 `bottom` 值。
+
+**Q6：是否支持移动端 / 触屏拖拽？**
+A：支持。拼图与播放器进度/音量均使用 Pointer Events，天然兼容鼠标与触屏；自定义光标在触屏 / 低动态偏好下自动关闭（`cursor.js`）。
+
+**Q7：能否用服务器方式运行？**
 A：可以，但没必要。纯静态页面直接双击即可。若用 VS Code 等工具起本地静态服务器，同样正常。
 
 ---
 
 ## 后续可扩展方向（供参考）
 
-- **测验下载 / 错题收集**：在测验模块加入「下载题目 PDF」（下载预制的题目 pdf）与「错题记录」按钮，按作答结果动态生成错题明细，支持导出或打印。
+- **错题收集 / 导出错题**：在测验模块加入「错题记录」按钮，按作答结果动态生成错题明细，支持导出或打印。
 - 将 `spiralPuzzle` 的 `PIE` 配置开放为可视化编辑器，实时调弧线坐标。
 - 为拼图完成 / 满分增加庆祝动画或音效。
 - 增加更多比奈公式 / 黄金比例的可视化实验（如动态 φ 分割工具）。
-- 增加浏览器前进 / 后退历史支持、URL hash 同步、页面加载进度条等体验优化。
 - 将 `js/sequence.js`、`css/sequence.css` 重命名为 `definition.*`，将 `js/formula.js`、`css/formula.css` 重命名为 `properties.*`，与锚点语义一致（需同步改 `index.html` 引入名，不影响功能）。
