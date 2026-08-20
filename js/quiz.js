@@ -36,6 +36,64 @@
   const quizNext = document.getElementById('quizNext');
   const progressFill = document.getElementById('quizProgressFill');
   const progressLabel = document.getElementById('quizProgressLabel');
+  const quizDownload = document.getElementById('quizDownload');
+  const qlOverlay = document.getElementById('qlOverlay');
+  const qlClose = document.getElementById('qlClose');
+  const qlCancel = document.getElementById('qlCancel');
+  const qlGo = document.getElementById('qlGo');
+
+  // ---- 下载题册（真正触发下载的动作，抽出以便弹窗确认后再调用） ----
+  function doDownload() {
+    const a = document.createElement('a');
+    a.href = 'download/quiz-question-v1.pdf';
+    a.download = 'quiz-question-v1.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+  // 打开弹窗
+  function openDownloadDialog() {
+    if (qlOverlay) {
+      qlOverlay.classList.add('show');
+      qlOverlay.setAttribute('aria-hidden', 'false');
+    }
+  }
+  // 关闭弹窗
+  function closeDownloadDialog() {
+    if (qlOverlay) {
+      qlOverlay.classList.remove('show');
+      qlOverlay.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  // 「📄 下载题册」：先弹说明弹窗（用户可以看明白内容，再决定是否下载）
+  if (quizDownload) {
+    quizDownload.addEventListener('click', openDownloadDialog);
+  }
+  // 「开始下载」：真正触发下载并关闭弹窗
+  if (qlGo) {
+    qlGo.addEventListener('click', () => {
+      doDownload();
+      closeDownloadDialog();
+      // 轻微的下载反馈（不影响页面）
+      if (hasGSAP) gsap.fromTo(quizDownload, { scale: 0.94 }, { scale: 1, duration: 0.3, ease: 'back.out(2)' });
+    });
+  }
+  // 取消 / 关闭 / 点击黑色背景：关闭弹窗，不下载
+  if (qlCancel) qlCancel.addEventListener('click', closeDownloadDialog);
+  if (qlClose) qlClose.addEventListener('click', closeDownloadDialog);
+  if (qlOverlay) {
+    qlOverlay.addEventListener('click', (e) => {
+      // 仅当点击到黑色遮罩本身（非弹窗内容）时关闭
+      if (e.target === qlOverlay) closeDownloadDialog();
+    });
+  }
+  // Esc 键仅在弹窗打开时关闭（避免影响页面其他交互）
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && qlOverlay && qlOverlay.classList.contains('show')) {
+      closeDownloadDialog();
+    }
+  });
 
   // 更新顶部进度条
   function updateProgress() {
