@@ -55,6 +55,17 @@
   box-shadow: 0 24px 70px rgba(0,0,0,0.55);
   padding: 44px 52px 34px;
 }
+/* 黑板画廊内容区：细窄青色滚动条（仿 .view 统一风格），替代原生白色粗滚动条 */
+.fo-content::-webkit-scrollbar { width: 6px; }
+.fo-content::-webkit-scrollbar-track { background: transparent; }
+.fo-content::-webkit-scrollbar-thumb {
+  background: rgba(45, 212, 191, 0.35);   /* 青色半透明滑块 */
+  border-radius: 50px;
+}
+.fo-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(45, 212, 191, 0.6);    /* 悬停变亮仍保持青色 */
+}
+.fo-content { scrollbar-width: thin; scrollbar-color: rgba(45,212,191,0.35) transparent; }
 /* 粉笔金标题 */
 .fo-kicker {
   text-align: center;
