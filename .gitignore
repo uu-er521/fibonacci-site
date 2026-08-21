@@ -1,0 +1,7 @@
+# 原图备份（26MB），部署/上传时排除
+original-assets/
+
+# 系统/编辑器临时文件
+.DS_Store
+Thumbs.db
+*.log
