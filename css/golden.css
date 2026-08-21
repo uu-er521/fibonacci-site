@@ -15,7 +15,7 @@
 .spiral-card svg { width: 100%; max-width: 420px; }
 
 /* ---------- Golden spiral puzzle ---------- */
-.puzzle-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.puzzle-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; max-width: 100%; }
 .puzzle-board {
   position: relative;
   border-radius: 8px;
@@ -80,7 +80,9 @@
   background: var(--card);
   border: 1px solid var(--card-border);
   border-radius: 12px;
-  min-width: 320px;
+  min-width: 0;
+  width: 100%;
+  max-width: 460px;
 }
 .puzzle-tray .tray-piece {
   width: 40px; height: 40px;
@@ -92,10 +94,30 @@
   font-size: 0.85rem;
   color: var(--text);
   cursor: grab;
+  touch-action: none;   /* 关键：触屏上禁止浏览器滚动劫持，拖拽/点选才能生效 */
   box-shadow: 0 4px 10px rgba(0,0,0,0.4);
 }
 .puzzle-tray .tray-piece.dragging { opacity: 0.4; }
 .puzzle-tray .tray-piece.used { opacity: 0.15; pointer-events: none; cursor: default; }
+/* 触屏点选模式：选中高亮 / 放错抖动 */
+.puzzle-tray .tray-piece.selected {
+  border-color: var(--gold-1);
+  box-shadow: 0 0 0 3px rgba(251,191,36,0.45), 0 4px 10px rgba(0,0,0,0.4);
+  transform: scale(1.1);
+}
+@keyframes pieceShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+.puzzle-tray .tray-piece.shake { animation: pieceShake 0.45s ease; border-color: var(--pink); }
+/* 触屏点选模式：选中托盘方块后，棋盘空格子高亮提示可点击 */
+.puzzle-wrap:has(.tray-piece.selected) .target-slot:not(.filled) {
+  border-color: rgba(45, 212, 191, 0.75);
+  background: rgba(45, 212, 191, 0.08);
+}
 .puzzle-msg { font-size: 0.95rem; color: var(--muted); min-height: 24px; }
 .puzzle-msg .done { color: var(--teal); font-weight: 700; }
 .puzzle-reset { margin-top: 4px; }
@@ -229,4 +251,11 @@
   .fs-prev { left: 10px; }
   .fs-next { right: 10px; }
   .fs-close { right: 14px; top: 14px; }
+}
+
+/* ---------- 手机端拼图适配 ---------- */
+@media (max-width: 480px) {
+  .spiral-card { padding: 16px 12px; }
+  .puzzle-tray { padding: 8px 8px; gap: 6px; }
+  .puzzle-tray .tray-piece { width: 38px; height: 38px; }
 }

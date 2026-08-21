@@ -95,6 +95,23 @@ nav .links a.active::after {
 }
 @keyframes navUnderline { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
+/* 手机端导航：链接横向滑动，避免 6 个链接把导航撑破/溢出 */
+@media (max-width: 760px) {
+  nav { padding: 10px 4%; }
+  .logo { font-size: 0.95rem; flex-shrink: 0; }
+  .logo .mark { width: 28px; height: 28px; font-size: 0.85rem; }
+  nav .links {
+    min-width: 0;
+    flex-shrink: 1;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  nav .links::-webkit-scrollbar { display: none; }
+  nav .links a { white-space: nowrap; font-size: 0.85rem; padding: 6px 8px; }
+}
+
 /* ---------- Hero ---------- */
 .hero {
   min-height: 100vh;
@@ -386,6 +403,7 @@ html, body {
   opacity: 0;
   overflow-y: auto;             /* 单屏内部内容超高时可独立滚动 */
   overflow-x: hidden;
+  overflow-x: clip;             /* 新版浏览器：避免 iOS 上 overflow-x:hidden 与纵向滚动冲突 */
   -webkit-overflow-scrolling: touch;
   z-index: 1;
 }

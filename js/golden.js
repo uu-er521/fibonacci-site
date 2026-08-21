@@ -11,8 +11,13 @@
 
   // 自适应格子尺寸
   const cardEl = document.querySelector('.spiral-card');
-  const availW = (cardEl ? cardEl.clientWidth : 520) - 24;
-  const CELL = Math.max(16, Math.min(30, Math.floor(availW / GRID_W)));
+  // 内容区宽度 = clientWidth − 左右内边距(24×2) − 8px 余量，避免移动端棋盘溢出被裁剪
+  const availW = (cardEl ? cardEl.clientWidth - 48 : 520) - 8;
+  const CELL = Math.max(11, Math.min(30, Math.floor(availW / GRID_W)));
+
+  // 触屏设备（手机/平板）：小方块拖拽不友好，改用「点选托盘 → 点选棋盘」放置
+  const isTouch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  let selected = null; // 触屏模式当前选中的托盘块
 
   /*
     正方形布局（SVG 网格的左上角坐标，棋盘 21×13）。
@@ -121,10 +126,13 @@
   function rebuildTray() {
     tray.innerHTML = '';
     placed = 0;
+    if (selected) { selected.trayEl.classList.remove('selected'); selected = null; }
     PIE.forEach(pi => { tray.appendChild(makeShape(pi, 'tray')); });
     pieceGeom = {};
     source = {};
-    msg.innerHTML = '将下方托盘中的方块拖入上方对应位置，拼满 7 块即完成 ✨';
+    msg.innerHTML = isTouch
+      ? '📱 触屏模式：先点一下托盘中的方块，再点棋盘上对应的虚线框放下它；拼满 7 块即完成 ✨'
+      : '将下方托盘中的方块拖入上方对应位置，拼满 7 块即完成 ✨';
   }
 
   /* ---- 根据几何信息更新槽位填充状态 ---- */
@@ -175,9 +183,28 @@
     }
   }
 
+  /* ---- 触屏点选：选中托盘方块 ---- */
+  function selectPiece(pi, trayEl) {
+    if (trayEl.classList.contains('used')) return;
+    if (selected) {
+      if (selected.trayEl === trayEl) { selected.trayEl.classList.remove('selected'); selected = null; return; }
+      selected.trayEl.classList.remove('selected');
+    }
+    selected = { pi, trayEl, k: String(PIE.indexOf(pi)) };
+    trayEl.classList.add('selected');
+    msg.innerHTML = '已选中边长 <strong style="color:var(--gold-1)">' + pi.s +
+      '</strong> 的方块，点棋盘上对应的虚线框放下它（放错会自动退回）';
+  }
+
   /* ---- 拖拽逻辑（Pointer Events，兼容鼠标/触屏） ---- */
   function attachDrag(el, mode, pi) {
     const k = String(PIE.indexOf(pi));
+
+    // 触屏设备：托盘块改为点选（点选 → 点棋盘放置），拖拽在小屏幕上不好操作
+    if (mode === 'tray' && isTouch) {
+      el.addEventListener('click', () => selectPiece(pi, el));
+      return;
+    }
 
     el.addEventListener('pointerdown', (e) => {
       if (e.button !== undefined && e.button !== 0) return;
@@ -262,6 +289,41 @@
     };
     el.addEventListener('pointerup', endDrag);
     el.addEventListener('pointercancel', endDrag);
+  }
+
+  /* ---- 触屏模式：点选棋盘虚线框放置 ---- */
+  if (isTouch) {
+    board.addEventListener('click', (e) => {
+      if (!selected) return;
+      const slot = e.target.closest('.target-slot');
+      if (!slot) return;
+      const pi = selected.pi;
+      const ok = +slot.dataset.size === pi.s && +slot.dataset.x === pi.x && +slot.dataset.y === pi.y;
+      if (ok) {
+        const k = selected.k;
+        const sh = makeShape(pi, 'shape');
+        sh.style.left = (pi.x * CELL) + 'px';
+        sh.style.top = (pi.y * CELL) + 'px';
+        sh.dataset.cx = pi.x; sh.dataset.cy = pi.y;
+        sh.classList.add('placed');
+        board.appendChild(sh);
+        pieceGeom[k] = { x: pi.x, y: pi.y };
+        placed++;
+        pingPlace();
+        selected.trayEl.classList.add('used');
+        selected.trayEl.classList.remove('selected');
+        selected = null;
+        refreshSlots();
+        updateMsg();
+      } else {
+        const t = selected.trayEl;
+        t.classList.remove('selected');
+        t.classList.add('shake');
+        setTimeout(() => t.classList.remove('shake'), 450);
+        selected = null;
+        msg.innerHTML = '这个位置不对哦，再想想 👀';
+      }
+    });
   }
 
   /* ---- 重置 ---- */
