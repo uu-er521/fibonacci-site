@@ -30,7 +30,7 @@
   position: relative;
   background-image:
     linear-gradient(180deg, rgba(15,21,36,0.82), rgba(15,21,36,0.9)),
-    url('../image/兔子图片.png');
+    url('../image/兔子图片.jpg');
   background-size: cover;
   background-position: center center;
   border-color: rgba(251,191,36,0.25);
@@ -39,14 +39,14 @@
   position: relative;
   background-image:
     linear-gradient(180deg, rgba(15,21,36,0.82), rgba(15,21,36,0.9)),
-    url('../image/垛积术图片.png');
+    url('../image/垛积术图片.jpg');
   background-size: cover;
   background-position: center center;
   border-color: rgba(45,212,191,0.25);
 }
 /* 鼠标悬停时略微压暗遮罩、透出更多图片，提示可交互 */
-.intro-card--rabbit:hover { background-image: linear-gradient(180deg, rgba(15,21,36,0.7), rgba(15,21,36,0.82)), url('../image/兔子图片.png'); }
-.intro-card--triangle:hover { background-image: linear-gradient(180deg, rgba(15,21,36,0.7), rgba(15,21,36,0.82)), url('../image/垛积术图片.png'); }
+.intro-card--rabbit:hover { background-image: linear-gradient(180deg, rgba(15,21,36,0.7), rgba(15,21,36,0.82)), url('../image/兔子图片.jpg'); }
+.intro-card--triangle:hover { background-image: linear-gradient(180deg, rgba(15,21,36,0.7), rgba(15,21,36,0.82)), url('../image/垛积术图片.jpg'); }
 
 /* 卡片底部"图源"角标 */
 .intro-card--rabbit::after,

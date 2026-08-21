@@ -129,7 +129,7 @@ nav .links a.active::after {
   background-color: #4a6db4;
   background-image:
     linear-gradient(160deg, rgba(64,224,255,0.30), rgba(10,20,40,0.22) 60%, rgba(5,12,28,0.40)),
-    url('../image/蓝色粗砺纹理.png');
+    url('../image/蓝色粗砺纹理.jpg');
   background-size: cover;
   background-position: center center;
   background-blend-mode: normal;
@@ -165,7 +165,7 @@ nav .links a.active::after {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background-image: url('../image/银河图片.png');
+  background-image: url('../image/银河图片.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;

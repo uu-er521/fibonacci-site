@@ -31,10 +31,10 @@
 }
 .fo-overlay.show { opacity: 1; visibility: visible; pointer-events: auto; }
 
-/* 黑板背景：直接使用 image/黑板图片.png 作全屏背景，去掉模糊与强压暗，让黑板清晰可见 */
+/* 黑板背景：直接使用 image/黑板图片.jpg 作全屏背景，去掉模糊与强压暗，让黑板清晰可见 */
 .fo-bg {
   position: absolute; inset: 0;
-  background: url('../image/黑板图片.png') center/cover no-repeat;
+  background: url('../image/黑板图片.jpg') center/cover no-repeat;
   filter: brightness(1.05) contrast(1.02);
 }
 /* 极淡的渐变遮罩，仅用于保证四周文字在边缘处的可读性，不影响黑板质感 */

@@ -130,7 +130,7 @@
 | 6 | 平方和求和 | F₁²+…+Fₙ² = Fₙ·Fₙ₊₁ |
 
   黑板画廊特性：
-  - 背景为 `image/黑板图片.png`，**粉笔白字 + 黑边**（`text-shadow` 四向描边），半透明板书面让黑板透出。
+  - 背景为 `image/黑板图片.jpg`，**粉笔白字 + 黑边**（`text-shadow` 四向描边），半透明板书面让黑板透出。
   - 每性质含「结论速览条 → 分步公式证明 → 为什么重要」。
   - 左右箭头 / 键盘 ← → 翻页，`Esc` / ✕ / 点击背景关闭，底部状态点。
   - 性质数据在 `js/properties.js` 的 `DATA` 数组中；新增性质需同步增补该数组与卡片 `data-fo` 序号。
@@ -162,7 +162,7 @@
 - **展开面板**（桌面悬停 / 触屏点击展开），向上弹出，含：专辑封面、歌名/歌手、进度条、时间显示、音量条、播放/暂停键。进度条进度点以**斐波那契标志 φ** 呈现。
 - **进度/音量可拖拽**（Pointer Events + `setPointerCapture`）；拖动时**时间气泡向上弹出**完整展示当前时间。
 - **跨屏不中断**：全局 `<audio loop>` 循环播放，切屏/滚动不受影响。
-- 音频与封面分别位于 `audio/ikoliks_aj-background-music-320427.mp3`、`audio/backgroundmusic.png`。
+- 音频与封面分别位于 `audio/ikoliks_aj-background-music-320427.mp3`、`audio/backgroundmusic.jpg`。
 
 ---
 
@@ -172,7 +172,7 @@
 
 - **跨模块共享样式**（`.formula`、`.reveal`、`@keyframes fadeSlide/popIn/float`）均集中在 **base.css** 定义，各模块复用，避免重复。
 - **单屏架构样式**也在 base.css（`.view`、`.page-transition` 扩散色块、`.next-btn`、`.view::-webkit-scrollbar` 自定义滚动条）。
-- **图片路径**：因 CSS 位于 `css/` 子目录，内部图片引用一律写成 `../image/xxx.png`（如 `base.css` 的银河图、`intro.css` 的兔子图与垛积术图、`properties.css` 的黑板图）。新增图片背景时请保持该相对路径规则。
+- **图片路径**：因 CSS 位于 `css/` 子目录，内部图片引用一律写成 `../image/xxx.jpg`（如 `base.css` 的银河图、`intro.css` 的兔子图与垛积术图、`properties.css` 的黑板图）。图片已统一压缩为 JPEG，原图备份在 `original-assets/`。新增图片背景时请保持该相对路径规则。
 - **加载顺序**：`index.html` 按 `base → definition → intro → golden → quiz → properties → music` 依次 `<link>`（base 最先，确保变量与通用样式就绪）。
 - **交互容器**：如需改动交互容器，请同步确认 `js/` 中 `getElementById` 的 ID 名称一致。
 
