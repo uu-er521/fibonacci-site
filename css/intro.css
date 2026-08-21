@@ -23,6 +23,7 @@
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
+  overflow: hidden;   /* 兜底：任何子内容溢出都裁剪在卡片内，避免右侧露出/撑破 */
 }
 
 /* 兔子 / 垛积术：把交互卡片做成"图挂"背景（图片偏亮 → 叠加深色玻璃遮罩保证文字清晰） */
@@ -351,4 +352,23 @@
 #intro .reveal-right.reveal.visible,
 #intro .mat-section.reveal.visible {
   transform: translateX(0);
+}
+
+/* ============================================================
+   手机端适配：收窄卡片内边距、缩小杨辉三角格子，
+   让兔子数列与杨辉三角完整放下、不再被裁掉右侧
+   ============================================================ */
+@media (max-width: 520px) {
+  .intro-card { padding: 18px 14px; }
+  .rabbit-field { padding: 10px; overflow-x: hidden; }
+  .rabbit-track { width: 100%; }
+  .yanghui-wrap { padding: 10px; }
+  .yanghui-tri { gap: 4px; }
+  .yh-row { gap: 4px; }
+  .yh-cell {
+    min-width: 26px; height: 34px;
+    padding: 0 5px;
+    font-size: 0.82rem;
+    flex: 0 1 auto;
+  }
 }

@@ -472,6 +472,8 @@ html, body {
 .next-btn .arr { font-size: 1.2rem; line-height: 1; }
 @media (max-width: 640px) {
   .next-btn { right: 16px; bottom: 16px; padding: 11px 18px; font-size: 0.85rem; }
+  /* 手机端收窄页面左右留白，给内容更多宽度，降低横向溢出 */
+  section { padding: 60px 3.5%; }
 }
 
 /* ============================================================
