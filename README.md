@@ -39,24 +39,24 @@
 ├── README.md      本说明文件
 ├── css/           样式，按功能模块拆分
 │   ├── base.css       设计系统变量(:root) · 背景 · 导航 · Hero · 通用 section/footer/animation
-│   ├── sequence.css   数列定义 · 生成器 · 公式
+│   ├── definition.css 数列定义 · 生成器 · 公式
 │   ├── intro.css      问题引入（兔子 × 杨辉三角 × 数学家 accordion）
 │   ├── golden.css     黄金螺旋拼图 · 自然卡片 · 全屏沉浸阅读
 │   ├── quiz.css       测验模块 · 下载题册弹窗
-│   ├── formula.css    性质推导 · 黑板全屏画廊
+│   ├── properties.css 性质推导 · 黑板全屏画廊
 │   └── music.css      右下角悬浮音乐播放器
 ├── js/            交互逻辑，按 IIFE 模块拆分
 │   ├── gsap.min.js        GSAP 核心（本地化第三方库，用于动画与单屏切换）
 │   ├── ScrollTrigger.min.js  ScrollTrigger 插件（本地化第三方库）
 │   ├── ui.js          navActive 导航高亮 + revealOnScroll（非 .view 内）滚动渐显
 │   ├── hero.js        heroSequence 首屏数列 + 银河视差
-│   ├── sequence.js    generator 数列生成器
+│   ├── definition.js  generator 数列生成器
 │   ├── intro.js       introPhenomena 兔子繁衍 + 数学家 accordion
 │   ├── yanghui.js     yanghuiIntro 杨辉三角对角线高亮（含防抖）
 │   ├── golden.js      spiralPuzzle 黄金螺旋拖拽拼图
 │   ├── nature.js      natureFullscreen 自然全屏展厅
 │   ├── quiz.js        quiz 测验（10 题）+ 下载题册弹窗
-│   ├── formula.js     formulaGallery 性质推导黑板画廊
+│   ├── properties.js  formulaGallery 性质推导黑板画廊
 │   ├── view.js        **单屏 View 切换核心**（依赖 GSAP，负责 .reveal 触发/导航高亮/URL hash 同步）
 │   ├── music.js       背景音乐播放器
 │   └── cursor.js      自定义紫色圆形光标
@@ -114,11 +114,11 @@
 - **数学家 accordion**：斐波那契 / 贾宪 / 杨辉 三张卡（`js/intro.js` + `css/intro.css`），点击横向展开生平、成就、与数列的联系及引文；该区域由滚动到视口才触发入场（配合 `viewactive` 事件）。
 
 ### 2. 数列定义（`#definition`）
-- 递推定义展示（初值 + 递推公式）+ 数列生成器（`js/sequence.js`）：滑杆选 3–16 项，逐项淡入，实时显示末两项比值逼近 φ。
+- 递推定义展示（初值 + 递推公式）+ 数列生成器（`js/definition.js`）：滑杆选 3–16 项，逐项淡入，实时显示末两项比值逼近 φ。
 
 ### 3. 性质与比奈公式（`#properties`）
 - 比奈公式及说明（`F(n) = [φⁿ − (1−φ)ⁿ] / √5`）。
-- **6 条性质卡**，每条点击进入**黑板全屏画廊**（`js/formula.js` + `css/formula.css`）查看完整分步证明：
+- **6 条性质卡**，每条点击进入**黑板全屏画廊**（`js/properties.js` + `css/properties.css`）查看完整分步证明：
 
 | # | 性质 | 结论 |
 |---|---|---|
@@ -133,7 +133,7 @@
   - 背景为 `image/黑板图片.png`，**粉笔白字 + 黑边**（`text-shadow` 四向描边），半透明板书面让黑板透出。
   - 每性质含「结论速览条 → 分步公式证明 → 为什么重要」。
   - 左右箭头 / 键盘 ← → 翻页，`Esc` / ✕ / 点击背景关闭，底部状态点。
-  - 性质数据在 `js/formula.js` 的 `DATA` 数组中；新增性质需同步增补该数组与卡片 `data-fo` 序号。
+  - 性质数据在 `js/properties.js` 的 `DATA` 数组中；新增性质需同步增补该数组与卡片 `data-fo` 序号。
 
 ### 4. 黄金比例与螺旋（`#golden`）
 - **核心交互**：拖拽拼图（`js/golden.js` + `css/golden.css`），Pointer Events 跨鼠标/触屏，拼满后 7 段 90° 圆弧连成完整黄金螺旋。
@@ -172,11 +172,11 @@
 
 - **跨模块共享样式**（`.formula`、`.reveal`、`@keyframes fadeSlide/popIn/float`）均集中在 **base.css** 定义，各模块复用，避免重复。
 - **单屏架构样式**也在 base.css（`.view`、`.page-transition` 扩散色块、`.next-btn`、`.view::-webkit-scrollbar` 自定义滚动条）。
-- **图片路径**：因 CSS 位于 `css/` 子目录，内部图片引用一律写成 `../image/xxx.png`（如 `base.css` 的银河图、`intro.css` 的兔子图与垛积术图、`formula.css` 的黑板图）。新增图片背景时请保持该相对路径规则。
-- **加载顺序**：`index.html` 按 `base → sequence → intro → golden → quiz → formula → music` 依次 `<link>`（base 最先，确保变量与通用样式就绪）。
+- **图片路径**：因 CSS 位于 `css/` 子目录，内部图片引用一律写成 `../image/xxx.png`（如 `base.css` 的银河图、`intro.css` 的兔子图与垛积术图、`properties.css` 的黑板图）。新增图片背景时请保持该相对路径规则。
+- **加载顺序**：`index.html` 按 `base → definition → intro → golden → quiz → properties → music` 依次 `<link>`（base 最先，确保变量与通用样式就绪）。
 - **交互容器**：如需改动交互容器，请同步确认 `js/` 中 `getElementById` 的 ID 名称一致。
 
-> **note**：`js/sequence.js` 与 `css/sequence.css` 对应板块 `#definition`，`js/formula.js` 与 `css/formula.css` 对应板块 `#properties`。锚点已用 `#definition`/`#properties`，文件名仍沿用旧名 `sequence.*`/`formula.*` 不影响功能。
+> **note**：`js/definition.js` 与 `css/definition.css` 对应板块 `#definition`，`js/properties.js` 与 `css/properties.css` 对应板块 `#properties`。
 
 ---
 
@@ -190,20 +190,20 @@
 | `ScrollTrigger.min.js` | (第三方库) | GSAP 滚动触发插件（本地化） |
 | `ui.js` | `navActive` / `revealOnScroll` | 导航高亮 + 非 .view 内 reveal 滚动渐显 |
 | `hero.js` | `heroSequence` / `heroFade` | 首屏数列 chips + 银河视差 |
-| `sequence.js` | `generator` | 数列生成器（`fib(n)` + 比值） |
+| `definition.js` | `generator` | 数列生成器（`fib(n)` + 比值） |
 | `intro.js` | `introPhenomena` | 兔子繁衍 + 数学家 accordion |
 | `yanghui.js` | `yanghuiIntro` | 杨辉三角对角线高亮（45ms 防抖） |
 | `golden.js` | `spiralPuzzle` | 黄金螺旋拖拽拼图 |
 | `nature.js` | `natureFullscreen` | 自然全屏沉浸展厅 + 中心散开入场 |
 | `quiz.js` | `quiz` | 10 题测验 + 下载题册弹窗 |
-| `formula.js` | `formulaGallery` | 性质推导·黑板全屏画廊（6 条性质翻页） |
+| `properties.js` | `formulaGallery` | 性质推导·黑板全屏画廊（6 条性质翻页） |
 | `view.js` | `viewController` | **单屏 View 切换核心**（.reveal 触发 + 导航高亮 + URL hash 同步/前进后退） |
 | `music.js` | `musicPlayer` | 背景音乐播放器（混合自动播放 + 可拖拽进度/音量） |
 | `cursor.js` | `customCursor` | 自定义紫色圆形光标 |
 
 > **兼容性说明**：为在 `file://` 协议下双击即可运行，全部脚本使用**普通 `<script>`**、**未使用 `import/export`**。请勿改回 ES Module，否则浏览器会因 CORS 拦截而无法通过本地文件方式运行。
 >
-> **加载原则**：`index.html` 按 `gsap → ScrollTrigger → ui → hero → sequence → intro → yanghui → golden → nature → quiz → formula → view → music → cursor` 顺序引入。`view.js` 需在 gsap 之后加载；`music.js` 需在 `view.js` 之后；其余 IIFE 无跨模块依赖。
+> **加载原则**：`index.html` 按 `gsap → ScrollTrigger → ui → hero → definition → intro → yanghui → golden → nature → quiz → properties → view → music → cursor` 顺序引入。`view.js` 需在 gsap 之后加载；`music.js` 需在 `view.js` 之后；其余 IIFE 无跨模块依赖。
 >
 > **导航高亮说明**：当前单屏模式的实际高亮由 `view.js` 的 `updateNav` 在切屏时更新。
 
@@ -283,4 +283,3 @@ A：可以，但没必要。纯静态页面直接双击即可。若用 VS Code �
 - 将 `spiralPuzzle` 的 `PIE` 配置开放为可视化编辑器，实时调弧线坐标。
 - 为拼图完成 / 满分增加庆祝动画或音效。
 - 增加更多比奈公式 / 黄金比例的可视化实验（如动态 φ 分割工具）。
-- 将 `js/sequence.js`、`css/sequence.css` 重命名为 `definition.*`，将 `js/formula.js`、`css/formula.css` 重命名为 `properties.*`，与锚点语义一致（需同步改 `index.html` 引入名，不影响功能）。
